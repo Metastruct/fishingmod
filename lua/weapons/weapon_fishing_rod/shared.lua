@@ -43,38 +43,42 @@ function SWEP:SecondaryAttack()
 	end
 end
 
+function SWEP:Reload()
+	if CLIENT or SinglePlayer() then
+		RunConsoleCommand("fishing_mod_drop_catch")
+	end
+end
+
 if CLIENT then
 	SWEP.PrintName = "Fishing Rod"			
 	SWEP.Slot = 3
 	SWEP.SlotPos = 1
 	SWEP.DrawAmmo = false
 	SWEP.DrawCrosshair	= false
-
-	function SWEP:Reload()
-		RunConsoleCommand("fishing_mod_drop_catch")
-	end
-		
+	
 else
 	
-	function SWEP:Think()
+	function SWEP:Initialize()
+		self.distance = 0
+	end
+	
+	function SWEP:Deploy()
 		if not ValidEntity(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			self.fishing_rod:Spawn()
 			self.fishing_rod:AssignPlayer(self.Owner)
 			self.Owner:SetNWEntity("fishing rod", self.fishing_rod)
+			return true
 		end
-		timer.Create("has fishing rod"..self:EntIndex(), 0.1, 1, function()
-			if ValidEntity(self) and ValidEntity(self.Owner) then
-				print("removing entity")
-				self.Owner:SetNWEntity("fishing rod", NULL)
-				self.fishing_rod:Remove()
-				self.fishing_rod = nil
-			end
-		end)
 	end
 	
-	function SWEP:Initialize()
-		self.distance = 0
+	function SWEP:Holster()
+		if ValidEntity(self) and ValidEntity(self.Owner) then
+			self.Owner:SetNWEntity("fishing rod", NULL)
+			self.fishing_rod:Remove()
+			self.fishing_rod = nil
+			return true
+		end
 	end
 		
 	AddCSLuaFile( "shared.lua" )

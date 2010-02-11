@@ -41,7 +41,7 @@ function ENT:Hook( entity_to_create )
 		entity.oldmovetype = entity:GetMoveType()
 		entity:SetMoveType(MOVETYPE_NONE)
 	else
-		constraint.Weld(entity, self)
+		constraint.Weld(entity, self, 0, 0, 1000)
 	end
 
 	self.hooked = entity

@@ -11,6 +11,7 @@ ENT.RopeOffset = Vector(120,0,0)
 function ENT:SetupDataTables()
 	self:DTVar("Entity", 0, "ply")
 	self:DTVar("Entity", 1, "attach")
+	self:DTVar("Entity", 2, "avatar")
 	self:DTVar("Int", 0, "length")
 end
 
@@ -26,8 +27,21 @@ function ENT:GetPlayer()
 	return ValidEntity(self.dt.ply) and self.dt.ply or false
 end
 
+function ENT:GetAvatar()
+	return ValidEntity(self.dt.avatar) and self.dt.avatar or false
+end
+
 function ENT:GetLength()
 	return self.dt.length or 0
+end
+
+function ENT:GetDepth()
+	local fish_hook = self.dt.attach.dt.hook
+	if ValidEntity(fish_hook) and fish_hook or false then
+		local trace = util.QuickTrace(fish_hook:GetPos(), Vector(0,0,-10000), fish_hook)
+		return (trace.StartPos - trace.HitPos):Length()
+	end
+	return 0
 end
 
 if CLIENT then

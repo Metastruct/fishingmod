@@ -19,7 +19,7 @@ function ENT:PhysicsSimulate( phys, deltatime )
 	phys:Wake()
 	self:GetBobber():PhysWake()
 	
-	local position, angles = self.dt.ply:GetBonePosition(self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
 	local new_position, new_angles = LocalToWorld(self.PlayerOffset, self.PlayerAngles, position, angles)
 	
 	self.shadow_params.secondstoarrive = 0.0001
@@ -74,6 +74,11 @@ function ENT:AssignPlayer(ply)
 	entity:Spawn()
 	entity.rod = self
 	
+	self.avatar = ents.Create("fishing_mod_avatar")
+	self.avatar.ply = ply
+	self.avatar:Spawn()
+	self.dt.avatar = self.avatar
+	
 	self:AttachEntity(entity)
 	self:SetLength(100)
 end
@@ -94,4 +99,5 @@ end
 function ENT:OnRemove()
 	self.dt.attach:Remove()
 	self.physical_rope:Remove()
+	self.avatar:Remove()
 end
