@@ -27,24 +27,37 @@ function ENT:Initialize()
 	fish_hook = self
 end
 
-function ENT:Hook( entity_to_create )
-	local entity = ents.Create(entity_to_create)
-	if not ValidEntity(entity) then
-		entity = ents.Create("prop_physics")
-		entity:SetModel(entity_to_create)
-	end
-	entity:SetPos(self:GetPos())
-	entity:SetOwner(self)
-	entity:Spawn()
-	if entity:IsNPC() then
-		entity:SetParent(self)
-		entity.oldmovetype = entity:GetMoveType()
-		entity:SetMoveType(MOVETYPE_NONE)
+function ENT:Hook( entity_to_create, existing )
+	if existing then
+		entity_to_create:SetPos(self:GetPos())
+		entity_to_create:SetOwner(self)
+		entity_to_create:Spawn()
+		if entity_to_create:IsNPC() then
+			entity_to_create:SetParent(self)
+			entity_to_create.oldmovetype = entity:GetMoveType()
+			entity_to_create:SetMoveType(MOVETYPE_NONE)
+		else
+			constraint.Weld(entity_to_create, self, 0, 0, 1000)
+		end
 	else
-		constraint.Weld(entity, self, 0, 0, 1000)
-	end
+		local entity = ents.Create(entity_to_create)
+		if not ValidEntity(entity) then
+			entity = ents.Create("prop_physics")
+			entity:SetModel(entity_to_create)
+		end
+		entity:SetPos(self:GetPos())
+		entity:SetOwner(self)
+		entity:Spawn()
+		if entity:IsNPC() then
+			entity:SetParent(self)
+			entity.oldmovetype = entity:GetMoveType()
+			entity:SetMoveType(MOVETYPE_NONE)
+		else
+			constraint.Weld(entity, self, 0, 0, 1000)
+		end
 
-	self.hooked = entity
+		self.hooked = entity
+	end
 end
 
 function ENT:GetHookedEntity()
@@ -71,6 +84,9 @@ end
 
 function ENT:Think()
 	if self.hooked and not ValidEntity(self.hooked) then
+		if not constraint.FindConstraint(self.hooked, "Weld") then
+			self.hooked = nil
+		end
 		self.hooked = nil
 	end
 	self:NextThink(CurTime())

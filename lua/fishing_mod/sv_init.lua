@@ -16,6 +16,7 @@ function fishingmod.RemoveCatch(name)
 end
 
 fishingmod.AddCatch("models/props_junk/Shoe001a.mdl", 500, 150)
+fishingmod.AddCatch("fishing_mod_fish", 2500, 500)
 
 hook.Add("Think", "Fishing Mod Think", function() 
 	for key, ply in pairs(player.GetAll()) do
