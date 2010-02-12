@@ -78,7 +78,9 @@ function ENT:UnHook()
 end
 
 function ENT:OnRemove()
-	self.hooked:SetParent()
+	if ValidEntity(self.hooked) then
+		self.hooked:SetParent()
+	end
 	self.physical_rope:Remove()
 end
 
