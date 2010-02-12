@@ -6,8 +6,8 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:GetPhysicsObject():SetMass(50000)
-	self:SetGravity(0)
+	self:GetPhysicsObject():SetMass(100)
+	--self:SetGravity(0)
 	self:StartMotionController()
 
 	self.shadow_params = {}
@@ -48,19 +48,12 @@ function ENT:SetLength(length)
 end
 
 function ENT:AttachRope()
-		
-	self.physical_rope = ents.Create("phys_spring")
-	self.physical_rope:SetPos( self:LocalToWorld(self.RopeOffset) )
-	self.physical_rope:SetKeyValue( "springaxis", tostring(Vector(0,0,0)) )
-	self.physical_rope:SetKeyValue( "constant", 3000 )
-	self.physical_rope:SetKeyValue( "damping", 70 )
-	self.physical_rope:SetKeyValue( "rdamping", 10 )
-	self.physical_rope:SetKeyValue( "spawnflags", 1)
-	self.physical_rope:SetPhysConstraintObjects( self:GetPhysicsObject(), self.dt.attach:GetPhysicsObject() )
-	self.physical_rope:Spawn()
-	self.physical_rope:Activate()
+
+	local constant =  math.min( self:GetPhysicsObject():GetMass(), self.dt.attach:GetPhysicsObject():GetMass() ) * 100
+	local damp = constant * 0.2
 	
-	--self.physical_rope:Fire("SetSpringLength", 100)
+	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(self.RopeOffset), Vector(0,0,0), 6000, 1200, 0, "cable/rope", 0.3, 1 )
+	
 end
 
 function ENT:AssignPlayer(ply)

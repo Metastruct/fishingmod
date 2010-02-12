@@ -3,25 +3,23 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/meathook001a.mdl")
-	self:PhysicsInitBox(Vector()*-1,Vector())
-	self:PhysWake()
 	self:SetOwner(self.bobber:GetOwner())
-	self:GetPhysicsObject():SetMass(10)
-	self:StartMotionController()
+	self:PhysicsInit( SOLID_VPHYSICS )
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	local phys = self:GetPhysicsObject()
+	if IsValid(phys) then
+		phys:SetMass(60)
+		phys:SetDamping(1,1)
+		phys:Wake()
+	end
 
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
+
+	local constant =  math.min( self:GetPhysicsObject():GetMass(), self.bobber:GetPhysicsObject():GetMass() ) * 100
+	local damp = constant * 0.2
 	
-	self.physical_rope = ents.Create("phys_spring")
-	self.physical_rope:SetPhysConstraintObjects( self:GetPhysicsObject(), self.bobber:GetPhysicsObject() )
-	self.physical_rope:SetPos( self:LocalToWorld(Vector(0,0,0)) )
-	self.physical_rope:SetKeyValue( "springaxis", tostring(Vector(0,0,0)) )
-	self.physical_rope:SetKeyValue( "constant", 2000 )
-	self.physical_rope:SetKeyValue( "damping", 0 )
-	self.physical_rope:SetKeyValue( "rdamping", 1 )
-	self.physical_rope:SetKeyValue( "spawnflags", 1)
-	self.physical_rope:Spawn()
-	self.physical_rope:Activate()
+	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0,0,4), 6000, 1200, 0, "cable/rope", 0.3, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
 	fish_hook = self
@@ -97,9 +95,10 @@ end
 
 function ENT:PhysicsSimulate(phys, deltatime)
 	phys:Wake()
-	local linear_delta = phys:GetVelocity() * -5 + (phys:GetVelocity() - self.last_velocity * 20)
+	if true then return end
+	local linear_delta = phys:GetVelocity() * -20 + (phys:GetVelocity() - self.last_velocity * 20)
 
-	local linear = linear_delta + phys:GetVelocity() * 20
+	local linear = linear_delta + phys:GetVelocity() * 4
 	
 	local angular_delta = (phys:GetAngleVelocity() * -50 + (phys:GetAngleVelocity() - self.last_angular_velocity * 5))
 	

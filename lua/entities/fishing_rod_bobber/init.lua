@@ -3,11 +3,14 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self:SetModel("models/props_c17/pottery01a.mdl")
-	self:PhysicsInitSphere(1)
-	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:PhysicsInit( SOLID_VPHYSICS )
-	self:StartMotionController()
-	self:GetPhysicsObject():EnableGravity(false)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	local phys = self:GetPhysicsObject()
+	if IsValid(phys) then
+		phys:SetMass(60)
+		phys:SetDamping(1,1)
+	end
+	--self:GetPhysicsObject():EnableGravity(false)
 	
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
@@ -31,7 +34,7 @@ end
 
 function ENT:PhysicsSimulate(phys, deltatime)	
 	phys:Wake()
-
+	if true then return end
 	local data = {}
 	
 	data.start = self:GetPos()
@@ -45,9 +48,9 @@ function ENT:PhysicsSimulate(phys, deltatime)
 
 	local damp_fraction = math.Clamp((trace.Fraction * -1 + 1), 0, 1) * 20
 		
-	local linear_delta = phys:GetVelocity() * -(4+damp_fraction) + (phys:GetVelocity() - self.last_velocity * 20)
+	local linear_delta = phys:GetVelocity() * -(20+damp_fraction) + (phys:GetVelocity() - self.last_velocity * 20)
 
-	local linear = linear_delta / 8
+	local linear = linear_delta + phys:GetVelocity() * 4
 	
 	local angular_delta = (phys:GetAngleVelocity() * -50 + (phys:GetAngleVelocity() - self.last_angular_velocity * 5))
 			

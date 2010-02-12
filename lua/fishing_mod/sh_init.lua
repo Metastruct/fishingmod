@@ -50,10 +50,6 @@ if CLIENT then
 			local new_position, new_angles = LocalToWorld(entity.PlayerOffset, entity.PlayerAngles, position, angles)
 			entity:SetPos(new_position)
 			entity:SetAngles(new_angles)
-			local fish_hook = entity:GetHook()
-			if fish_hook then
-				fish_hook:SetAngles(Angle(0,0,0))
-			end
 		end
 	end)
 	hook.Add( "HUDPaint", "Fishing Mod Draw HUD", function()
