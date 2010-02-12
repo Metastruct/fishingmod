@@ -10,16 +10,17 @@ hook.Add("ShouldDrawLocalPlayer", "MyHax ShouldDrawLocalPlayer", function(ply)
 		return true
 	end
 end)
-	hook.Add("CalcView", "Fishing Rod Thirdperson", function(ply,position,angles,fov)
+
+hook.Add("CalcView", "Fishing Rod Thirdperson", function(ply,position,angles,fov)
 	local fishing_rod = ply:GetFishingRod()
 	if fishing_rod and ValidEntity(fishing_rod.GetBobber and fishing_rod:GetBobber()) then
 					
 		local offset = ply:GetShootPos() + 
 			(ply:EyeAngles():Right() * 50) + 
-			(Angle(0,ply:EyeAngles().y,0):Forward() * -130) + 
-			(Angle(0,0,ply:EyeAngles().z):Up() * 20) +
-			(ply:GetShootPos() - fishing_rod:GetBobber():GetPos()):Normalize()*30
-		
+			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
+			(Angle(0,0,ply:EyeAngles().z):Up() * 20)--[[  +
+			(ply:GetShootPos() - fishing_rod:GetBobber():GetPos()):Normalize()*30 ]]
+		angles.p = math.Clamp(angles.p-30, -70, 15)			
 		local direction = LerpVector(0.7, fishing_rod:GetBobber():GetPos() + Vector(0,0,-50) - offset, ply:GetShootPos() - offset)
 		
 		--[[local data = {}
@@ -34,10 +35,11 @@ end)
 			trace_position = ((trace.HitPos - offset) + direction:Angle():Forward())
 		end]]
 		
-		return GAMEMODE:CalcView(ply,offset--[[ +trace_position ]],direction:Angle(),fov)
+		return GAMEMODE:CalcView(ply,offset--[[ +trace_position ]],angles--[[ direction:Angle() ]],fov)
 	end
 end)
-	hook.Add("RenderScene", "Render Fishing Rods", function()
+
+hook.Add("RenderScene", "Render Fishing Rods", function()
 	for key, entity in pairs(ents.FindByClass("entity_fishing_rod")) do
 		local ply = entity:GetPlayer()
 		if ply then
@@ -53,6 +55,7 @@ end)
 		end
 	end
 end)
+
 hook.Add( "HUDPaint", "Fishing Mod Draw HUD", function()
 	for key, entity in pairs(ents.FindByClass("entity_fishing_rod")) do
 		local xy = (entity:GetBobber():GetPos() + Vector(0,0,10)):ToScreen()

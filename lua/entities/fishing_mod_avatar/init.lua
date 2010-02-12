@@ -9,7 +9,6 @@ function ENT:Initialize()
 	--self:SetParent(self.ply)
 	self:SetOwner(self.ply)
 	self.dt.ply = self.ply
-	print(self.ply, self.dt.ply)
 end
 
 function ENT:Think()

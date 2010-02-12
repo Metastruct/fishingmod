@@ -45,14 +45,13 @@ function ENT:GetDepth()
 end
 
 if CLIENT then
---	local rope_material = Material("cable/rope")
+	local rope_material = Material("cable/rope")
 	
 	function ENT:Draw()
---[[ 		if ValidEntity(self:GetBobber()) then
-			
+		if ValidEntity(self:GetBobber()) then
 			render.SetMaterial(rope_material)
-			render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():LocalToWorld(Vector(0,0,0)), 0.1, 0, 0, Color(255,200,200,50))
-		end ]]
+			render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
+		end
 		self:SetRenderBounds(Vector()*-1000, Vector()*1000)
 		self:DrawModel()
 		self:SetModelScale(self.ModelScale)

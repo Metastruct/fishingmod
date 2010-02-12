@@ -47,39 +47,39 @@ function ENT:SetLength(length)
 	self.dt.length = length
 end
 
-function ENT:AttachRope()
-
-	local constant =  math.min( self:GetPhysicsObject():GetMass(), self.dt.attach:GetPhysicsObject():GetMass() ) * 100
-	local damp = constant * 0.2
-	
-	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(self.RopeOffset), Vector(0,0,0), 6000, 1200, 0, "cable/rope", 0.3, 1 )
-	
-end
-
 function ENT:AssignPlayer(ply)
 	self:SetOwner(ply)
 	--self:SetParent(ply)
 	self.dt.ply = ply
 	
-	local entity = ents.Create("fishing_rod_bobber")
-	timer.Simple(0.1, function() if ValidEntity(entity) then entity:SetPos(ply:GetShootPos()) end end)
-	entity:SetOwner(ply)
-	entity:Spawn()
-	entity.rod = self
+	local bobber = ents.Create("fishing_rod_bobber")
+	bobber.rod = self
+	bobber:SetOwner(ply)
+	bobber:Spawn()
+	self.dt.attach = bobber
+	
+	
+	local fish_hook = ents.Create("fishing_rod_hook")
+	fish_hook.bobber = bobber
+	fish_hook:Spawn()
+	bobber.dt.hook = fish_hook
 	
 	self.avatar = ents.Create("fishing_mod_avatar")
 	self.avatar.ply = ply
 	self.avatar:Spawn()
 	self.dt.avatar = self.avatar
+		
+	self.dt.attach.parent = self
 	
-	self:AttachEntity(entity)
+	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(self.RopeOffset), Vector(0,0,0), 6000, 1200, 0, "", 0, 1 )
+	
 	self:SetLength(100)
-end
-
-function ENT:AttachEntity(entity)
-	self.dt.attach= entity
-	self.dt.attach.parent = self	
-	self:AttachRope()
+	
+	timer.Simple(0.1, function()
+		local position = self:LocalToWorld(self.RopeOffset)
+		bobber:SetPos(position)
+		fish_hook:SetPos(position)
+	end)
 end
 
 function ENT:Think()
@@ -93,4 +93,5 @@ function ENT:OnRemove()
 	self.dt.attach:Remove()
 	self.physical_rope:Remove()
 	self.avatar:Remove()
+	self.dt.attach.dt.hook:Remove()
 end

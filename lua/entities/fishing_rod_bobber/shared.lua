@@ -14,10 +14,10 @@ if CLIENT then
 		self:SetModelScale(Vector()*0.5)
 		self:DrawModel()
 		self:SetRenderBounds(Vector()*-1000, Vector()*1000)
---[[ 		if ValidEntity(self.dt.hook) then
+ 		if ValidEntity(self.dt.hook) then
 			render.SetMaterial(rope_material)
-			render.DrawBeam(self:LocalToWorld(Vector(0,0,2)), self.dt.hook:LocalToWorld(Vector(0,1.3,6)), 0.1, 0, 0, Color(255,200,200,50))
-		end ]]
+			render.DrawBeam(self:LocalToWorld(Vector(0,0,4)), self.dt.hook:LocalToWorld(Vector(0,1.3,6)), 0.1, 0, 0, Color(255,200,200,50))
+		end
 	end
 
 end

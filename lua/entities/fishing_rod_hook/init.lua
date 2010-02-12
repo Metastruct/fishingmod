@@ -9,17 +9,14 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
 		phys:SetMass(60)
-		phys:SetDamping(1,1)
+		phys:SetDamping(0,1)
 		phys:Wake()
 	end
 
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
-
-	local constant =  math.min( self:GetPhysicsObject():GetMass(), self.bobber:GetPhysicsObject():GetMass() ) * 100
-	local damp = constant * 0.2
 	
-	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0,0,4), 6000, 1200, 0, "cable/rope", 0.3, 1 )
+	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0,0,4), 6000, 1200, 0, "", 0, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
 	fish_hook = self
@@ -93,22 +90,4 @@ function ENT:Think()
 	end
 	self:NextThink(CurTime())
 	return true
-end
-
-function ENT:PhysicsSimulate(phys, deltatime)
-	phys:Wake()
-	if true then return end
-	local linear_delta = phys:GetVelocity() * -20 + (phys:GetVelocity() - self.last_velocity * 20)
-
-	local linear = linear_delta + phys:GetVelocity() * 4
-	
-	local angular_delta = (phys:GetAngleVelocity() * -50 + (phys:GetAngleVelocity() - self.last_angular_velocity * 5))
-	
-	local angular = angular_delta
-	
-	self.last_velocity = phys:GetVelocity()
-	self.last_angular_velocity = phys:GetAngleVelocity()
-		
-	phys:AddVelocity(linear*deltatime)
-	phys:AddAngleVelocity(angular*deltatime)
 end

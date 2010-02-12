@@ -8,12 +8,16 @@ function ENT:Initialize()
 	self:SetModel("models/props_c17/doll01.mdl")
 	self.dt.scale = math.Clamp(math.random()*self.MaxScale,0.3, self.MaxScale)
 	self:PhysicsInitBox( Vector(0.5,0.5,1)*-self.dt.scale * 5, Vector(0.5,0.5,1)*self.dt.scale * 5 )
-	self:GetPhysicsObject():SetMass(self.dt.scale*self.MaxScale)
 	self:SetMoveType( MOVETYPE_VPHYSICS )
-	self:SetSolid( SOLID_VPHYSICS ) 
-	self:GetPhysicsObject():SetDamping(0,0)
-	self:StartMotionController()
+	self:SetSolid( SOLID_VPHYSICS )
 	
+	local phys = self:GetPhysicsObject()
+	if IsValid(phys) then
+		phys:SetDamping(0,0)
+		phys:SetMass(self.dt.scale*self.MaxScale)
+		phys:Wake()
+	end
+
 end
 
 function ENT:PhysicsSimulate(phys, deltatime)
@@ -49,9 +53,8 @@ end
 
 
 function ENT:Think()
-	if not constraint.FindConstraint(self, "Weld") and (self.target and self.target:GetClass() == "fishing_rod_hook") and self.target:GetPos():Distance(self:GetPos()) < 5 then
+	if ValidEntity(self.target) and not constraint.FindConstraint(self, "Weld") and (self.target and self.target:GetClass() == "fishing_rod_hook") and self.target:GetPos():Distance(self:GetPos()) < 5 then
 		self.target:Hook(self, 2500, true)
-		print("hooking!")
 	end
 	self:NextThink(CurTime()+0.1)
 	return true
