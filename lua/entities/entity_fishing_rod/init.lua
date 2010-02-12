@@ -6,9 +6,12 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:GetPhysicsObject():SetMass(100)
-	--self:SetGravity(0)
 	self:StartMotionController()
+	local phys = self:GetPhysicsObject()
+	if phys:IsValid() then
+		phys:SetMass(100)
+		phys:Wake()
+	end
 
 	self.shadow_params = {}
 	
@@ -56,12 +59,14 @@ function ENT:AssignPlayer(ply)
 	bobber.rod = self
 	bobber:SetOwner(ply)
 	bobber:Spawn()
+	bobber:SetOwner(self.dt.ply)
 	self.dt.attach = bobber
 	
 	
 	local fish_hook = ents.Create("fishing_rod_hook")
 	fish_hook.bobber = bobber
 	fish_hook:Spawn()
+	fish_hook:SetOwner(self.dt.ply)
 	bobber.dt.hook = fish_hook
 	
 	self.avatar = ents.Create("fishing_mod_avatar")

@@ -3,11 +3,10 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/meathook001a.mdl")
-	self:SetOwner(self.bobber:GetOwner())
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	local phys = self:GetPhysicsObject()
-	if IsValid(phys) then
+	if phys:IsValid() then
 		phys:SetMass(60)
 		phys:SetDamping(0,1)
 		phys:Wake()
