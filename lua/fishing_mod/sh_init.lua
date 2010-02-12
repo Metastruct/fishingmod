@@ -15,7 +15,7 @@ if CLIENT then
 	hook.Add("CalcView", "Fishing Rod Thirdperson", function(ply,position,angles,fov)
 		local fishing_rod = ply:GetFishingRod()
 		if fishing_rod and ValidEntity(fishing_rod.GetBobber and fishing_rod:GetBobber()) then
-		
+						
 			local offset = ply:GetShootPos() + 
 				(ply:EyeAngles():Right() * 50) + 
 				(Angle(0,ply:EyeAngles().y,0):Forward() * -70) + 
@@ -23,7 +23,20 @@ if CLIENT then
 				(ply:GetShootPos() - fishing_rod:GetBobber():GetPos()):Normalize()*30
 			
 			local direction = LerpVector(0.7, fishing_rod:GetBobber():GetPos() + Vector(0,0,-50) - offset, ply:GetShootPos() - offset)
-			return GAMEMODE:CalcView(ply,offset,direction:Angle(),fov)
+			
+			--[[local data = {}
+			data.start = ply:GetShootPos()
+			data.endpos = smooth_position
+			data.filter = ply
+			local trace = util.TraceLine(data)
+			
+			local trace_position = Vector(0)
+			
+			if trace.Hit then
+				trace_position = ((trace.HitPos - offset) + direction:Angle():Forward())
+			end]]
+			
+			return GAMEMODE:CalcView(ply,offset--[[ +trace_position ]],direction:Angle(),fov)
 		end
 	end)
 

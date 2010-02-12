@@ -27,17 +27,19 @@ function ENT:Initialize()
 	fish_hook = self
 end
 
-function ENT:Hook( entity_to_create, existing )
+function ENT:Hook( entity_to_create, force, existing )
+	if ValidEntity(self.hooked) then return end
+	force = force or 0
 	if existing then
+		self.hooked = entity_to_create
 		entity_to_create:SetPos(self:GetPos())
 		entity_to_create:SetOwner(self)
-		entity_to_create:Spawn()
 		if entity_to_create:IsNPC() then
-			entity_to_create:SetParent(self)
-			entity_to_create.oldmovetype = entity:GetMoveType()
+			entity_to_create.oldmovetype = entity_to_create:GetMoveType()
 			entity_to_create:SetMoveType(MOVETYPE_NONE)
+			entity_to_create:SetParent(self)
 		else
-			constraint.Weld(entity_to_create, self, 0, 0, 1000)
+			constraint.Weld(entity_to_create, self, 0, 0, force)
 		end
 	else
 		local entity = ents.Create(entity_to_create)
@@ -53,9 +55,8 @@ function ENT:Hook( entity_to_create, existing )
 			entity.oldmovetype = entity:GetMoveType()
 			entity:SetMoveType(MOVETYPE_NONE)
 		else
-			constraint.Weld(entity, self, 0, 0, 1000)
+			constraint.Weld(entity, self, 0, 0, force)
 		end
-
 		self.hooked = entity
 	end
 end
@@ -79,14 +80,15 @@ function ENT:UnHook()
 end
 
 function ENT:OnRemove()
+	self.hooked:SetParent()
 	self.physical_rope:Remove()
 end
 
 function ENT:Think()
+	if not constraint.FindConstraint(self.hooked, "Weld") then
+		self.hooked = nil
+	end
 	if self.hooked and not ValidEntity(self.hooked) then
-		if not constraint.FindConstraint(self.hooked, "Weld") then
-			self.hooked = nil
-		end
 		self.hooked = nil
 	end
 	self:NextThink(CurTime())

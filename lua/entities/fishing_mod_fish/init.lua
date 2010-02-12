@@ -2,40 +2,58 @@ AddCSLuaFile( "shared.lua" )
  
 include('shared.lua')
 
+ENT.MaxScale = 5
+
 function ENT:Initialize()
 	self:SetModel("models/props_c17/doll01.mdl")
-	self:PhysicsInit( SOLID_VPHYSICS )
+	self.dt.scale = math.Clamp(math.random()*self.MaxScale,0.3, self.MaxScale)
+	self:PhysicsInitBox( Vector(0.5,0.5,1)*-self.dt.scale * 5, Vector(0.5,0.5,1)*self.dt.scale * 5 )
+	self:GetPhysicsObject():SetMass(self.dt.scale*self.MaxScale)
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS ) 
-	self:GetPhysicsObject():SetDamping(5,100)
+	self:GetPhysicsObject():SetDamping(0,0)
 	self:StartMotionController()
+	
 end
 
 function ENT:PhysicsSimulate(phys, deltatime)
 	phys:Wake()
 	debugoverlay.Cross(self:GetPos(), 100, 0, Color(255,255,255,255), true)
-	if self:WaterLevel() >= 1 then
+	if self:WaterLevel() >= 3 then
 	
 		if constraint.FindConstraint(self, "Weld") then
 			phys:AddVelocity(VectorRand()*500)
+			phys:AddAngleVelocity(VectorRand()*5000)
 			return
 		end
 		
-		local target
 		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 300)) do
 			if entity ~= self and entity:GetClass() ~= "fishing_mod_fish" and entity:GetVelocity():Length() > 20 then
-				target = entity
+				self.target = entity
 			end
 		end
-		if target and target:GetClass() == "fishing_rod_hook" and target:GetPos():Distance(self:GetPos()) < 20 and not constraint.FindConstraint(self, "Weld") then
-			--target:Hook(self, true) crashes
-		end
-		if target then
-			phys:AddVelocity((target:GetPos() - self:GetPos()):Normalize()*100)
+
+		if ValidEntity(self.target) then
+			phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*100)
 		else
 			phys:AddVelocity(VectorRand()*200)
+			phys:AddAngleVelocity(VectorRand()*2000)
+		end
+	else
+		if math.random() > 0.99 then
+			phys:AddVelocity(VectorRand()*200)
+			phys:AddAngleVelocity(VectorRand()*2000)
 		end
 	end
 end
 
+
+function ENT:Think()
+	if not constraint.FindConstraint(self, "Weld") and (self.target and self.target:GetClass() == "fishing_rod_hook") and self.target:GetPos():Distance(self:GetPos()) < 5 then
+		self.target:Hook(self, 2500, true)
+		print("hooking!")
+	end
+	self:NextThink(CurTime()+0.1)
+	return true
+end
 --lua_run Entity(1):GetFishingRod():GetHook():Hook("fishing_mod_fish")
