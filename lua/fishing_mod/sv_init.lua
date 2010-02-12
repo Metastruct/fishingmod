@@ -1,3 +1,9 @@
+fishingmod = {}
+
+function _R.Player:GetFishingRod()
+	return ValidEntity(self:GetNWEntity("fishing rod")) and self:GetNWEntity("fishing rod") or false
+end
+
 concommand.Add("fishing_mod_drop_catch", function(ply)
 	local fishing_rod = ply:GetFishingRod()
 	if fishing_rod then
