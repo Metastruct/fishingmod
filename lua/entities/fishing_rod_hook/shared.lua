@@ -2,11 +2,7 @@ ENT.Type = "anim"
 ENT.Base = "base_anim"
 ENT.PrintName = "Bobber"
 
-if CLIENT then
-
-	function ENT:Draw()
-		self:SetModelScale(Vector()*0.3)
-		self:DrawModel()
-	end
-
+function ENT:SetupDataTables()
+	self:DTVar("Entity", 0, "hooked")
+	self:DTVar("Entity", 1, "bait")
 end

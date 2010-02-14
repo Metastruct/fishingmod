@@ -1,7 +1,7 @@
 if SERVER then
+	AddCSLuaFile("autorun/fishing_mod_init.lua")
 	AddCSLuaFile("fishing_mod/sh_init.lua")
 	AddCSLuaFile("fishing_mod/cl_init.lua")
-	AddCSLuaFile("autorun/fishing_mod_init.lua")
 	resource.AddFile("sound/fishingrod/reel.wav")
 end
 

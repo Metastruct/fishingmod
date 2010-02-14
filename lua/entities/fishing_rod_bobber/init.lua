@@ -1,3 +1,4 @@
+AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
@@ -6,6 +7,7 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:StartMotionController()
+	self:SetColor(255,200,100,255)
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:SetMass(60)

@@ -1,4 +1,5 @@
-AddCSLuaFile( "shared.lua" )
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
@@ -51,45 +52,45 @@ function ENT:SetLength(length)
 end
 
 function ENT:AssignPlayer(ply)
+	ply:SetEyeAngles(Angle(10,ply:EyeAngles().y,0))
 	self:SetOwner(ply)
-	--self:SetParent(ply)
+
+	self.avatar = ents.Create("fishing_mod_avatar")
+	self.avatar.ply = ply
+	
+	self.avatar:Spawn()
+	self.dt.avatar = self.avatar	
+
 	self.dt.ply = ply
+	
+	local position = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
 	
 	local bobber = ents.Create("fishing_rod_bobber")
 	bobber.rod = self
 	bobber:SetOwner(ply)
+	bobber:SetPos(position)
 	bobber:Spawn()
-	bobber:SetOwner(self.dt.ply)
-	self.dt.attach = bobber
 	
+	self.dt.attach = bobber
 	
 	local fish_hook = ents.Create("fishing_rod_hook")
 	fish_hook.bobber = bobber
+	fish_hook:SetOwner(ply)
+	fish_hook:SetPos(position)
 	fish_hook:Spawn()
-	fish_hook:SetOwner(self.dt.ply)
-	bobber.dt.hook = fish_hook
 	
-	self.avatar = ents.Create("fishing_mod_avatar")
-	self.avatar.ply = ply
-	self.avatar:Spawn()
-	self.dt.avatar = self.avatar
-		
+	bobber.dt.hook = fish_hook
+			
 	self.dt.attach.parent = self
 	
 	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(self.RopeOffset), Vector(0,0,0), 6000, 1200, 0, "", 0, 1 )
 	
 	self:SetLength(100)
-	
-	timer.Simple(0.1, function()
-		local position = self:LocalToWorld(self.RopeOffset)
-		bobber:SetPos(position)
-		fish_hook:SetPos(position)
-	end)
+
 end
 
 function ENT:Think()
 	if not ValidEntity(self.dt.ply) or not self.dt.ply:Alive() or not ValidEntity(self.dt.ply:GetNWEntity("fishing rod")) then self:Remove() return end
-	--debugoverlay.Cross(self:GetPos(), 50, 0, Color(0,0,255,255))
 	self:NextThink(CurTime())
 	return true
 end

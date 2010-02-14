@@ -1,3 +1,4 @@
+AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
@@ -8,7 +9,7 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:SetMass(60)
-		phys:SetDamping(0,1)
+		phys:SetDamping(1,1)
 		phys:Wake()
 	end
 
@@ -21,26 +22,67 @@ function ENT:Initialize()
 	fish_hook = self
 end
 
-function ENT:Hook( entity_to_create, force, existing )
-	if ValidEntity(self.hooked) then return end
-	force = force or 0
-	if existing then
-		self.hooked = entity_to_create
-		entity_to_create:SetPos(self:GetPos())
-		entity_to_create:SetOwner(self)
-		if entity_to_create:IsNPC() then
-			entity_to_create.oldmovetype = entity_to_create:GetMoveType()
-			entity_to_create:SetMoveType(MOVETYPE_NONE)
-			entity_to_create:SetParent(self)
+function ENT:StartTouch(entity)
+	if fishingmod.IsBait(entity) then
+		self:HookBait(entity)
+	end
+end
+
+function ENT:HookBait(bait)
+	if not IsValid(self.dt.bait) then
+		bait:SetPos(self:GetPos())
+		self.dt.bait = bait
+		constraint.Weld(self, self.dt.bait)
+	end
+end
+
+function ENT:DropBait()
+	if IsValid(self.dt.bait) then
+		constraint.RemoveConstraints(self.dt.bait, "Weld")
+		self.dt.bait = nil
+	end
+end
+
+function ENT:GetHookedBait()
+	return IsValid(self.dt.bait) and self.dt.bait or false
+end
+
+function ENT:Hook( entitytype, data )
+	if IsValid(self.dt.hooked) then return end
+	if IsValid(self.dt.bait) then
+		self.dt.bait:Remove()
+	end
+	
+	data = data or {}
+		
+	if IsValid(type(entitytype) == "Entity" and entitytype or false) then
+		self.dt.hooked = type
+		self.dt.hooked:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		self.dt.hooked:SetNWBool("fishingmod catch", true)
+		self.dt.hooked:SetNWFloat("fishingmod size", data.size)
+		self.dt.hooked.remove_on_release = data.remove_on_release
+		self.dt.hooked.is_catch = true
+		self.dt.hooked.data = data
+		
+		entitytype:SetPos(self:GetPos())
+		entitytype:SetOwner(self)
+		entitytype.is_catch = true
+		if entitytype:IsNPC() then
+			entitytype.oldmovetype = entitytype:GetMoveType()
+			entitytype:SetMoveType(MOVETYPE_NONE)
+			entitytype:SetParent(self)
 		else
-			constraint.Weld(entity_to_create, self, 0, 0, force)
+			constraint.Weld(entitytype, self, 0, 0, data.force or 2000)
 		end
+		fishingmod.SetClientInfo(entitytype)
 	else
-		local entity = ents.Create(entity_to_create)
-		if not ValidEntity(entity) then
+		local random_entity = data.type
+		local entity = ents.Create(entitytype or random_entity or "")
+		if not IsValid(entity) then
 			entity = ents.Create("prop_physics")
-			entity:SetModel(entity_to_create)
+			entity:SetModel(entitytype or random_entity or "error.mdl")
 		end
+		entity.data = data
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity:Spawn()
@@ -49,43 +91,64 @@ function ENT:Hook( entity_to_create, force, existing )
 			entity.oldmovetype = entity:GetMoveType()
 			entity:SetMoveType(MOVETYPE_NONE)
 		else
-			constraint.Weld(entity, self, 0, 0, force)
+			constraint.Weld(entity, self, 0, 0, data.force or 2000)
 		end
-		self.hooked = entity
+		self.dt.hooked = entity
+		self.dt.hooked:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		self.dt.hooked:SetNWBool("fishingmod catch", true)
+		self.dt.hooked:SetNWFloat("fishingmod size", data.size)
+		self.dt.hooked.remove_on_release = data.remove_on_release
+		self.dt.hooked.is_catch = true
+		fishingmod.SetClientInfo(entity)
 	end
 end
 
 function ENT:GetHookedEntity()
-	return ValidEntity(self.hooked) and self.hooked or false
+	return IsValid(self.dt.hooked) and self.dt.hooked or false
 end
 
 function ENT:UnHook()
-	if self.hooked then
-		self.hooked:SetOwner()
-		if self.hooked:IsNPC() then
-			self.hooked:SetAngles(Angle(0))
-			self.hooked:SetMoveType(self.hooked.oldmovetype)
-			self.hooked:SetParent()
-		else
-			constraint.RemoveConstraints(self.hooked, "Weld")
+	if IsValid(self.dt.hooked) then
+		if self.dt.hooked.remove_on_release then
+			self.remove_on_release = self.dt.hooked
 		end
-		self.hooked = nil
+		self.dt.hooked:SetOwner()
+		if self.dt.hooked:IsNPC() then
+			self.dt.hooked:SetAngles(Angle(0))
+			self.dt.hooked:SetMoveType(self.dt.hooked.oldmovetype)
+			self.dt.hooked:SetParent()
+		else
+			constraint.RemoveConstraints(self.dt.hooked, "Weld")
+		end
+		self.dt.hooked = nil
 	end
 end
 
 function ENT:OnRemove()
-	if ValidEntity(self.hooked) then
-		self.hooked:SetParent()
+	if IsValid(self.dt.hooked) then
+		self.dt.hooked:SetParent()
 	end
 	self.physical_rope:Remove()
 end
 
 function ENT:Think()
-	if not constraint.FindConstraint(self.hooked, "Weld") then
-		self.hooked = nil
+	if not constraint.FindConstraint(self.dt.hooked, "Weld") and not self.dt.hooked:IsNPC() then
+		if self.dt.hooked.remove_on_release then
+			self.remove_on_release = self.dt.hooked
+		end
+		self.dt.hooked = nil
 	end
-	if self.hooked and not ValidEntity(self.hooked) then
-		self.hooked = nil
+	if self.dt.hooked and not IsValid(self.dt.hooked) then
+		self.dt.hooked = nil
+	end
+	if IsValid(self.remove_on_release) then
+		if self.remove_on_release:WaterLevel() >= 1 then
+			local effect_data = EffectData()
+			effect_data:SetOrigin(self.remove_on_release:GetPos())
+			effect_data:SetScale(self.remove_on_release:BoundingRadius())
+			util.Effect("gunshotsplash", effect_data)
+			self.remove_on_release:Remove()
+		end
 	end
 	self:NextThink(CurTime())
 	return true

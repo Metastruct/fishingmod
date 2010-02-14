@@ -1,18 +1,10 @@
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-function ENT:Initialize()
-	self:SetModel(self.ply:GetModel())
-	self:SetMoveType( MOVETYPE_NONE )
-	self:SetPos(self.ply:GetPos())
-	self:SetAngles(self.ply:GetAngles())
-	--self:SetParent(self.ply)
-	self:SetOwner(self.ply)
-	self.dt.ply = self.ply
-end
-
-function ENT:Think()
+function ENT:Draw()
+	if not ValidEntity(self.dt.ply) then return end
+	self.dt.ply:SetNoDraw(true)
+	self.dt.ply:SetMaterial("Models/effects/vol_light001")
+	self:DrawModel()
 	self:SetPos(self.dt.ply:GetPos())
 	self:SetAngles(Angle(0,self.dt.ply:EyeAngles().y,0))
 	self:SetPoseParameter("move_yaw", math.AngleDifference(self.dt.ply:GetVelocity():Angle().y, self.dt.ply:GetLocalAngles().y))
@@ -37,6 +29,9 @@ function ENT:Think()
 	end
 	self:SetCycle(self.dt.ply:GetCycle())
 	self:SetSequence(self:LookupSequence(sequence))
-	self:NextThink(CurTime())
-	return true
+end
+
+function ENT:OnRemove()
+	self.dt.ply:SetNoDraw(false)
+	self.dt.ply:SetMaterial("")
 end
