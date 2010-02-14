@@ -14,7 +14,6 @@ function ENT:Initialize()
 		phys:SetDamping(0,100)
 		phys:SetMaterial("wood")
 	end
-	self.last_velocity = Vector(0)	
 end
 
 function ENT:Yank( force )

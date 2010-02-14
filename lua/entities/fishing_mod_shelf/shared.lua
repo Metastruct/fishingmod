@@ -4,10 +4,6 @@ ENT.Spawnable = true
 ENT.Category = "Fishing Mod"
 ENT.PrintName = "Shelf Storage"
 
-function ENT:SetupDataTables()
-	self:DTVar("Entity", 0, "ply")
-end
-
 function ENT:SetupStorage()
 	local divider = 1.2
 	self.storage = {

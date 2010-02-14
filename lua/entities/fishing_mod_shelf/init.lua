@@ -8,7 +8,7 @@ function ENT:SpawnFunction(ply, trace)
 	if ply.has_shelf then return end
 	
 	local entity = ents.Create("fishing_mod_shelf")
-	entity.dt.ply = ply
+	entity.uniqueid = ply:UniqueID()
 	entity:Spawn()
 	local angle = (ply:GetAimVector()*-1):Angle()
 	angle.p = 0
@@ -16,30 +16,30 @@ function ENT:SpawnFunction(ply, trace)
 	entity:SetPos(trace.HitPos + Vector(0,0,entity:BoundingRadius()))
 	shelf = entity
 	ply.has_shelf = true
-	
 	return entity
 end
 
 function ENT:OnRemove()
-	if ValidEntity(self.dt.ply) then
-		self.dt.ply.has_shelf = false
+	if IsValid(player.GetByUniqueID(self.uniqueid)) then
+		player.GetByUniqueID(self.uniqueid).has_shelf = false
 	end
 	
-	self:SaveShelf()
-	
 	for key, item in pairs(self.shelf_storage) do
-		if ValidEntity(item.entity) then
+		if IsValid(item.entity) then
 			item.entity:Remove()
 		end
 	end
 end
 
 function ENT:SaveShelf()
-	self.dt.ply:SetPData("fishing mod shelf", glon.encode(self.shelf_storage))
+	if not IsValid(player.GetByUniqueID(self.uniqueid)) then return end
+	player.GetByUniqueID(self.uniqueid):SetPData("fishing mod shelf", glon.encode(self.shelf_storage))
 end
 
 function ENT:LoadShelf()
-	local storage = glon.decode(self.dt.ply:GetPData("fishing mod shelf"))
+	if not IsValid(player.GetByUniqueID(self.uniqueid)) then return end
+	local storage = glon.decode(player.GetByUniqueID(self.uniqueid):GetPData("fishing mod shelf"))
+	if not storage then return end
 	for key, value in pairs(storage) do
 		local entity = ents.Create(value.class)
 		entity:SetModel(value.model)
@@ -96,6 +96,9 @@ function ENT:AddItemByIndex(index, entity)
 			entity:SetPos( self:GetPos() + ( self:GetUp() * data.position.z ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - (entity:OBBCenter()*entity:GetNWFloat("fishingmod size")/entity:BoundingRadius()))
 			entity.weld = constraint.Weld(self, entity, 0, 0, 0, true)
 			entity.weld:CallOnRemove("detach from shelf", function()
+				if IsValid(self) then
+					self:SaveShelf()
+				end
 				local item = entity
 				timer.Simple(1, function() 
 					if IsValid(item) then 
@@ -106,6 +109,7 @@ function ENT:AddItemByIndex(index, entity)
 					end
 				end)
 			end)
+			self:SaveShelf()
 		end
 	end)
 end
@@ -139,6 +143,9 @@ function ENT:AddItem( entity )
 				entity:SetPos( self:GetPos() + ( self:GetUp() * data.position.z ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
 				entity.weld = constraint.Weld(self, entity, 0, 0, 0, true)
 				entity.weld:CallOnRemove("detach from shelf", function()
+					if IsValid(self) then
+						self:SaveShelf()
+					end
 					local item = entity
 					timer.Simple(1, function() 
 						if IsValid(item) then 
@@ -149,12 +156,11 @@ function ENT:AddItem( entity )
 						end
 					end)
 				end)
+				self:SaveShelf()
 			end
 		end)
 	end
-	print("start")
-	PrintTable(self.shelf_storage)
-	print("end")
+
 	closest = nil
 	
 end

@@ -23,7 +23,7 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(entity)
-	if fishingmod.IsBait(entity) then
+	if fishingmod.IsBait(entity) or entity:GetClass() == "gmod_dynamite" then
 		self:HookBait(entity)
 	end
 end
@@ -63,6 +63,8 @@ function ENT:Hook( entitytype, data )
 		self.dt.hooked.remove_on_release = data.remove_on_release
 		self.dt.hooked.is_catch = true
 		self.dt.hooked.data = data
+		self.dt.hooked.data.caught = os.time()
+		self.dt.hooked.data.owner = self.bobber.rod:GetPlayer():Nick()
 		
 		entitytype:SetPos(self:GetPos())
 		entitytype:SetOwner(self)
@@ -83,6 +85,8 @@ function ENT:Hook( entitytype, data )
 			entity:SetModel(entitytype or random_entity or "error.mdl")
 		end
 		entity.data = data
+		entity.data.caught = os.time()
+		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity:Spawn()
@@ -132,16 +136,16 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
+	if self.dt.hooked.remove_on_release then
+		self.remove_on_release = self.dt.hooked
+	end
 	if not constraint.FindConstraint(self.dt.hooked, "Weld") and not self.dt.hooked:IsNPC() then
-		if self.dt.hooked.remove_on_release then
-			self.remove_on_release = self.dt.hooked
-		end
 		self.dt.hooked = nil
 	end
 	if self.dt.hooked and not IsValid(self.dt.hooked) then
 		self.dt.hooked = nil
 	end
-	if IsValid(self.remove_on_release) then
+	if IsValid(self.remove_on_release) and not self.dt.hooked then
 		if self.remove_on_release:WaterLevel() >= 1 then
 			local effect_data = EffectData()
 			effect_data:SetOrigin(self.remove_on_release:GetPos())
