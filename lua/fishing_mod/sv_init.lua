@@ -1,5 +1,13 @@
 include("sv_networking.lua")
 
+local servertags = GetConVarString("sv_tags") --Thanks PHX!
+
+if servertags == nil then
+	RunConsoleCommand("sv_tags", "fishingmod")
+elseif not string.find(servertags, "fishingmod") then
+	RunConsoleCommand("sv_tags", "fishingmod," .. servertags)
+end
+
 fishingmod.CatchTable = {}
 
 function fishingmod.AddCatch(data)
