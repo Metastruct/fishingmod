@@ -2,14 +2,39 @@ include("shared.lua")
 
 local rope_material = Material("cable/rope")
 
-function ENT:Draw()
+function ENT:RenderScene()
+	local ply = self:GetPlayer()
+	if ply then
+		ply:SetAngles(Angle(0,ply:EyeAngles().y,0))
+	end
+	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local new_position, new_angles = LocalToWorld(self.PlayerOffset, self.PlayerAngles, position, angles)
+	self:SetPos(new_position)
+	self:SetAngles(new_angles)
+	self:DrawModel()
 	if ValidEntity(self:GetBobber()) then
 		render.SetMaterial(rope_material)
 		render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
 	end
 	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
-	self:DrawModel()
 	self:SetModelScale(self.ModelScale)
+end
+
+function ENT:HUDPaint()
+	local xy = (self:GetBobber():GetPos() + Vector(0,0,10)):ToScreen()
+
+	local depth = ""
+	if self:GetHook():WaterLevel() >= 1 then
+		depth =  "\nDepth: " .. math.ceil(self:GetDepth())
+	end
+	
+	local catch = ""
+	local hooked_entity = self:GetHook():GetHookedEntity()
+	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
+		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
+	end
+	
+	draw.DrawText(self:GetPlayer():Nick() .. "\nLength: " .. self:GetLength() .. depth .. catch, "HudSelectionText", xy.x,xy.y, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
@@ -21,6 +46,8 @@ function ENT:Initialize()
 	self.sound_reel:Play()
 	self.sound_reel:ChangePitch(0)
 	self.last_length = 0
+	self:SetupHook("RenderScene")
+	self:SetupHook("HUDPaint")
 end
 
 function ENT:Think()

@@ -1,5 +1,5 @@
 ENT.Type = "anim"
-ENT.Base = "base_anim"
+ENT.Base = "fishing_mod_base"
 ENT.PrintName = "Bobber"
 
 function ENT:SetupDataTables()

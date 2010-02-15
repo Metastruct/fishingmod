@@ -55,16 +55,14 @@ function ENT:Hook( entitytype, data )
 	
 	data = data or {}
 		
-	if IsValid(type(entitytype) == "Entity" and entitytype or false) then
-		self.dt.hooked = type
-		self.dt.hooked:SetNWString("fishingmod friendly", data.friendly or "Unknown")
-		self.dt.hooked:SetNWBool("fishingmod catch", true)
-		self.dt.hooked:SetNWFloat("fishingmod size", data.size)
-		self.dt.hooked.remove_on_release = data.remove_on_release
-		self.dt.hooked.is_catch = true
-		self.dt.hooked.data = data
-		self.dt.hooked.data.caught = os.time()
-		self.dt.hooked.data.owner = self.bobber.rod:GetPlayer():Nick()
+	if IsEntity(entitytype) and IsValid(entitytype) then
+		entitytype:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		entitytype:SetNWBool("fishingmod catch", true)
+		entitytype:SetNWFloat("fishingmod size", data.size)
+		entitytype.is_catch = true
+		entitytype.data = data
+		entitytype.data.caught = os.time()
+		entitytype.data.owner = self.bobber.rod:GetPlayer():Nick()
 		
 		entitytype:SetPos(self:GetPos())
 		entitytype:SetOwner(self)
@@ -77,12 +75,12 @@ function ENT:Hook( entitytype, data )
 			constraint.Weld(entitytype, self, 0, 0, data.force or 2000)
 		end
 		fishingmod.SetClientInfo(entitytype)
+		self.dt.hooked = entitytype
 	else
-		local random_entity = data.type
-		local entity = ents.Create(entitytype or random_entity or "")
+		local entity = ents.Create(entitytype or data.type or "")
 		if not IsValid(entity) then
 			entity = ents.Create("prop_physics")
-			entity:SetModel(entitytype or random_entity or "error.mdl")
+			entity:SetModel(entitytype or data.type or "error.mdl")
 		end
 		entity.data = data
 		entity.data.caught = os.time()
@@ -97,13 +95,16 @@ function ENT:Hook( entitytype, data )
 		else
 			constraint.Weld(entity, self, 0, 0, data.force or 2000)
 		end
-		self.dt.hooked = entity
-		self.dt.hooked:SetNWString("fishingmod friendly", data.friendly or "Unknown")
-		self.dt.hooked:SetNWBool("fishingmod catch", true)
-		self.dt.hooked:SetNWFloat("fishingmod size", data.size)
-		self.dt.hooked.remove_on_release = data.remove_on_release
-		self.dt.hooked.is_catch = true
+		entity:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		entity:SetNWBool("fishingmod catch", true)
+		entity:SetNWFloat("fishingmod size", data.size)
+		print(data.remove_on_release)
+		if data.remove_on_release then
+			self.remove_on_release = entity
+		end
+		entity.is_catch = true
 		fishingmod.SetClientInfo(entity)
+		self.dt.hooked = entity
 	end
 end
 
@@ -136,16 +137,13 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
-	if self.dt.hooked.remove_on_release then
-		self.remove_on_release = self.dt.hooked
-	end
 	if not constraint.FindConstraint(self.dt.hooked, "Weld") and not self.dt.hooked:IsNPC() then
 		self.dt.hooked = nil
 	end
 	if self.dt.hooked and not IsValid(self.dt.hooked) then
 		self.dt.hooked = nil
 	end
-	if IsValid(self.remove_on_release) and not self.dt.hooked then
+	if IsValid(self.remove_on_release) and not IsValid(self.dt.hooked) then
 		if self.remove_on_release:WaterLevel() >= 1 then
 			local effect_data = EffectData()
 			effect_data:SetOrigin(self.remove_on_release:GetPos())

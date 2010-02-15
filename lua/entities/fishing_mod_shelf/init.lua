@@ -45,12 +45,10 @@ function ENT:LoadShelf()
 		entity:SetModel(value.model)
 		entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		entity:PhysicsInitSphere(10/entity:BoundingRadius())
-		entity.data = value.data
 		entity.is_catch = true
 		entity:SetOwner(self)
 		entity:Spawn()
-		entity:SetNWBool("fishingmod catch", true)
-		entity:SetNWFloat("fishingmod size", value.data.size)
+		fishingmod.SetData(entity, value.data)
 		fishingmod.SetClientInfo(entity)
 		self:AddItemByIndex(value.index, entity)
 	end

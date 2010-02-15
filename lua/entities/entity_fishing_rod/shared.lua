@@ -1,5 +1,5 @@
 ENT.Type = "anim"
-ENT.Base = "base_anim"
+ENT.Base = "fishing_mod_base"
 ENT.ModelScale = Vector(3,1,1)
 ENT.PlayerOffset = Vector(76,-1,-128)
 ENT.PlayerAngles = Angle(60,0,0)
