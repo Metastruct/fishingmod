@@ -11,13 +11,16 @@ function ENT:RenderScene()
 	local new_position, new_angles = LocalToWorld(self.PlayerOffset, self.PlayerAngles, position, angles)
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
-	self:DrawModel()
+	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
+	self:SetModelScale(self.ModelScale)
+end
+
+function ENT:Draw()
 	if ValidEntity(self:GetBobber()) then
 		render.SetMaterial(rope_material)
 		render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
 	end
-	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
-	self:SetModelScale(self.ModelScale)
+	self:DrawModel()
 end
 
 function ENT:HUDPaint()

@@ -82,7 +82,7 @@ usermessage.Hook("Fishingmod", function(um)
 	)
 	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
 	local text = string.gsub(text, "{TIME}", time)
-	fishingmod.InfoTable[entity].mark_up = markup.Parse(text, ScrW()/4)
+	fishingmod.InfoTable[entity].mark_up = markup.Parse(text, ScrW()/3)
 end)
 
 hook.Add("Think", "Fishing Mod Think Client", function()
