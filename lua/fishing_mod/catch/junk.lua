@@ -26,7 +26,7 @@ fishingmod.AddCatch{
 		"models/props_junk/propane_tank001a.mdl",		
 	},
 	size = 10,
-	rareness = 500, 
+	rareness = 2000, 
 	yank = 1000, 
 	force = 2000, 
 	mindepth = 0, 

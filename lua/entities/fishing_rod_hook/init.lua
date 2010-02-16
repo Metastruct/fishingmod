@@ -12,7 +12,8 @@ function ENT:Initialize()
 		phys:SetDamping(1,1)
 		phys:Wake()
 	end
-
+	
+	self.is_hook = true
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
 	
@@ -76,18 +77,19 @@ function ENT:Hook( entitytype, data )
 		end
 		fishingmod.SetClientInfo(entitytype)
 		self.dt.hooked = entitytype
+		print("caught")
+		PrintTable(entitytype.data)
 	else
 		local entity = ents.Create(entitytype or data.type or "")
 		if not IsValid(entity) then
 			entity = ents.Create("prop_physics")
 			entity:SetModel(entitytype or data.type or "error.mdl")
 		end
-		entity.data = data
-		entity.data.caught = os.time()
-		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity:Spawn()
+		
+
 		if entity:IsNPC() then
 			entity:SetParent(self)
 			entity.oldmovetype = entity:GetMoveType()
@@ -95,16 +97,21 @@ function ENT:Hook( entitytype, data )
 		else
 			constraint.Weld(entity, self, 0, 0, data.force or 2000)
 		end
+		entity.data = data
+		entity.data.caught = os.time()
+		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity:SetNWString("fishingmod friendly", data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
 		entity:SetNWFloat("fishingmod size", data.size)
-		print(data.remove_on_release)
+
 		if data.remove_on_release then
 			self.remove_on_release = entity
 		end
 		entity.is_catch = true
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
+		print("spawn caught")
+		PrintTable(entity.data)
 	end
 end
 
@@ -118,6 +125,9 @@ function ENT:UnHook()
 			self.remove_on_release = self.dt.hooked
 		end
 		self.dt.hooked:SetOwner()
+		self.dt.hooked.just_unhooked = true
+		local entity = self.dt.hooked
+		timer.Simple(1, function() if IsValid(entity) then entity.just_unhooked = false end end)
 		if self.dt.hooked:IsNPC() then
 			self.dt.hooked:SetAngles(Angle(0))
 			self.dt.hooked:SetMoveType(self.dt.hooked.oldmovetype)
