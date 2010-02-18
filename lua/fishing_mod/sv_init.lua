@@ -111,7 +111,7 @@ hook.Add("Think", "Fishing Mod Think", function()
 					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth and
 					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
 				then
-					rod:GetHook():Hook(table.Random(data.type), data)
+					rod:GetHook():Hook(data.type, data)
 					rod:GetBobber():Yank(data.yank)
 				end
 			end

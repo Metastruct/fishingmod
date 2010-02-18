@@ -1,4 +1,6 @@
-fishingmod.AddCatch{
+--disabled for now
+
+--[[fishingmod.AddCatch{
 	friendly = "Weapons",
 	type = {
 		"weapon_crowbar",
@@ -74,4 +76,4 @@ fishingmod.AddCatch{
 		"models/weapons/w_superphyscannon.mdl",
 		"models/weapons/w_stunstick.mdl",
 	},
-}
+}]]

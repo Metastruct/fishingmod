@@ -52,7 +52,6 @@ function ENT:SetLength(length)
 end
 
 function ENT:AssignPlayer(ply)
-	ply:SetEyeAngles(Angle(10,ply:EyeAngles().y,0))
 	self:SetOwner(ply)
 
 	self.avatar = ents.Create("fishing_mod_avatar")
@@ -79,6 +78,12 @@ function ENT:AssignPlayer(ply)
 	fish_hook:SetPos(position)
 	fish_hook:Spawn()
 	
+	local bait = ply:GetEyeTrace().Entity
+	if fishingmod.IsBait(bait) then
+		fish_hook:HookBait(bait)
+		print"Is bait!!"
+	end
+	
 	bobber.dt.hook = fish_hook
 			
 	self.dt.attach.parent = self
@@ -87,6 +92,7 @@ function ENT:AssignPlayer(ply)
 	
 	self:SetLength(100)
 
+	ply:SetEyeAngles(Angle(10,ply:EyeAngles().y,0))
 end
 
 function ENT:Think()

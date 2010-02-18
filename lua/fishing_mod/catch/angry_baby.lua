@@ -1,8 +1,6 @@
 fishingmod.AddCatch{
 	friendly = "Angry Baby",
-	type = {
-		"fishing_mod_angry_baby",
-	},
+	type = "fishing_mod_angry_baby",
 	rareness = 2000, 
 	yank = 0, 
 	force = 0, 

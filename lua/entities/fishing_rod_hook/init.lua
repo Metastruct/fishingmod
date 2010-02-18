@@ -24,7 +24,7 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(entity)
-	if fishingmod.IsBait(entity) or entity:GetClass() == "gmod_dynamite" then
+	if fishingmod.IsBait(entity) then
 		self:HookBait(entity)
 	end
 end
@@ -77,13 +77,10 @@ function ENT:Hook( entitytype, data )
 		end
 		fishingmod.SetClientInfo(entitytype)
 		self.dt.hooked = entitytype
-		print("caught")
-		PrintTable(entitytype.data)
 	else
-		local entity = ents.Create(entitytype or data.type or "")
-		if not IsValid(entity) then
-			entity = ents.Create("prop_physics")
-			entity:SetModel(entitytype or data.type or "error.mdl")
+		local entity = ents.Create(data.type)
+		if data.models then
+			entity:SetModel(table.Random(data.models) or "error.mdl")
 		end
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
@@ -110,8 +107,6 @@ function ENT:Hook( entitytype, data )
 		entity.is_catch = true
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
-		print("spawn caught")
-		PrintTable(entity.data)
 	end
 end
 

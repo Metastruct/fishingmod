@@ -1,6 +1,7 @@
 fishingmod.AddCatch{
 	friendly = "Explosive Barrel",
-	type = {
+	type = "prop_physics",
+	models = {
 		"models/props_c17/oildrum001_explosive.mdl",
 	},
 	size = 8,

@@ -1,6 +1,7 @@
 fishingmod.AddCatch{
 	friendly = "Junk",
-	type = {
+	type = "prop_physics",
+	models = {
 		"models/props_junk/Shoe001a.mdl",
 		"models/props_junk/garbage_coffeemug001a.mdl",
 		"models/props_junk/garbage_coffeemug001a_chunk01.mdl",
