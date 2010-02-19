@@ -49,7 +49,7 @@ function ENT:LoadShelf()
 		entity:SetOwner(self)
 		entity:Spawn()
 		fishingmod.SetData(entity, value.data)
-		fishingmod.SetClientInfo(entity)
+		timer.Simple(0.1, function() if IsValid(entity) then fishingmod.SetClientInfo(entity) end end)
 		self:AddItemByIndex(value.index, entity)
 	end
 end
