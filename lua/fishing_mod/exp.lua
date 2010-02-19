@@ -18,7 +18,7 @@ hook.Add( "PlayerInitialSpawn", "Fishingmod:ExpPlayerJoined", function( ply )
 		if not IsValid(ply) then return end
 		local Query = sql.Query( Queries.Get:format( ply:UniqueID() ) )
 		if( !Query ) then
-			print("No Unique ID in database, creating new")
+			--print("No Unique ID in database, creating new")
 			sql.Query( Queries.Create:format( ply:UniqueID() ) )
 			ply.fishingmod_catches = 0
 			ply.fishingmod_exp = 0
