@@ -33,7 +33,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 		end
 		
 		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 10000)) do
-			if entity ~= self and entity:GetClass() ~= "fishing_mod_angry_baby" and entity:GetVelocity():Length() > 20 then
+			if entity:GetModel() == "models/props_junk/watermelon01.mdl" or entity ~= self and entity:GetClass() ~= "fishing_mod_angry_baby" and entity:GetVelocity():Length() > 20 then
 				self.target = entity
 			end
 		end
