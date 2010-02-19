@@ -1,4 +1,5 @@
-SWEP.Author = "CapsAdmin and Dr. Magnusson"
+SWEP.Author = "CapsAdmin"
+SWEP.Category = "Fishing Mod"
 SWEP.Instructions = "Left click to start fishing"
 SWEP.Spawnable = true 
 SWEP.ViewModel = ""

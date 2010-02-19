@@ -6,6 +6,8 @@ fishingmod.AddCatch{
 	force = 0, 
 	mindepth = 200, 
 	maxdepth = 20000,
+	expgain = 50,
+	levelrequired = 3,
 	remove_on_release = false,
 	friendlybait = "Melons",
 	bait = {

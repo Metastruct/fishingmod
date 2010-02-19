@@ -31,6 +31,8 @@ fishingmod.AddCatch{
 	yank = 1000, 
 	force = 2000, 
 	mindepth = 0, 
-	maxdepth = 500,
+	maxdepth = 20000,
+	expgain = 20,
+	levelrequired = 0,
 	remove_on_release = true,
 }

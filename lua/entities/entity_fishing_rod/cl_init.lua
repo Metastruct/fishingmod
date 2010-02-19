@@ -2,6 +2,14 @@ include("shared.lua")
 
 local rope_material = Material("cable/rope")
 
+function ENT:Draw()
+	if ValidEntity(self:GetBobber()) then
+		render.SetMaterial(rope_material)
+		render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
+	end
+	self:DrawModel()
+end
+
 function ENT:RenderScene()
 	local ply = self:GetPlayer()
 	if ply then
@@ -15,17 +23,23 @@ function ENT:RenderScene()
 	self:SetModelScale(self.ModelScale)
 end
 
-function ENT:Draw()
-	if ValidEntity(self:GetBobber()) then
-		render.SetMaterial(rope_material)
-		render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
+function ENT:KeyPress(ply, key)
+	if ply:GetFishingRod() and key == IN_USE then
+		RunConsoleCommand("fishing_mod_drop_bait")
 	end
-	self:DrawModel()
+end
+
+function ENT:ShouldDrawLocalPlayer(ply)
+	if ply:GetFishingRod() then
+		return true
+	end
 end
 
 function ENT:HUDPaint()
+	if not self:GetPlayer().fishingmod_catches then return end
+		
 	local xy = (self:GetBobber():GetPos() + Vector(0,0,10)):ToScreen()
-
+	
 	local depth = ""
 	if self:GetHook():WaterLevel() >= 1 then
 		depth =  "\nDepth: " .. math.ceil(self:GetDepth())
@@ -36,8 +50,11 @@ function ENT:HUDPaint()
 	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
 		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
-	
-	draw.DrawText(self:GetPlayer():Nick() .. "\nLength: " .. self:GetLength() .. depth .. catch, "HudSelectionText", xy.x,xy.y, hooked_entity and Color(0,255,0,255) or color_white,1)
+	draw.DrawText(self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-95, color_white, 1)
+	draw.RoundedBox( 0, xy.x-50, xy.y-68, 100, 23, Color( 255, 255, 255, 100 ) )
+	draw.RoundedBox( 0, xy.x-50, xy.y-68, self:GetPlayer().fishingmod_percent, 23, Color( 0, 255, 0, 150 ) )
+	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod_expleft)), "HudSelectionText" ,xy.x, xy.y-65, color_black, 1)
+	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod_catches .. "\nLevel: " .. self:GetPlayer().fishingmod_level .. "\nLength: " .. self:GetLength() .. depth .. catch, "HudSelectionText", xy.x,xy.y-40, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
@@ -51,6 +68,9 @@ function ENT:Initialize()
 	self.last_length = 0
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
+	self:SetupHook("ShouldDrawLocalPlayer")
+	self:SetupHook("KeyPress")
+	self:SetupHook("CalcView")
 end
 
 function ENT:Think()

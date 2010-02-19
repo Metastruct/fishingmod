@@ -1,29 +1,6 @@
 include("cl_networking.lua")
 
-hook.Add("KeyPress", "Fishing Mod KeyPress", function(ply, key)
-	if ply:GetFishingRod() and key == IN_USE then
-		RunConsoleCommand("fishing_mod_drop_bait")
-	end
-end)
-
-hook.Add("ShouldDrawLocalPlayer", "MyHax ShouldDrawLocalPlayer", function(ply)
-	if ply:GetFishingRod() then
-		return true
-	end
-end)
-
-hook.Add("CalcView", "Fishing Rod Thirdperson", function(ply,position,angles,fov)
-	if ply:GetFishingRod() and not ply:InVehicle() then
-					
-		local offset = ply:GetShootPos() + 
-			(ply:EyeAngles():Right() * 50) + 
-			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
-			(Angle(0,0,ply:EyeAngles().z):Up() * 20)
-		angles.p = math.Clamp(angles.p-30, -70, 15)			
-		
-		return GAMEMODE:CalcView(ply,offset,angles,fov)
-	end
-end)
+FMOldCalcVehicleThirdPersonView = FMOldCalcVehicleThirdPersonView or GAMEMODE.CalcVehicleThirdPersonView
 
 function GAMEMODE:CalcVehicleThirdPersonView(vehicle, ply, position, angles, fov)
 	if ply:GetFishingRod() and IsValid(ply:GetNWEntity("weapon seat")) then
@@ -38,18 +15,31 @@ function GAMEMODE:CalcVehicleThirdPersonView(vehicle, ply, position, angles, fov
 		
 		return view
 	end
-	return -1
+	return FMOldCalcVehicleThirdPersonView(self, vehicle, ply, position, angles, fov)
 end
 
-hook.Add( "HUDPaint", "Fishing Mod Draw HUD", function()
+hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local trace = LocalPlayer():GetEyeTrace().Entity
 	if IsValid(trace.Entity) and (trace.Entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 		local data = fishingmod.InfoTable[trace.Entity:EntIndex()]
-		if data and data.mark_up then
-			local size = 20
-			local width = data.mark_up:GetWidth()
-			draw.RoundedBox( 6, ScrW()/2-(width/4)-(size/2) - 10, ScrH()/2-(size/2) + 100, width -(width/4) + size - 40, data.mark_up:GetHeight() + size, Color(0,0,0,230))
-			data.mark_up:Draw(ScrW()/2-(width/8), ScrH()/2 + 100, 1, 0, 200)
+		if data and data.text then
+			local width = 250
+			local height = 60
+			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
+			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end
+	end
+end)
+
+hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
+	if ply:GetFishingRod() and not ply:InVehicle() then
+					
+		local offset = ply:GetShootPos() + 
+			(ply:EyeAngles():Right() * 50) + 
+			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
+			(Angle(0,0,ply:EyeAngles().z):Up() * 20)
+		angles.p = math.Clamp(angles.p-30, -70, 15)			
+		
+		return GAMEMODE:CalcView(ply,offset,angles,fov)
 	end
 end)

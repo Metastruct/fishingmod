@@ -10,6 +10,8 @@ fishingmod.AddCatch{
 	force = 0, 
 	mindepth = 100, 
 	maxdepth = 20000,
+	expgain = 30,
+	levelrequired = 2,
 	remove_on_release = false,
 	friendlybait = "Explosives",
 	bait = {

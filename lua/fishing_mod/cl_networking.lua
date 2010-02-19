@@ -40,52 +40,63 @@ local function FriedToFriendly(number)
 	end
 end
 
-usermessage.Hook("Fishingmod", function(um) 
+usermessage.Hook("Fishingmod:Player", function(um) 
+	local ply = um:ReadEntity()
+	local exp = um:ReadLong()
+	local catch = um:ReadLong()
+	ply.fishingmod_level = fishingmod.ExpToLevel(exp)
+	if ply.fishingmod_level ~= 0 and ply.fishingmod_last_level ~= ply.fishingmod_level then
+		ply:EmitSound("ambient/levels/canals/windchime2.wav", 100, 200)
+	end
+	ply.fishingmod_last_level = ply.fishingmod_level
+	ply.fishingmod_percent = fishingmod.PercentToNextLevel(exp)
+	ply.fishingmod_expleft = fishingmod.ExpLeft(exp)
+	ply.fishingmod_exp = exp
+	ply.fishingmod_catches = catch
+end)
+
+usermessage.Hook("Fishingmod:Entity", function(um) 
 	local entity = um:ReadShort()
 	local friendly = um:ReadString()
-	local rareness = um:ReadLong()
-	local mindepth = um:ReadShort()
-	local maxdepth = um:ReadShort()
-	local bait = um:ReadString()
+	-- local rareness = um:ReadLong()
+	-- local mindepth = um:ReadShort()
+	-- local maxdepth = um:ReadShort()
+	-- local bait = um:ReadString()
 	local caught = um:ReadLong()
 	local owner = um:ReadString()
 	local fried = um:ReadShort()
 
 	fishingmod.InfoTable[entity] = {
 		friendly = friendly,
-		rareness = RarenessToFriendly(rareness),
-		rarenessnumber = rarenessnumber,
-		mindepth = mindepth,
-		maxdepth = maxdepth,
-		bait = bait,
+		--rareness = RarenessToFriendly(rareness),
+		--rarenessnumber = rarenessnumber,
+		--mindepth = mindepth,
+		--maxdepth = maxdepth,
+		--bait = bait,
 		caught = caught,
 		owner = owner,
 		cooked = FriedToFriendly(fried),
 	}
 	local text = Format([[
-		<font=Default>
-			This catch is called <font=DefaultUnderline>%s</font> and it's <font=DefaultUnderline>%s</font>.
-			<font=DefaultUnderline>%s</font> caught this
-			<font=DefaultUnderline>{TIME}</font>
-			It can be caught at a depth between <font=DefaultUnderline>%u</font> to <font=DefaultUnderline>%s</font> units.
-			This catch likes <font=DefaultUnderline>%s</font>.
-			The catch is <font=DefaultUnderline>%s</font>.
-		</font>
+		This catch is called %s.
+		%s caught this
+		{TIME}
+		This catch is %s
 	]],
 	friendly,
-	RarenessToFriendly(rareness),
+--	RarenessToFriendly(rareness),
 	owner,
-	mindepth,
-	maxdepth,
-	bait,
+	-- mindepth,
+	-- maxdepth,
+	-- bait,
 	FriedToFriendly(fried)
 	)
 	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
 	local text = string.gsub(text, "{TIME}", time)
-	fishingmod.InfoTable[entity].mark_up = markup.Parse(text, ScrW()/3)
+	fishingmod.InfoTable[entity].text = text
 end)
 
-hook.Add("Think", "Fishing Mod Think Client", function()
+hook.Add("Think", "Fishingmod:Think", function()
 	for key, value in pairs(fishingmod.InfoTable or {}) do
 		if not IsValid(Entity(key)) then
 			print("invalid", Entity(key))

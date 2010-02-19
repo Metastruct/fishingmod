@@ -1,9 +1,10 @@
 ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
-ENT.ModelScale = Vector(3,1,1)
-ENT.PlayerOffset = Vector(76,-1,-128)
-ENT.PlayerAngles = Angle(60,0,0)
-ENT.RopeOffset = Vector(120,0,0)
+ENT.Length = 1
+ENT.ModelScale = Vector(3*ENT.Length,1,1)
+ENT.PlayerOffset = Vector(76,-1,-128) * ENT.Length
+ENT.PlayerAngles = Angle(60,0,90)
+ENT.RopeOffset = Vector(120,0,0) * ENT.Length
 
 function ENT:SetupDataTables()
 	self:DTVar("Entity", 0, "ply")

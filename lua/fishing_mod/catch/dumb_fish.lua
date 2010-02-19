@@ -5,7 +5,9 @@ fishingmod.AddCatch{
 	yank = 0, 
 	force = 0, 
 	mindepth = 50, 
-	maxdepth = 1000,
+	maxdepth = 700,
+	expgain = 300,
+	levelrequired = 10,
 	remove_on_release = false,
 	friendlybait = "Bugbait",
 	bait = {

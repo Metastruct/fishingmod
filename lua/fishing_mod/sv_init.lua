@@ -1,4 +1,5 @@
 include("sv_networking.lua")
+include("exp.lua")
 
 local servertags = GetConVarString("sv_tags") --Thanks PHX!
 
@@ -30,9 +31,8 @@ local function BreakWeld(ply,entity)
 	end
 end
 
-hook.Add("GravGunOnPickedUp", "Fishing Mod Pick From Shelf", BreakWeld)
-
-hook.Add("PhysgunPickup", "Fishing Mod Pick From Shelf", BreakWeld)
+hook.Add("GravGunOnPickedUp", "Fishingmod:GravGunOnPickedUp", BreakWeld)
+hook.Add("PhysgunPickup", "Fishingmod:PhysgunPickup", BreakWeld)
 
 
 concommand.Add("fishing_mod_drop_catch", function(ply)
@@ -81,9 +81,11 @@ function fishingmod.IsBait(entity)
 	return false
 end
 
+--local multiplier = CreateConVar("fishing_mod_level_multiplier")
+
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
-hook.Add("Think", "Fishing Mod Think", function()
+hook.Add("Think", "Fishingmod:Think", function()
 	for key, fire in pairs(ents.GetAll()) do 
 		if fire:IsOnFire() then
 			for key, catch in pairs(ents.FindInSphere(fire:GetPos(), fire:BoundingRadius()*2)) do
@@ -107,11 +109,13 @@ hook.Add("Think", "Fishing Mod Think", function()
 			for key, data in RandomPairs(fishingmod.CatchTable) do
  				if 
 					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
+					fishingmod.LevelToExp(data.levelrequired) <= ply.fishingmod_exp and
 					math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2),1)/divider:GetFloat(),1)) == 1 and
 					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth and
 					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
 				then
 					rod:GetHook():Hook(data.type, data)
+					fishingmod.GainEXP(ply, data.expgain)
 					rod:GetBobber():Yank(data.yank)
 				end
 			end
@@ -119,9 +123,10 @@ hook.Add("Think", "Fishing Mod Think", function()
 	end
 end)
 
-hook.Add("PlayerInitialSpawn", "Update Client Info", function(ply)
+hook.Add("PlayerInitialSpawn", "Fishingmod:PlayerInitialSpawn", function(ply)
 	timer.Simple(3, function()
 		if not IsValid(ply) then return end
+		
 		for key, entity in pairs(ents.GetAll()) do
 			if IsValid(entity:GetNWEntity("fishingmod catch")) then
 				fishingmod.SetClientInfo(entity, ply)
