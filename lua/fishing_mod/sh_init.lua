@@ -24,7 +24,7 @@ function fishingmod.SetData(entity, data)
 	entity:SetNWFloat("fishingmod size", data.size)
 end
 
-local pow = 1.8
+local pow = 1.4
 local mult = 100
 
 function fishingmod.ExpToLevel(exp)

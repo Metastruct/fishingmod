@@ -14,6 +14,9 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
+	if not IsValid(self.ply:GetNWEntity("fishing rod")) then
+		self:Remove()
+	end
 	self:Animate()
 	self:NextThink(CurTime())
 	return true

@@ -34,6 +34,17 @@ end
 hook.Add("GravGunOnPickedUp", "Fishingmod:GravGunOnPickedUp", BreakWeld)
 hook.Add("PhysgunPickup", "Fishingmod:PhysgunPickup", BreakWeld)
 
+hook.Add("OnPhysgunFreeze", "Fishingmod:OnPhysgunFreeze", function(weapon, phys, entity, ply)
+	if string.find(entity:GetClass(), "fishing_rod") then
+		return false
+	end
+end)
+
+hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
+	if string.find(trace.Entity:GetClass(), "fishing_rod") then
+		return false
+	end
+end)
 
 concommand.Add("fishing_mod_drop_catch", function(ply)
 	local fishing_rod = ply:GetFishingRod()

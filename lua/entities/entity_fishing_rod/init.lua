@@ -69,7 +69,7 @@ function ENT:AssignPlayer(ply)
 	bobber:SetOwner(ply)
 	bobber:SetPos(position)
 	bobber:Spawn()
-	hook.Call("PlayerSpawnedProp", gmod.GetGamemode(), ply, bobber:GetModel(), bobber)
+	hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, bobber)
 	
 	self.dt.attach = bobber
 	
@@ -78,7 +78,7 @@ function ENT:AssignPlayer(ply)
 	fish_hook:SetOwner(ply)
 	fish_hook:SetPos(position)
 	fish_hook:Spawn()
-	hook.Call("PlayerSpawnedProp", gmod.GetGamemode(), ply, fish_hook:GetModel(), fish_hook)
+	hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, fish_hook)
 	
 	local bait = ply:GetEyeTrace().Entity
 	if fishingmod.IsBait(bait) then
