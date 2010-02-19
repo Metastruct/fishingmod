@@ -12,6 +12,7 @@ function ENT:Initialize()
 	
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
+		
 		phys:SetDamping(0,0)
 		phys:Wake()
 		phys:SetBuoyancyRatio( 0 )
@@ -22,16 +23,17 @@ end
 function ENT:PhysicsSimulate(phys, deltatime)
 	if self.dead then return end
 	phys:Wake()
+	phys:SetMass(100)
 	if self:WaterLevel() >= 3 then
 	
 		if constraint.FindConstraint(self, "Weld") then
-			phys:AddVelocity(VectorRand()*500)
+			phys:AddVelocity(VectorRand()*1000)
 			phys:AddAngleVelocity(VectorRand()*5000)
 			return
 		end
 		
-		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 300)) do
-			if entity ~= self and entity:GetClass() ~= "fishing_mod_fish" and entity:GetVelocity():Length() > 20 then
+		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 10000)) do
+			if entity ~= self and entity:GetClass() ~= "fishing_mod_angry_baby" and entity:GetVelocity():Length() > 20 then
 				self.target = entity
 			end
 		end
