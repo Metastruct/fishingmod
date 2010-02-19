@@ -99,7 +99,6 @@ end)
 hook.Add("Think", "Fishingmod:Think", function()
 	for key, value in pairs(fishingmod.InfoTable or {}) do
 		if not IsValid(Entity(key)) then
-			print("invalid", Entity(key))
 			fishingmod.InfoTable[key] = nil
 		end
 	end

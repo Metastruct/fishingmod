@@ -81,7 +81,6 @@ function ENT:AssignPlayer(ply)
 	local bait = ply:GetEyeTrace().Entity
 	if fishingmod.IsBait(bait) then
 		fish_hook:HookBait(bait)
-		print"Is bait!!"
 	end
 	
 	bobber.dt.hook = fish_hook

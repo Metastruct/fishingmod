@@ -43,7 +43,6 @@ concommand.Add("fishing_mod_drop_catch", function(ply)
 end)
 
 concommand.Add("fishing_mod_drop_bait", function(ply)
-	print(ply)
 	local fishing_rod = ply:GetFishingRod()
 	if fishing_rod then
 		fishing_rod:GetHook():DropBait()
