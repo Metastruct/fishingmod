@@ -23,7 +23,7 @@ function ENT:RenderScene()
 	self:SetModelScale(self.ModelScale)
 end
 
-function ENT:KeyPress(ply, key)
+function ENT:KeyRelease(ply, key)
 	if ply:GetFishingRod() and key == IN_USE then
 		RunConsoleCommand("fishing_mod_drop_bait")
 	end
@@ -69,7 +69,7 @@ function ENT:Initialize()
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
 	self:SetupHook("ShouldDrawLocalPlayer")
-	self:SetupHook("KeyPress")
+	self:SetupHook("KeyRelease")
 	self:SetupHook("CalcView")
 end
 

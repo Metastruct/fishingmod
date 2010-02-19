@@ -7,7 +7,7 @@ function ENT:Initialize()
 	self:SetModel("models/props_c17/doll01.mdl")
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:PhysicsInit()
+	self:PhysicsInit(SOLID_VPHYSICS)
 	self:StartMotionController()
 	
 	local phys = self:GetPhysicsObject()

@@ -85,8 +85,7 @@ function ENT:Hook( entitytype, data )
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity:Spawn()
-		
-
+		hook.Call("PlayerSpawnedProp", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity:GetModel(), entity)
 		if entity:IsNPC() then
 			entity:SetParent(self)
 			entity.oldmovetype = entity:GetMoveType()
