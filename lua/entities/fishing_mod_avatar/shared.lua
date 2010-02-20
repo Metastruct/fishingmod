@@ -52,6 +52,7 @@ function ENT:Animate()
 end
 
 function ENT:OnRemove()
+	if not IsValid(self.dt.ply) then return end
 	self.dt.ply:SetNoDraw(false)
 	self.dt.ply:SetMaterial("")
 	self.dt.ply:SetNWEntity("fishingmod avatar", NULL)
