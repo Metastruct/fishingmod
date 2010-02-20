@@ -44,12 +44,6 @@ function SWEP:SecondaryAttack()
 	end
 end
 
-function SWEP:Reload()
-	if CLIENT or SinglePlayer() then
-		RunConsoleCommand("fishing_mod_drop_catch")
-	end
-end
-
 if CLIENT then
 	SWEP.PrintName = "Fishing Rod"			
 	SWEP.Slot = 3

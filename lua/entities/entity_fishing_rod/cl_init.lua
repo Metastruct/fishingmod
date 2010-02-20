@@ -41,7 +41,7 @@ function ENT:HUDPaint()
 	local xy = (self:GetBobber():GetPos() + Vector(0,0,10)):ToScreen()
 	
 	local depth = ""
-	if self:GetHook():WaterLevel() >= 1 then
+	if self:GetHook() and self:GetHook():WaterLevel() >= 1 then
 		depth =  "\nDepth: " .. tostring(math.Round((self:GetDepth()*2.54)/100*10)/10)
 	end
 	

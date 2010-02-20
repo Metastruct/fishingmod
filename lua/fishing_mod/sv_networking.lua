@@ -9,6 +9,8 @@ function fishingmod.SetClientInfo(entity, ply)
 		rp:AddPlayer(ply) 
 	end
 	
+	entity.data = entity.data or {}
+	
 	umsg.Start("Fishingmod:Entity", rp)
 		umsg.Short(entity:EntIndex() or 0)
 		umsg.String(entity.data.friendly or "unknown")

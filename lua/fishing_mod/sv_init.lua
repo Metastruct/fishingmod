@@ -138,7 +138,7 @@ hook.Add("PlayerInitialSpawn", "Fishingmod:PlayerInitialSpawn", function(ply)
 		if not IsValid(ply) then return end
 		
 		for key, entity in pairs(ents.GetAll()) do
-			if IsValid(entity:GetNWEntity("fishingmod catch")) then
+			if entity:GetNWBool("fishingmod catch") then
 				fishingmod.SetClientInfo(entity, ply)
 			end
 		end
