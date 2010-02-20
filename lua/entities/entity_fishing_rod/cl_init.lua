@@ -46,7 +46,7 @@ function ENT:HUDPaint()
 	end
 	
 	local catch = ""
-	local hooked_entity = self:GetHook():GetHookedEntity()
+	local hooked_entity = self:GetHook() and self:GetHook():GetHookedEntity()
 	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
 		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
