@@ -25,7 +25,7 @@ timer.Create("AngryBaby:FindTarget", 1, 0, function()
 	if number_of_babies == 0 then return end
 	local baby = ents.FindByClass("fishing_mod_angry_baby")[math.random(number_of_babies)]
 	for key, entity in pairs(ents.FindInSphere(baby:GetPos(), 10000)) do
-		if entity:GetClass() == "prop_physics" and entity:WaterLevel() >= 1 and string.find(entity:GetModel() or "", "melon") and entity:GetVelocity():Length() > 60 then
+		if entity:GetClass() == "prop_physics" and entity:WaterLevel() >= 1 and string.find(entity:GetModel() or "", "melon") then
 			fishingmod.AngryBabyTarget = entity
 			return
 		end
