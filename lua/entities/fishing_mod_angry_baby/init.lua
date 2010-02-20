@@ -25,7 +25,11 @@ timer.Create("AngryBaby:FindTarget", 1, 0, function()
 	if number_of_babies == 0 then return end
 	local baby = ents.FindByClass("fishing_mod_angry_baby")[math.random(number_of_babies)]
 	for key, entity in pairs(ents.FindInSphere(baby:GetPos(), 10000)) do
-		if string.find(entity:GetModel() or "", "melon") then
+		if entity:GetClass() == "prop_physics" and entity:WaterLevel() >= 1 and string.find(entity:GetModel() or "", "melon") and entity:GetVelocity():Length() > 60 then
+			fishingmod.AngryBabyTarget = entity
+			return
+		end
+		if entity:GetClass() == "prop_physics" and string.find(entity:GetModel() or "", "melon") then
 			fishingmod.AngryBabyTarget = entity
 			return
 		end
@@ -40,7 +44,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 	phys:Wake()
 
 	if self:WaterLevel() >= 3 then
-		phys:SetDamping(0,0)
+		phys:SetDamping(1,0)
 		if constraint.FindConstraint(self, "Weld") then
 			phys:AddVelocity(VectorRand()*1000)
 			phys:AddAngleVelocity(VectorRand()*5000)
@@ -48,7 +52,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 		end
 	
 		if ValidEntity(self.target) then
-			phys:AddVelocity((self.target:GetPos() - self:GetPos()) * 0.5)
+			phys:AddVelocity((self.target:GetPos() - self:GetPos()))
 			phys:AddAngleVelocity(VectorRand()*2000)
 		else
 			phys:AddVelocity(VectorRand()*200)

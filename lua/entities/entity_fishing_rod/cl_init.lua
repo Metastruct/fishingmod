@@ -27,6 +27,9 @@ function ENT:KeyRelease(ply, key)
 	if ply:GetFishingRod() and key == IN_USE then
 		RunConsoleCommand("fishing_mod_drop_bait")
 	end
+	if ply:GetFishingRod() and key == IN_RELOAD then
+		RunConsoleCommand("fishing_mod_drop_catch")
+	end	
 end
 
 function ENT:ShouldDrawLocalPlayer(ply)
