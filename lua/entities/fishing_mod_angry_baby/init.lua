@@ -21,7 +21,9 @@ function ENT:Initialize()
 end
 
 timer.Create("AngryBaby:FindTarget", 1, 0, function() 
-	local baby = ents.FindByClass("fishing_mod_angry_baby")[math.random(#ents.FindByClass("fishing_mod_angry_baby"))]
+	local number_of_babies = #ents.FindByClass("fishing_mod_angry_baby")
+	if number_of_babies == 0 then return end
+	local baby = ents.FindByClass("fishing_mod_angry_baby")[math.random(number_of_babies)]
 	for key, entity in pairs(ents.FindInSphere(baby:GetPos(), 10000)) do
 		if string.find(entity:GetModel() or "", "melon") then
 			fishingmod.AngryBabyTarget = entity
