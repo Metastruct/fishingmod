@@ -76,7 +76,7 @@ end
 function ENT:Think()
 	local delta = self.dt.length - self.last_length
 
-	local velocity_length = self.dt.attach:GetVelocity():Length()
+	local velocity_length = IsValid(self.dt.attach) and self.dt.attach:GetVelocity():Length() or 0
 	local pitch = velocity_length/10 - 0.1
 	local volume = velocity_length/1000 - 0.1
 	local reel_velocity = self.dt.length - self.last_length
