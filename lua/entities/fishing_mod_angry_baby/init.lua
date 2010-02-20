@@ -44,7 +44,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 	phys:Wake()
 
 	if self:WaterLevel() >= 3 then
-		phys:SetDamping(1,0)
+		phys:SetDamping(3,0)
 		if constraint.FindConstraint(self, "Weld") then
 			phys:AddVelocity(VectorRand()*1000)
 			phys:AddAngleVelocity(VectorRand()*5000)
