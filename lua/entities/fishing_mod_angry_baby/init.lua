@@ -17,9 +17,21 @@ function ENT:Initialize()
 		phys:SetDamping(0,0)
 		phys:Wake()
 		phys:SetBuoyancyRatio( 0 )
-	end
-
+	end	
 end
+
+timer.Create("AngryBaby:FindTarget", 1, 0, function() 
+	local baby = ents.FindByClass("fishing_mod_angry_baby")[math.random(#ents.FindByClass("fishing_mod_angry_baby"))]
+	for key, entity in pairs(ents.FindInSphere(baby:GetPos(), 10000)) do
+		if string.find(entity:GetModel() or "", "melon") then
+			fishingmod.AngryBabyTarget = entity
+			return
+		end
+		if IsValid(entity) and entity:GetClass() == "prop_physics" and (entity:GetClass() ~= "fishing_mod_angry_baby" and entity:GetVelocity():Length() > 20) then
+			fishingmod.AngryBabyTarget = entity
+		end
+	end		
+end)
 
 function ENT:PhysicsSimulate(phys, deltatime)
 	if self.dead then return end
@@ -34,7 +46,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 		end
 	
 		if ValidEntity(self.target) then
-			phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*60)
+			phys:AddVelocity((self.target:GetPos() - self:GetPos()) * 0.5)
 			phys:AddAngleVelocity(VectorRand()*2000)
 		else
 			phys:AddVelocity(VectorRand()*200)
@@ -60,7 +72,7 @@ end
 
 function ENT:OnTakeDamage(dmginfo)
 	self:TakePhysicsDamage(dmginfo)
-	if dmginfo:GetDamage() > 10 and not self.dead then
+	if (dmginfo:GetDamageType() == DMG_BURN or dmginfo:GetDamage() > 10) and not self.dead then
 		self.dead = true
 		self:GetPhysicsObject():SetBuoyancyRatio( 1 )
 		self:EmitSound("ambient/creatures/teddy.wav", 100, math.random(90,110))
@@ -69,14 +81,11 @@ end
 
 function ENT:Think()
 	if self.dead then return end
+	
+	self.target = fishingmod.AngryBabyTarget
+	
 	self:GetPhysicsObject():Wake()
-	
-	for key, entity in pairs(ents.FindInSphere(self:GetPos(), 10000)) do
-		if string.find(entity:GetModel() or "", "melon") or entity ~= self and entity:GetClass() ~= "fishing_mod_angry_baby" and entity:GetVelocity():Length() > 20 then
-			self.target = entity
-		end
-	end
-	
+		
 	if ValidEntity(self.target) and not constraint.FindConstraint(self, "Weld") and (self.target and self.target:GetClass() == "fishing_rod_hook") and self.target:GetPos():Distance(self:GetPos()) < 30 then
 		self.target:Hook(self, self.data)
 	end
