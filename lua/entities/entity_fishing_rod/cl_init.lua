@@ -42,7 +42,7 @@ function ENT:HUDPaint()
 	
 	local depth = ""
 	if self:GetHook():WaterLevel() >= 1 then
-		depth =  "\nDepth: " .. math.ceil(self:GetDepth())
+		depth =  "\nDepth: " .. tostring(math.Round((self:GetDepth()*2.54)/100*10)/10)
 	end
 	
 	local catch = ""
@@ -54,7 +54,7 @@ function ENT:HUDPaint()
 	draw.RoundedBox( 0, xy.x-50, xy.y-68, 100, 23, Color( 255, 255, 255, 100 ) )
 	draw.RoundedBox( 0, xy.x-50, xy.y-68, self:GetPlayer().fishingmod_percent, 23, Color( 0, 255, 0, 150 ) )
 	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod_expleft)), "HudSelectionText" ,xy.x, xy.y-65, color_black, 1)
-	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod_catches .. "\nLevel: " .. self:GetPlayer().fishingmod_level .. "\nLength: " .. self:GetLength() .. depth .. catch, "HudSelectionText", xy.x,xy.y-40, hooked_entity and Color(0,255,0,255) or color_white,1)
+	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod_catches .. "\nLevel: " .. self:GetPlayer().fishingmod_level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-40, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
