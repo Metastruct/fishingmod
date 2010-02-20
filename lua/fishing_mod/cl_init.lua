@@ -31,6 +31,15 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	end
 end)
 
+hook.Add("RenderScene", "Fishingmod:RenderScene", function() 
+	for key, entity in pairs(ents.GetAll()) do
+		local size = entity:GetNWFloat("fishingmod size")
+		if entity:GetNWBool("fishingmod catch") and size ~= 0 then
+			entity:SetModelScale(Vector()*size/entity:BoundingRadius())
+		end
+	end
+end)
+
 hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 	if ply:GetFishingRod() and not ply:InVehicle() then
 					
