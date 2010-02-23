@@ -40,6 +40,8 @@ end
 
 function ENT:HUDPaint()
 	if not self:GetPlayer().fishingmod_catches then return end
+	
+	if self:GetPlayer() ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
 	local xy = (self:GetBobber():GetPos() + Vector(0,0,10)):ToScreen()
 	

@@ -61,8 +61,13 @@ concommand.Add("fishing_mod_drop_bait", function(ply)
 end)
 
 function fishingmod.CheckBait(name, entity)
-	if not name then return false end
-	local model = (entity and string.lower(entity:GetModel())) or "none"
+	if not name or not entity then return false end
+	local model
+	if entity.AttachedEntity then
+		model = (entity.AttachedEntity and string.lower(entity.AttachedEntity:GetModel())) or "none"
+	else
+		model = (entity and string.lower(entity:GetModel())) or "none"
+	end
 	local bait = fishingmod.CatchTable[name].bait
 	if bait then
 		for key, value in pairs(bait) do

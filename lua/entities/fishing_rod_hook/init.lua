@@ -59,7 +59,9 @@ function ENT:Hook( entitytype, data )
 	if IsEntity(entitytype) and IsValid(entitytype) then
 		entitytype:SetNWString("fishingmod friendly", data.friendly or "Unknown")
 		entitytype:SetNWBool("fishingmod catch", true)
-		entitytype:SetNWFloat("fishingmod size", data.size)
+		if data.size then
+			entitytype:SetNWFloat("fishingmod size", data.size)
+		end
 		entitytype.is_catch = true
 		entitytype.data = data
 		entitytype.data.caught = os.time()
@@ -98,7 +100,9 @@ function ENT:Hook( entitytype, data )
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity:SetNWString("fishingmod friendly", data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
-		entity:SetNWFloat("fishingmod size", data.size)
+		if data.size then
+			entity:SetNWFloat("fishingmod size", data.size)
+		end
 
 		if data.remove_on_release then
 			self.remove_on_release = entity
@@ -141,6 +145,13 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
+	for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
+		if entity.is_recatchable and not self.just_released then
+			self:Hook(entity, entity.data)
+			self.just_released = true
+			timer.Simple(0.5, function() if IsValid(self) then self.just_released = false end end)
+		end
+	end
 	if not constraint.FindConstraint(self.dt.hooked, "Weld") and not self.dt.hooked:IsNPC() then
 		self.dt.hooked = nil
 	end

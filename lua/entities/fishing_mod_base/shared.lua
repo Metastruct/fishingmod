@@ -11,3 +11,7 @@ function ENT:SetupHook(event_name)
 		end
 	end)
 end
+
+function ENT:IsCatch()
+	return self:GetNWBool("fishingmod catch")
+end

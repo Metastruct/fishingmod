@@ -31,10 +31,22 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	end
 end)
 
-hook.Add("RenderScene", "Fishingmod:RenderScene", function() 
+hook.Add("OnEntityCreated", "Fishingmod:OnEntityCreated", function(entity)
+	if string.find(entity:GetClass(), "fishing_mod_catch") then
+		entity:SetTable{
+			Type = "anim",
+			Base = "fishing_mod_base",
+			Draw = function(self)
+				self:DrawModel()
+			end,
+		}
+	end	
+end)
+
+hook.Add("RenderScene", "Fishingmod:RenderScene", function()	
 	for key, entity in pairs(ents.GetAll()) do
 		local size = entity:GetNWFloat("fishingmod size")
-		if entity:GetNWBool("fishingmod catch") and size ~= 0 then
+		if entity:GetNWBool("in fishing shelf") and size ~= 0 then
 			entity:SetModelScale(Vector()*size/entity:BoundingRadius())
 		end
 	end

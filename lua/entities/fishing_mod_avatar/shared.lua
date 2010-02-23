@@ -1,6 +1,5 @@
 ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
-ENT.Spawnable = true
 ENT.AutomaticFrameAdvance = true
 
 function ENT:SetupDataTables()
@@ -10,9 +9,10 @@ end
 function ENT:Animate()
 	self:SetPos(self.dt.ply:GetPos())
 	self:SetAngles(Angle(0,self.dt.ply:EyeAngles().y,0))
-	self:SetPoseParameter("move_yaw", math.AngleDifference(self.dt.ply:GetVelocity():Angle().y, self.dt.ply:GetLocalAngles().y))
-	self:SetPoseParameter("aim_pitch", self.dt.ply:EyeAngles().p)
-
+	if SERVER then
+		self:SetPoseParameter("move_yaw", math.AngleDifference(self.dt.ply:GetVelocity():Angle().y, self.dt.ply:GetLocalAngles().y))
+		self:SetPoseParameter("aim_pitch", self.dt.ply:EyeAngles().p)
+	end
 	local moving = self.dt.ply:KeyDown(IN_FORWARD) or self.dt.ply:KeyDown(IN_BACK) or self.dt.ply:KeyDown(IN_MOVELEFT) or self.dt.ply:KeyDown(IN_MOVERIGHT)
 	local running = self.dt.ply:KeyDown(IN_SPEED)
 	local sequence = "idle_melee2"
@@ -45,11 +45,16 @@ function ENT:Animate()
 			self:SetPoseParameter("head_yaw", angle*30.7)
 		end
 	end
-	
 	self:SetCycle(self.dt.ply:GetCycle())
-	self:SetPlaybackRate(1)
 	self:SetSequence(self:LookupSequence(sequence))
 end
+
+--[[ hook.Add("SetPlayerAnimation", "Fishingmod:SetPlayerAnimation", function(ply, sequence)
+	if IsValid(ply:GetNWEntity("fishingmod avatar")) then
+		return true
+	end
+end) ]]
+
 
 function ENT:OnRemove()
 	if not IsValid(self.dt.ply) then return end

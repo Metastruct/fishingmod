@@ -5,7 +5,6 @@ local force = 0
 local mindepth = 200
 local maxdepth = 20000
 local remove_on_release = false
-local friendlybait = "Heads"
 local expgain = 100
 local levelrequired = 7
 local bait = {
@@ -25,7 +24,6 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
 
@@ -41,7 +39,6 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
 
@@ -57,7 +54,6 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
 
@@ -74,7 +70,6 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
 
@@ -91,7 +86,6 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
 
@@ -107,6 +101,5 @@ fishingmod.AddCatch{
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
-	friendlybait = friendlybait,
 	bait = bait,
 }
