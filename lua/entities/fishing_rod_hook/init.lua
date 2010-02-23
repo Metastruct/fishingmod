@@ -81,6 +81,7 @@ function ENT:Hook( entitytype, data )
 		self.dt.hooked = entitytype
 	else
 		local entity = ents.Create(data.type)
+		if not IsValid(entity) then return end
 		if data.models then
 			entity:SetModel(table.Random(data.models) or "error.mdl")
 		end
