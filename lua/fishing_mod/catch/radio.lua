@@ -30,7 +30,30 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	self.sound = CreateSound(self, "ambient/music/country_rock_am_radio_loop.wav")
-	self.sound:PlayEx(100, math.random(90,110))
+	self.sound:SetSoundLevel(150)
+	self.sound:ChangeVolume(500)
+	self.sound:Play()
+	self.sound:ChangePitch(math.random(90,110))
+end
+
+function ENT:Use()
+	self.sound:Play()
+	self.sound:ChangePitch(math.random(90,110))
+end
+
+function ENT:OnTakeDamage()
+	self.sound:Play()
+	self.sound:ChangePitch(math.random(90,110))
+	self.shot = 100
+end
+
+function ENT:Think()
+	if self.shot then
+		self.shot = math.Clamp(self.shot - 1, 0, 255)
+		self.sound:ChangePitch(self.shot)
+	end
+	self:NextThink(CurTime())
+	return true
 end
 
 function ENT:OnRemove()
