@@ -31,7 +31,7 @@ end
 
 function ENT:HookBait(bait)
 	if not IsValid(self.dt.bait) then
-		bait:GetPhysicsObject():EnableMotion(false)
+		bait:GetPhysicsObject():EnableMotion(true)
 		bait:PhysWake()
 		bait:SetPos(self:GetPos())
 		self.dt.bait = bait
