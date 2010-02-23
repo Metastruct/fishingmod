@@ -32,6 +32,7 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 end)
 
 hook.Add("OnEntityCreated", "Fishingmod:OnEntityCreated", function(entity)
+	if not IsValid(entity) then return end
 	if string.find(entity:GetClass(), "fishing_mod_catch") then
 		entity:SetTable{
 			Type = "anim",
