@@ -42,6 +42,7 @@ function ENT:Initialize()
 	self:SetSolid( SOLID_VPHYSICS )
 	self:PhysicsInitBox(Vector(-5, -1, -10),Vector(5, 1, 10))
 	self:StartMotionController()
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self.avoider_angles = Angle(0)
 	self.swim_down = Vector(0)	
 	self.avoid = Angle(0)
@@ -54,12 +55,6 @@ function ENT:Initialize()
 	end
 
 end
-
-hook.Add( "ShouldCollide", "Fishingmod Should Fish Collide", function(ent1, ent2) 
-	if ent1:GetClass() == "fishing_mod_fish" and ent2:GetClass() == "fishing_mod_fish" then
-		return false
-	end
-end)
 
 function ENT:CalculateAvoider(distance, eyesight, speed, target)
 	target = target or NULL
