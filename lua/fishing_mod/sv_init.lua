@@ -1,7 +1,16 @@
 include("sv_networking.lua")
-include("exp.lua")
+include("sv_player_stats.lua")
+include("sv_upgrades.lua")
+AddCSLuaFile("cl_shop_menu.lua")
 
 local servertags = GetConVarString("sv_tags") --Thanks PHX!
+
+function fishingmod.SetData(entity, data)
+	entity.data = data
+	entity:SetColor(fishingmod.FriedToColor(data.fried or 0))
+	entity:SetNWBool("fishingmod catch", true)
+	entity:SetNWFloat("fishingmod size", data.size)
+end
 
 if servertags == nil then
 	RunConsoleCommand("sv_tags", "fishingmod")
@@ -23,7 +32,6 @@ for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
 	include("fishing_mod/catch/"..name)
 end
 
-
 local function BreakWeld(ply,entity)
 	if entity.shelf_stored and IsValid(entity.weld) then
 		entity.weld:Fire("break")
@@ -41,6 +49,7 @@ hook.Add("OnPhysgunFreeze", "Fishingmod:OnPhysgunFreeze", function(weapon, phys,
 end)
 
 hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
+	if not IsValid(trace.Entity) then return end
 	if string.find(trace.Entity:GetClass(), "fishing_rod") then
 		return false
 	end
@@ -61,22 +70,21 @@ concommand.Add("fishing_mod_drop_bait", function(ply)
 end)
 
 function fishingmod.CheckBait(name, entity)
-	if not name or not entity then return false end
+	local bait = fishingmod.CatchTable[name].bait
+	if bait == "none" then return true end
+	if not entity then return false end
 	local model
 	if entity.AttachedEntity then
 		model = (entity.AttachedEntity and string.lower(entity.AttachedEntity:GetModel())) or "none"
 	else
 		model = (entity and string.lower(entity:GetModel())) or "none"
 	end
-	local bait = fishingmod.CatchTable[name].bait
 	if bait then
 		for key, value in pairs(bait) do
 			if string.lower(value) == model then
 				return true
 			end
 		end
-	else
-		return true
 	end
 	return false
 end
@@ -85,7 +93,7 @@ function fishingmod.IsBait(entity)
 	if not IsValid(entity) then return end
 	local model = string.lower(entity:GetModel()) or ""
 	for name, catch in pairs(fishingmod.CatchTable) do
-		if catch.bait then
+		if type(catch.bait) == "table" then
 			for key, bait in pairs(catch.bait) do
 				if string.lower(bait) == model then 
 					return true 
@@ -96,7 +104,13 @@ function fishingmod.IsBait(entity)
 	return false
 end
 
---local multiplier = CreateConVar("fishing_mod_level_multiplier")
+hook.Add("PlayerUse", "Fishingmod:PlayerUse", function(ply, entity)
+	if entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
+		entity:Remove()
+		fishingmod.GiveMoney(ply, entity.data.value or 0)
+		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
+	end
+end)
 
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
@@ -122,9 +136,23 @@ hook.Add("Think", "Fishingmod:Think", function()
 		local rod = ply:GetFishingRod()
 		if rod then
 			for key, data in RandomPairs(fishingmod.CatchTable) do
+--[[ 			print(	
+					"friendly\n\n\n\n\n",
+					data.friendly,
+					"\nwater",
+					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 , 
+					"\nlevel",
+					fishingmod.LevelToExp(data.levelrequired) <= ply.fishingmod_exp,
+					"\nrandom",
+					math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2),1)/divider:GetFloat(),1)) == 1,
+					"\ndepth",
+					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth ,
+					"\nbait",
+					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
+				) ]]
  				if 
 					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
-					fishingmod.LevelToExp(data.levelrequired) <= ply.fishingmod_exp and
+					fishingmod.LevelToExp(data.levelrequired) <= tonumber(ply.fishingmod.exp) and
 					math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2),1)/divider:GetFloat(),1)) == 1 and
 					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth and
 					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
@@ -141,11 +169,16 @@ end)
 hook.Add("PlayerInitialSpawn", "Fishingmod:PlayerInitialSpawn", function(ply)
 	timer.Simple(3, function()
 		if not IsValid(ply) then return end
-		
 		for key, entity in pairs(ents.GetAll()) do
 			if entity:GetNWBool("fishingmod catch") then
 				fishingmod.SetClientInfo(entity, ply)
 			end
 		end
 	end)
+end)
+
+hook.Add("PlayerSpawnedProp", "Fishingmod:PlayerSpawnedProp", function(ply, model, entity)
+	if ply:GetFishingRod() and fishingmod.IsBait(entity) then
+		ply:GetFishingRod():GetHook():HookBait(entity)
+	end
 end)

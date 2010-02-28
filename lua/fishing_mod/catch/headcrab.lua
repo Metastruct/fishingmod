@@ -7,6 +7,7 @@ local maxdepth = 20000
 local remove_on_release = false
 local expgain = 100
 local levelrequired = 7
+local value = 100
 local bait = {
 	"models/props/cs_office/Snowman_head.mdl",
 	"models/Gibs/HGIBS.mdl",
@@ -18,10 +19,10 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
+	value = value,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
@@ -33,13 +34,13 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
+	value = value,
 }
 
 fishingmod.AddCatch{
@@ -48,13 +49,13 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
+	value = value,
 }
 
 fishingmod.AddCatch{
@@ -64,13 +65,13 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
+	value = value,
 }
 
 fishingmod.AddCatch{
@@ -80,13 +81,13 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
+	value = value,
 }
 
 fishingmod.AddCatch{
@@ -95,11 +96,11 @@ fishingmod.AddCatch{
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
-	force = force, 
 	mindepth = mindepth, 
 	maxdepth = maxdepth,
 	expgain = expgain,
 	levelrequired = levelrequired,
 	remove_on_release = remove_on_release,
 	bait = bait,
+	value = value,
 }

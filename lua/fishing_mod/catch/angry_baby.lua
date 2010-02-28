@@ -3,12 +3,12 @@ fishingmod.AddCatch{
 	type = "fishing_mod_catch_angry_baby",
 	rareness = 2000, 
 	yank = 0, 
-	force = 0, 
 	mindepth = 200, 
 	maxdepth = 20000,
 	expgain = 50,
 	levelrequired = 3,
 	remove_on_release = false,
+	value = 500,
 	bait = {
 		"models/props_junk/watermelon01.mdl",
 		"models/props_junk/watermelon01_chunk01a.mdl",

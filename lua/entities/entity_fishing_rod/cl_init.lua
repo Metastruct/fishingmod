@@ -5,7 +5,7 @@ local rope_material = Material("cable/rope")
 function ENT:Draw()
 	if ValidEntity(self:GetBobber()) then
 		render.SetMaterial(rope_material)
-		render.DrawBeam(self:LocalToWorld(self.RopeOffset), self:GetBobber():GetPos(), 0.1, 0, 0, Color(255,200,200,50))
+		render.DrawBeam(self:LocalToWorld(Vector(40,0,0) * self.dt.rod_length), self:GetBobber():LocalToWorld(self:GetBobber().TopOffset), 0.1, 0, 0, Color(255,200,200,50))
 	end
 	self:DrawModel()
 end
@@ -16,14 +16,17 @@ function ENT:RenderScene()
 		ply:SetAngles(Angle(0,ply:EyeAngles().y,0))
 	end
 	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
-	local new_position, new_angles = LocalToWorld(self.PlayerOffset, self.PlayerAngles, position, angles)
+	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0), Angle(60,0,90), position, angles)
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
 	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
-	self:SetModelScale(self.ModelScale)
+	self:SetModelScale(Vector(1*self.dt.rod_length,1,1))
 end
 
 function ENT:KeyRelease(ply, key)
+	if ply:GetFishingRod() and (key == IN_USE and ply:KeyDown(IN_RELOAD)) or (key == IN_RELOAD and ply:KeyDown(IN_USE)) and not IsValid(fishingmod.UpgradeMenu) then
+		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu")
+	end	
 	if ply:GetFishingRod() and key == IN_USE then
 		RunConsoleCommand("fishing_mod_drop_bait")
 	end
@@ -39,7 +42,7 @@ function ENT:ShouldDrawLocalPlayer(ply)
 end
 
 function ENT:HUDPaint()
-	if not self:GetPlayer().fishingmod_catches then return end
+	if not self:GetPlayer().fishingmod then return end
 	
 	if self:GetPlayer() ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
@@ -55,11 +58,12 @@ function ENT:HUDPaint()
 	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
 		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
-	draw.DrawText(self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-95, color_white, 1)
-	draw.RoundedBox( 0, xy.x-50, xy.y-68, 100, 23, Color( 255, 255, 255, 100 ) )
-	draw.RoundedBox( 0, xy.x-50, xy.y-68, self:GetPlayer().fishingmod_percent, 23, Color( 0, 255, 0, 150 ) )
-	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod_expleft)), "HudSelectionText" ,xy.x, xy.y-65, color_black, 1)
-	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod_catches .. "\nLevel: " .. self:GetPlayer().fishingmod_level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-40, hooked_entity and Color(0,255,0,255) or color_white,1)
+	local height_offset = 50
+	draw.DrawText(self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
+	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, 100, 23, Color( 255, 255, 255, 100 ) )
+	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, self:GetPlayer().fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
+	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
+	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod.catches .. "\nMoney: " .. (self:GetPlayer().fishingmod.money or "0") .. "\nLevel: " .. self:GetPlayer().fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
@@ -78,7 +82,7 @@ function ENT:Initialize()
 	self:SetupHook("CalcView")
 end
 
-function ENT:Think()
+function ENT:Think()	
 	local delta = self.dt.length - self.last_length
 
 	local velocity_length = IsValid(self.dt.attach) and self.dt.attach:GetVelocity():Length() or 0

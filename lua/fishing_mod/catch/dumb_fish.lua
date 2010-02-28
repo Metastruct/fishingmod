@@ -3,12 +3,12 @@ fishingmod.AddCatch{
 	type = "fishing_mod_catch_fish",
 	rareness = 2000, 
 	yank = 0, 
-	force = 0, 
 	mindepth = 50, 
 	maxdepth = 700,
 	expgain = 300,
 	levelrequired = 10,
 	remove_on_release = false,
+	value = 700,
 	bait = {
 		"models/weapons/w_bugbait.mdl",
 	},

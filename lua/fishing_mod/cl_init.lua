@@ -1,4 +1,5 @@
 include("cl_networking.lua")
+include("cl_shop_menu.lua")
 
 FMOldCalcVehicleThirdPersonView = FMOldCalcVehicleThirdPersonView or GAMEMODE.CalcVehicleThirdPersonView
 
@@ -24,7 +25,7 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 		local data = fishingmod.InfoTable[trace.Entity:EntIndex()]
 		if data and data.text then
 			local width = 250
-			local height = 60
+			local height = 75
 			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
 			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end

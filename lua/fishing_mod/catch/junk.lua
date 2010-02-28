@@ -29,10 +29,11 @@ fishingmod.AddCatch{
 	size = 10,
 	rareness = 2000, 
 	yank = 1000, 
-	force = 2000, 
 	mindepth = 0, 
 	maxdepth = 20000,
 	expgain = 20,
 	levelrequired = 0,
 	remove_on_release = true,
+	bait = "none",
+	value = 5,
 }

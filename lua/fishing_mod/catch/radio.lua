@@ -3,12 +3,12 @@ fishingmod.AddCatch{
 	type = "fishing_mod_catch_radio",
 	rareness = 1000, 
 	yank = 777, 
-	force = 0, 
 	mindepth = 100, 
 	maxdepth = 20000,
 	expgain = 40,
 	levelrequired = 2,
 	remove_on_release = false,
+	value = 50,
 	bait = {
 		"models/props_radiostation/radio_antenna01_skybox.mdl",
 		"models/props_misc/antenna03.mdl",

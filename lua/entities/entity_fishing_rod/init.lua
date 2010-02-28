@@ -24,7 +24,7 @@ function ENT:PhysicsSimulate( phys, deltatime )
 	self:GetBobber():PhysWake()
 	
 	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
-	local new_position, new_angles = LocalToWorld(self.PlayerOffset, self.PlayerAngles, position, angles)
+	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	
 	self.shadow_params.secondstoarrive = 0.0001
 	self.shadow_params.pos = new_position
@@ -42,12 +42,8 @@ function ENT:PhysicsSimulate( phys, deltatime )
 end
 
 function ENT:SetLength(length)
-	self.physical_rope:Fire("SetSpringLength", length)
-	
-	local damping = math.Clamp(self.dt.attach:GetPos():Distance(self:LocalToWorld(self.RopeOffset))/100*-10+2, 0, 2)
-	local length_damping = math.Clamp(length/10000*-2+2, 0, 1)
-	self.dt.attach.damping = damping+length_damping
-	self.length = length
+	self.physical_rope:Fire("SetSpringLength", length/2+10)
+	self:GetHook().physical_rope:Fire("SetSpringLength", length/2+10)
 	self.dt.length = length
 end
 
@@ -89,7 +85,7 @@ function ENT:AssignPlayer(ply)
 			
 	self.dt.attach.parent = self
 	
-	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(self.RopeOffset), Vector(0,0,0), 6000, 1200, 0, "", 0, 1 )
+	self.physical_rope, self.dt.rope = constraint.Elastic( self, self.dt.attach, 0, 0, self:LocalToWorld(Vector(40,0,0) * self.dt.rod_length), Vector(0,0,0), 6000, 1200, 0, "", 0, 1 )
 	
 	self:SetLength(100)
 

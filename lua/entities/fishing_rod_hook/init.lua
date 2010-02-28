@@ -17,7 +17,7 @@ function ENT:Initialize()
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
 	
-	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0,0,4), 6000, 1200, 0, "", 0, 1 )
+	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0), 6000, 1200, 0, "", 0, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
 	fish_hook = self
@@ -77,7 +77,7 @@ function ENT:Hook( entitytype, data )
 			entitytype:SetMoveType(MOVETYPE_NONE)
 			entitytype:SetParent(self)
 		else
-			constraint.Weld(entitytype, self, 0, 0, data.force or 2000)
+			constraint.Weld(entitytype, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
 		fishingmod.SetClientInfo(entitytype)
 		self.dt.hooked = entitytype
@@ -96,7 +96,7 @@ function ENT:Hook( entitytype, data )
 			entity.oldmovetype = entity:GetMoveType()
 			entity:SetMoveType(MOVETYPE_NONE)
 		else
-			constraint.Weld(entity, self, 0, 0, data.force or 2000)
+			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
 		entity.data = data
 		entity.data.caught = os.time()
