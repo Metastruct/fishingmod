@@ -82,7 +82,7 @@ function ENT:Hook( entitytype, data )
 		fishingmod.SetClientInfo(entitytype)
 		self.dt.hooked = entitytype
 	else
-		local entity = ents.Create(data.type)
+		local entity = ents.Create(data.type or "")
 		if not IsValid(entity) then return end
 		if data.models then
 			entity:SetModel(table.Random(data.models) or "error.mdl")
