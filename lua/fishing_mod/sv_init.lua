@@ -104,8 +104,9 @@ function fishingmod.IsBait(entity)
 	return false
 end
 
-hook.Add("PlayerUse", "Fishingmod:PlayerUse", function(ply, entity)
-	if entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
+hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply)
+	local entity = ply:GetEyeTrace().Entity
+	if entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
 		entity:Remove()
 		fishingmod.GiveMoney(ply, entity.data.value or 0)
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
