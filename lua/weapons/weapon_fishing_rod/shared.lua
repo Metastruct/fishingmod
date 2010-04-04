@@ -18,6 +18,8 @@ SWEP.Secondary.Ammo = "none"
 
 function SWEP:PrimaryAttack()
 	if SERVER then
+		if not IsValid(self.fishing_rod) then return end
+		
 		local speed = 5
 		if self.Owner:KeyDown(IN_SPEED) then
 			speed = 10 + self.Owner.fishingmod.reel_speed
@@ -32,6 +34,8 @@ end
 
 function SWEP:SecondaryAttack()
 	if SERVER then
+		if not IsValid(self.fishing_rod) then return end
+		
 		local speed = 5
 		if self.Owner:KeyDown(IN_SPEED) then
 			speed = 10 + self.Owner.fishingmod.reel_speed
@@ -58,7 +62,7 @@ else
 	end
 	
 	function SWEP:Deploy()
-		if not ValidEntity(self.fishing_rod) then
+		if not IsValid(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			self.fishing_rod.dt.rod_length = self.Owner.fishingmod.length / 10 + 1
 			self.fishing_rod:Spawn()
@@ -69,7 +73,7 @@ else
 	end
 	
 	function SWEP:Holster()
-		if ValidEntity(self) and ValidEntity(self.Owner) then
+		if IsValid(self) and IsValid(self.Owner) and IsValid(self.fishing_rod) then
 			self.Owner:SetNWEntity("fishing rod", NULL)
 			self.fishing_rod:Remove()
 			self.fishing_rod = nil
