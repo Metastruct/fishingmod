@@ -21,7 +21,10 @@ end
 function ENT:PhysicsSimulate( phys, deltatime )
   
 	phys:Wake()
-	self:GetBobber():PhysWake()
+	local bobber = self:GetBobber()
+	if bobber then
+		bobber:PhysWake()
+	end
 	
 	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
@@ -42,6 +45,7 @@ function ENT:PhysicsSimulate( phys, deltatime )
 end
 
 function ENT:SetLength(length)
+	if not IsValid(self.physical_rope) then return end
 	self.physical_rope:Fire("SetSpringLength", length/2+10)
 	self:GetHook().physical_rope:Fire("SetSpringLength", length/2+10)
 	self.dt.length = length
@@ -102,8 +106,8 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	self.dt.attach:Remove()
-	self.physical_rope:Remove()
-	self.avatar:Remove()
-	self.dt.attach.dt.hook:Remove()
+	SafeRemoveEntity(self.dt.attach)
+	SafeRemoveEntity(self.physical_rope)
+	SafeRemoveEntity(self.avatar)
+	SafeRemoveEntity(self.dt.attach.dt.hook)
 end

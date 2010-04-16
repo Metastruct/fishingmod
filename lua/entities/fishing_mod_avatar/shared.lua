@@ -7,6 +7,7 @@ function ENT:SetupDataTables()
 end
 
 function ENT:Animate()
+	if not self.dt and not IsValid(self.dt.ply) then return end
 	self:SetPos(self.dt.ply:GetPos())
 	self:SetAngles(Angle(0,self.dt.ply:EyeAngles().y,0))
 	if SERVER then

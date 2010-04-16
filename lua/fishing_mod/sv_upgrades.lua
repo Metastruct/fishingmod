@@ -79,7 +79,7 @@ function fishingmod.UpgradeHookForce(ply, amount)
 end
 
 function fishingmod.DowngradeHookForce(ply, amount)
-	amount = math.max(length, 1)
+	amount = math.max(amount, 1)
 	if amount >= ply.fishingmod.string_length then return end
 	fishingmod.SetHookForce(ply, amount, "sub")
 end

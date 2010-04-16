@@ -15,33 +15,33 @@ function ENT:SetupDataTables()
 end
 
 function ENT:GetBobber()
-	return ValidEntity(self.dt.attach) and self.dt.attach or false
+	return self.dt and IsValid(self.dt.attach) and self.dt.attach or false
 end
 
 function ENT:GetHook()
-	return ValidEntity(self.dt.attach.dt.hook) and self.dt.attach.dt.hook or false
+	return self.dt and IsValid(self.dt.attach.dt.hook) and self.dt.attach.dt.hook or false
 end
 
 function ENT:GetBait()
-	return ValidEntity(self.dt.attach.dt.hook.dt.bait) and self.dt.attach.dt.hook.dt.bait or false
+	return self.dt and IsValid(self.dt.attach.dt.hook.dt.bait) and self.dt.attach.dt.hook.dt.bait or false
 end
 
 function ENT:GetPlayer()
-	return ValidEntity(self.dt.ply) and self.dt.ply or false
+	return self.dt and IsValid(self.dt.ply) and self.dt.ply or false
 end
 
 function ENT:GetAvatar()
-	return ValidEntity(self.dt.avatar) and self.dt.avatar or false
+	return self.dt and IsValid(self.dt.avatar) and self.dt.avatar or false
 end
 
 function ENT:GetLength()
-	return self.dt.length or 0
+	return self.dt and self.dt.length or 0
 end
 
 function ENT:GetDepth()
 	if self:GetPlayer():WaterLevel() >= 1 then return 0 end
 	local fish_hook = self.dt.attach.dt.hook
-	if ValidEntity(fish_hook) and fish_hook or false then
+	if IsValid(fish_hook) and fish_hook or false then
 		local data = {}
 		local position = fish_hook:GetPos()
 		data.start = position
