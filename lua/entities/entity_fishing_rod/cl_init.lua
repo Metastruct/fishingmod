@@ -36,7 +36,7 @@ function ENT:KeyRelease(ply, key)
 end
 
 function ENT:ShouldDrawLocalPlayer(ply)
-	if ply:GetFishingRod() then
+	if ply and ply:GetFishingRod() then
 		return true
 	end
 end
