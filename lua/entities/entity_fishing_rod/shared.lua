@@ -19,11 +19,11 @@ function ENT:GetBobber()
 end
 
 function ENT:GetHook()
-	return self.dt and IsValid(self.dt.attach.dt.hook) and self.dt.attach.dt.hook or false
+	return self.dt and self.dt.attach.dt and IsValid(self.dt.attach.dt.hook) and self.dt.attach.dt.hook or false
 end
 
 function ENT:GetBait()
-	return self.dt and IsValid(self.dt.attach.dt.hook.dt.bait) and self.dt.attach.dt.hook.dt.bait or false
+	return self.dt and self.dt.attach.dt and self.dt.attach.dt.hook.dt and IsValid(self.dt.attach.dt.hook.dt.bait) and self.dt.attach.dt.hook.dt.bait or false
 end
 
 function ENT:GetPlayer()
