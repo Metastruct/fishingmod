@@ -15,6 +15,7 @@ function ENT:RenderScene()
 	if ply then
 		ply:SetAngles(Angle(0,ply:EyeAngles().y,0))
 	end
+	if not IsValid(self.dt.avatar) then return end
 	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0), Angle(60,0,90), position, angles)
 	self:SetPos(new_position)
