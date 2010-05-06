@@ -26,7 +26,7 @@ function ENT:PhysicsSimulate( phys, deltatime )
 		bobber:PhysWake()
 	end
 	
-	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local position, angles = self.dt.ply:GetBonePosition(self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand"))
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	
 	self.shadow_params.secondstoarrive = 0.0001
@@ -54,15 +54,9 @@ end
 function ENT:AssignPlayer(ply)
 	self:SetOwner(ply)
 
-	self.avatar = ents.Create("fishing_mod_avatar")
-	self.avatar.ply = ply
-	
-	self.avatar:Spawn()
-	self.dt.avatar = self.avatar	
-
 	self.dt.ply = ply
 	
-	local position = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local position = ply:GetBonePosition(ply:LookupBone("ValveBiped.Bip01_R_Hand"))
 	
 	local bobber = ents.Create("fishing_rod_bobber")
 	bobber.rod = self

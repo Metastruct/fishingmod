@@ -15,9 +15,9 @@ function ENT:RenderScene()
 	if ply then
 		ply:SetAngles(Angle(0,ply:EyeAngles().y,0))
 	end
-	if not IsValid(self.dt.avatar) then return end
-	local position, angles = self.dt.avatar:GetBonePosition(self.dt.avatar:LookupBone("ValveBiped.Bip01_R_Hand"))
-	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0), Angle(60,0,90), position, angles)
+	if not IsValid(self.dt.ply) then return end
+	local position, angles = self.dt.ply:GetBonePosition(self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local new_position, new_angles = LocalToWorld(Vector(26.5-(self.dt.rod_length/13),-0.17,-44) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
 	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
@@ -34,12 +34,6 @@ function ENT:KeyRelease(ply, key)
 	if ply:GetFishingRod() and key == IN_RELOAD then
 		RunConsoleCommand("fishing_mod_drop_catch")
 	end	
-end
-
-function ENT:ShouldDrawLocalPlayer(ply)
-	if ply and ply:GetFishingRod() then
-		return true
-	end
 end
 
 function ENT:HUDPaint()

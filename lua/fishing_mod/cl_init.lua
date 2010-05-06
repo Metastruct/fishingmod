@@ -45,6 +45,12 @@ hook.Add("OnEntityCreated", "Fishingmod:OnEntityCreated", function(entity)
 	end	
 end)
 
+hook.Add("ShouldDrawLocalPlayer", "Fishingmod:ShouldDrawLocalPlayer", function(ply)
+	if ply and ply:GetFishingRod() then
+		return true
+	end
+end)
+
 hook.Add("RenderScene", "Fishingmod:RenderScene", function()	
 	for key, entity in pairs(ents.GetAll()) do
 		local size = entity:GetNWFloat("fishingmod size")

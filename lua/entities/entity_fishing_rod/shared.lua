@@ -30,10 +30,6 @@ function ENT:GetPlayer()
 	return self.dt and IsValid(self.dt.ply) and self.dt.ply or false
 end
 
-function ENT:GetAvatar()
-	return self.dt and IsValid(self.dt.avatar) and self.dt.avatar or false
-end
-
 function ENT:GetLength()
 	return self.dt and self.dt.length or 0
 end
