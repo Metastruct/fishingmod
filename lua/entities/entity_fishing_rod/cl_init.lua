@@ -25,7 +25,8 @@ function ENT:RenderScene()
 end
 
 function ENT:KeyRelease(ply, key)
-	if ply:GetFishingRod() and (key == IN_USE and ply:KeyDown(IN_RELOAD)) or (key == IN_RELOAD and ply:KeyDown(IN_USE)) and not IsValid(fishingmod.UpgradeMenu) then
+	if ply:GetFishingRod() and (key == IN_USE and ply:KeyDown(IN_RELOAD)) or (key == IN_RELOAD and ply:KeyDown(IN_USE)) and (not fishingmod.UpgradeMenu:IsVisible() or not IsValid(fishingmod.UpgradeMenu)) then
+		if fishingmod.UpgradeMenu then fishingmod.UpgradeMenu:Remove() end
 		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu")
 	end	
 	if ply:GetFishingRod() and key == IN_USE then
