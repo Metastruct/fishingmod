@@ -25,7 +25,7 @@ function ENT:RenderScene()
 end
 
 function ENT:KeyRelease(ply, key)
-	if ply:GetFishingRod() and (key == IN_USE and ply:KeyDown(IN_RELOAD)) or (key == IN_RELOAD and ply:KeyDown(IN_USE)) and (not fishingmod.UpgradeMenu:IsVisible() or not IsValid(fishingmod.UpgradeMenu)) then
+	if ply:GetFishingRod() and (key == IN_USE and ply:KeyDown(IN_RELOAD)) or (key == IN_RELOAD and ply:KeyDown(IN_USE)) and ((fishingmod.UpgradeMenu and not fishingmod.UpgradeMenu:IsVisible()) or not IsValid(fishingmod.UpgradeMenu)) then
 		if fishingmod.UpgradeMenu then fishingmod.UpgradeMenu:Remove() end
 		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu")
 	end	
@@ -73,9 +73,7 @@ function ENT:Initialize()
 	self.last_length = 0
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
-	self:SetupHook("ShouldDrawLocalPlayer")
 	self:SetupHook("KeyRelease")
-	self:SetupHook("CalcView")
 end
 
 function ENT:Think()	
