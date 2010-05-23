@@ -9,6 +9,7 @@ fishingmod.AddCatch{
 	levelrequired = 3,
 	remove_on_release = false,
 	value = 500,
+	scalable = "box",
 	bait = {
 		"models/props_junk/watermelon01.mdl",
 		"models/props_junk/watermelon01_chunk01a.mdl",
@@ -31,7 +32,6 @@ function ENT:Initialize()
 	self:SetModel("models/props_c17/doll01.mdl")
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self:StartMotionController()
 	self.is_recatchable = true

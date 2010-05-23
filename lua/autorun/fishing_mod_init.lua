@@ -11,5 +11,6 @@ hook.Add("InitPostEntity", "Init Fish Mod", function()
 		include("fishing_mod/sv_init.lua")
 	else
 		include("fishing_mod/cl_init.lua")
+		RunConsoleCommand"fishing_mod_request_init"
 	end
 end)

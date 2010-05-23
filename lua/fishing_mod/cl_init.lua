@@ -20,7 +20,7 @@ function GAMEMODE:CalcVehicleThirdPersonView(vehicle, ply, position, angles, fov
 end
 
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
-	local trace = LocalPlayer():GetEyeTrace().Entity
+	local trace = LocalPlayer():GetEyeTrace()
 	if IsValid(trace.Entity) and (trace.Entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 		local data = fishingmod.InfoTable[trace.Entity:EntIndex()]
 		if data and data.text then
@@ -53,6 +53,9 @@ end)
 
 hook.Add("RenderScene", "Fishingmod:RenderScene", function()	
 	for key, entity in pairs(ents.GetAll()) do
+		if entity:GetNWBool("fishingmod catch") then
+			entity:SetModelScale(Vector()*entity:GetNWFloat("fishingmod scale", 1))
+		end
 		local size = entity:GetNWFloat("fishingmod size")
 		if entity:GetNWBool("in fishing shelf") and size ~= 0 then
 			entity:SetModelScale(Vector()*size/entity:BoundingRadius())

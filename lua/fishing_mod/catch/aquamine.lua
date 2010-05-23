@@ -8,6 +8,7 @@ fishingmod.AddCatch{
 	expgain = 30,
 	levelrequired = 3,
 	remove_on_release = false,
+	scalable = "sphere",
 	value = 300,
 	bait = {
 		"models/props_junk/watermelon01.mdl",
@@ -31,7 +32,6 @@ function ENT:Initialize()
 	self:SetModel("models/Roller.mdl")
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self:StartMotionController()
 	

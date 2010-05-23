@@ -59,7 +59,8 @@ function ENT:Hook( entitytype, data )
 	data = data or {}
 		
 	if IsEntity(entitytype) and IsValid(entitytype) then
-		entitytype:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		local oldname = entitytype:GetNWString("fishingmod friendly")
+		entitytype:SetNWString("fishingmod friendly", oldname ~= "" and oldname or data.friendly or "Unknown")
 		entitytype:SetNWBool("fishingmod catch", true)
 		if data.size then
 			entitytype:SetNWFloat("fishingmod size", data.size)
@@ -83,14 +84,33 @@ function ENT:Hook( entitytype, data )
 		self.dt.hooked = entitytype
 	else
 		local entity = ents.Create(data.type or "")
+		local size, name = 1, ""
+		
+		if data.scalable then 
+			size, name, value = fishingmod.GenerateSize(data.value)
+		end
+		
 		if not IsValid(entity) then return end
+		
 		if data.models then
 			entity:SetModel(table.Random(data.models) or "error.mdl")
 		end
+		
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity:Spawn()
+		if data.scalable == "box" then
+			entity:PhysicsInitBox(entity:OBBMins()*size,entity:OBBMaxs()*size)
+			entity:SetNWFloat("fishingmod scale", size)
+			if entity.Initialize then entity:Initialize() end
+		elseif data.scalable == "sphere" then
+			entity:PhysicsInitSphere(entity:BoundingRadius()*size)
+			entity:SetNWFloat("fishingmod scale",size*1.7)
+			if entity.Initialize then entity:Initialize() end
+		end
+		
 		hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
+		
 		if entity:IsNPC() then
 			entity:SetParent(self)
 			entity.oldmovetype = entity:GetMoveType()
@@ -98,18 +118,23 @@ function ENT:Hook( entitytype, data )
 		else
 			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
+		
 		entity.data = data
 		entity.data.caught = os.time()
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
-		entity:SetNWString("fishingmod friendly", data.friendly or "Unknown")
+		entity.data.value = entity.data.value * (size*1.5)
+		
+		entity:SetNWString("fishingmod friendly", name .. data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
+		
 		if data.size then
 			entity:SetNWFloat("fishingmod size", data.size)
 		end
-
+				
 		if data.remove_on_release then
 			self.remove_on_release = entity
 		end
+		
 		entity.is_catch = true
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
@@ -125,7 +150,6 @@ function ENT:UnHook()
 		if self.dt.hooked.remove_on_release then
 			self.remove_on_release = self.dt.hooked
 		end
-		self.dt.hooked:SetOwner()
 		self.dt.hooked.just_unhooked = true
 		local entity = self.dt.hooked
 		timer.Simple(1, function() if IsValid(entity) then entity.just_unhooked = false end end)
@@ -152,7 +176,7 @@ function ENT:Think()
 		if entity.is_recatchable and not self.just_released then
 			self:Hook(entity, entity.data)
 			self.just_released = true
-			timer.Simple(0.5, function() if IsValid(self) then self.just_released = false end end)
+			timer.Simple(1.5, function() if IsValid(self) then self.just_released = false end end)
 		end
 	end
 	if not constraint.FindConstraint(self.dt.hooked, "Weld") and not self.dt.hooked:IsNPC() then

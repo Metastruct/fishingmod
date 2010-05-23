@@ -104,6 +104,44 @@ function fishingmod.IsBait(entity)
 	return false
 end
 
+local function Random(min, max)
+	max = max*1000000
+	for i=0, max do 
+		if math.random(max/4) == math.random(max/10) then 
+			return math.max(i/max,min) 
+		end 
+	end
+end
+
+local sizes = {
+	["Nano"] = {0.3, 0.4},
+	["Micro"] = {0.4, 0.5},
+	["Mini"] = {0.5, 0.8},
+	["Small"] = {0.8, 1.1},
+	["Medium"] = {1.1, 1.4},
+	["Big-ish"] = {1.4, 1.8},
+	["Large"] = {1.8, 2.5},
+	["Huge"] = {2.5, 3.2},
+	["Gigantic"] = {3.2, 4},
+	["Humongous"] = {4, 7},
+	["Colossal"] = {7,10}
+}
+
+function fishingmod.GenerateSize()
+	local size = Random(sizes["Nano"][1], sizes["Colossal"][2])
+	
+	local name = ""
+	
+	for key, value in pairs(sizes) do
+		if size >= value[1] and size < value[2] then
+			name = key
+			break
+		end
+	end
+	
+	return size, name .. " "
+end
+
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
@@ -115,7 +153,7 @@ end)
 
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
-hook.Add("Think", "Fishingmod:Think", function()
+hook.Add("Think","FishingMod:Think", function()
 	for key, fire in pairs(ents.GetAll()) do 
 		if fire:IsOnFire() then
 			for key, catch in pairs(ents.FindInSphere(fire:GetPos(), fire:BoundingRadius()*2)) do
@@ -137,20 +175,6 @@ hook.Add("Think", "Fishingmod:Think", function()
 		local rod = ply:GetFishingRod()
 		if rod then
 			for key, data in RandomPairs(fishingmod.CatchTable) do
---[[ 			print(	
-					"friendly\n\n\n\n\n",
-					data.friendly,
-					"\nwater",
-					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 , 
-					"\nlevel",
-					fishingmod.LevelToExp(data.levelrequired) <= ply.fishingmod_exp,
-					"\nrandom",
-					math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2),1)/divider:GetFloat(),1)) == 1,
-					"\ndepth",
-					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth ,
-					"\nbait",
-					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
-				) ]]
  				if 
 					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
 					fishingmod.LevelToExp(data.levelrequired) <= tonumber(ply.fishingmod.exp) and
@@ -167,19 +191,18 @@ hook.Add("Think", "Fishingmod:Think", function()
 	end
 end)
 
-hook.Add("PlayerInitialSpawn", "Fishingmod:PlayerInitialSpawn", function(ply)
-	timer.Simple(3, function()
-		if not IsValid(ply) then return end
-		for key, entity in pairs(ents.GetAll()) do
-			if entity:GetNWBool("fishingmod catch") then
-				fishingmod.SetClientInfo(entity, ply)
-			end
+concommand.Add("fishing_mod_request_init", function(ply)
+	if ply.fishing_mod_spawned then return end
+	for key, entity in pairs(ents.GetAll()) do
+		if entity:GetNWBool("fishingmod catch") then
+			fishingmod.SetClientInfo(entity, ply)
 		end
-	end)
+	end
+	ply.fishing_mod_spawned = true
 end)
 
 hook.Add("PlayerSpawnedProp", "Fishingmod:PlayerSpawnedProp", function(ply, model, entity)
-	if ply:GetFishingRod() and fishingmod.IsBait(entity) then
+	if ply:GetFishingRod() and fishingmod.IsBait(entity) and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
 		ply:GetFishingRod():GetHook():HookBait(entity)
 	end
 end)
