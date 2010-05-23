@@ -102,10 +102,12 @@ function ENT:Hook( entitytype, data )
 		if data.scalable == "box" then
 			entity:PhysicsInitBox(entity:OBBMins()*size,entity:OBBMaxs()*size)
 			entity:SetNWFloat("fishingmod scale", size)
-			if entity.Initialize then entity:Initialize() end
 		elseif data.scalable == "sphere" then
 			entity:PhysicsInitSphere(entity:BoundingRadius()*size)
 			entity:SetNWFloat("fishingmod scale",size*1.7)
+		end
+		if data.scalable then
+			entity:SetNWBool("fishingmod scalable", true)
 			if entity.Initialize then entity:Initialize() end
 		end
 		

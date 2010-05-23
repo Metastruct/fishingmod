@@ -53,7 +53,7 @@ end)
 
 hook.Add("RenderScene", "Fishingmod:RenderScene", function()	
 	for key, entity in pairs(ents.GetAll()) do
-		if entity:GetNWBool("fishingmod catch") then
+		if entity:GetNWBool("fishingmod scalable") then
 			entity:SetModelScale(Vector()*entity:GetNWFloat("fishingmod scale", 1))
 		end
 		local size = entity:GetNWFloat("fishingmod size")
