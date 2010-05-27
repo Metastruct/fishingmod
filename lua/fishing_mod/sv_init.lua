@@ -1,7 +1,6 @@
 include("sv_networking.lua")
 include("sv_player_stats.lua")
 include("sv_upgrades.lua")
-AddCSLuaFile("cl_shop_menu.lua")
 
 local servertags = GetConVarString("sv_tags") --Thanks PHX!
 

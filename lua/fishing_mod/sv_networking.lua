@@ -1,5 +1,3 @@
-AddCSLuaFile("cl_networking.lua")
-
 function fishingmod.SetClientInfo(entity, ply)
 
 	local rp = RecipientFilter()
