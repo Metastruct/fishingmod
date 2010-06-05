@@ -72,7 +72,7 @@ end
 function ENT:Think()
 
 	for key, entity in pairs( ents.FindInBox( self:GetPos() + Vector( 6, -15, 37 ), self:GetPos() + Vector( 25, 15, -37 ) ) ) do
-		if entity.is_catch and not entity.shelf_stored and not entity:GetClass() == "prop_ragdoll" then
+		if entity.is_catch and not entity.shelf_stored and entity:GetClass() ~= "prop_ragdoll" then
 			self:AddItem( entity )
 		end
 	end
