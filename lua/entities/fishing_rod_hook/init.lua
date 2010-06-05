@@ -124,7 +124,7 @@ function ENT:Hook( entitytype, data )
 		entity.data = data
 		entity.data.caught = os.time()
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
-		entity.data.value = entity.data.value * (size*1.5)
+		entity.data.value = (entity.data.value or 0) * (size*1.5)
 		
 		entity:SetNWString("fishingmod friendly", name .. data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
