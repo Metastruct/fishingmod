@@ -55,7 +55,7 @@ function ENT:Hook( entitytype, data )
 	if IsValid(self.dt.bait) then
 		self.dt.bait:Remove()
 	end
-	
+		
 	data = data or {}
 		
 	if IsEntity(entitytype) and IsValid(entitytype) then
@@ -87,7 +87,7 @@ function ENT:Hook( entitytype, data )
 		local size, name = 1, ""
 		
 		if data.scalable then 
-			size, name, value = fishingmod.GenerateSize(data.value)
+			size, name = fishingmod.GenerateSize()
 		end
 		
 		if not IsValid(entity) then return end
@@ -126,7 +126,7 @@ function ENT:Hook( entitytype, data )
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity.data.value = (entity.data.value or 0) * (size*1.5)
 		
-		entity:SetNWString("fishingmod friendly", name .. data.friendly or "Unknown")
+		entity:SetNWString("fishingmod friendly", name .. " " .. data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
 		
 		if data.size then
@@ -175,7 +175,7 @@ end
 
 function ENT:Think()
 	for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
-		if entity.is_recatchable and not self.just_released then
+		if entity.is_recatchable and not self.just_released and not entity.just_unhooked then
 			self:Hook(entity, entity.data)
 			self.just_released = true
 			timer.Simple(1.5, function() if IsValid(self) then self.just_released = false end end)

@@ -103,43 +103,50 @@ function fishingmod.IsBait(entity)
 	return false
 end
 
-local function Random(min, max)
-	max = max*1000000
-	for i=0, max do 
-		if math.random(max/4) == math.random(max/10) then 
-			return math.max(i/max,min) 
-		end 
-	end
+local function RouletteRandom(t, r_func)
+    local max = 0
+    for pos, v in pairs(t) do
+        if tonumber(pos) and tonumber(pos) > max then
+            max = pos
+        end
+    end
+    if max == 0 then return end
+    local choice = (r_func or math.random)()*max
+    local biggest, best = -1
+    for pos, v in pairs(t) do
+        local k = tonumber(pos)
+        if k and k <= choice and k > biggest then
+            biggest = k
+            best = v
+        end
+    end
+    return best, choice
 end
 
 local sizes = {
-	["Nano"] = {0.3, 0.4},
-	["Micro"] = {0.4, 0.5},
-	["Mini"] = {0.5, 0.8},
-	["Small"] = {0.8, 1.1},
-	["Medium"] = {1.1, 1.4},
-	["Big-ish"] = {1.4, 1.8},
-	["Large"] = {1.8, 2.5},
-	["Huge"] = {2.5, 3.2},
-	["Gigantic"] = {3.2, 4},
-	["Humongous"] = {4, 7},
-	["Colossal"] = {7,10}
+    [1.4677992676221^12]  = {n = "Colossal"	, min = 7.0, max = 10.0},
+    [1.4677992676221^11] = {n = "Nano"       , min = 0.3, max = 0.4},
+    [1.4677992676221^10] = {n = "Micro"      , min = 0.4, max = 0.5},
+    [1.4677992676221^9]  = {n = "Mini"       , min = 0.5, max = 0.8},
+    [1.4677992676221^8]  = {n = "Small"      , min = 0.8, max = 1.1},
+    [1.4677992676221^7]  = {n = "Medium"     , min = 1.1, max = 1.4},
+    [1.4677992676221^6]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
+    [1.4677992676221^5]  = {n = "Large"      , min = 1.8, max = 2.5},
+    [1.4677992676221^4]  = {n = "Huge"       , min = 2.5, max = 3.2},
+    [1.4677992676221^3]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
+    [1.4677992676221^2]  = {n = "Humongous"  , min = 4.0, max = 7.0},
+    [1.4677992676221^1]  = {n = "Colossal"	, min = 7.0, max = 10.0},
 }
 
 function fishingmod.GenerateSize()
-	local size = Random(sizes["Nano"][1], sizes["Colossal"][2])
-	
-	local name = ""
-	
-	for key, value in pairs(sizes) do
-		if size >= value[1] and size < value[2] then
-			name = key
-			break
-		end
-	end
-	
-	return size, name .. " "
+    local size_category, choice = RouletteRandom(sizes)
+    if size_category then
+        return size_category.min+math.random()*(size_category.max-size_category.min), size_category.n, choice
+    else
+        return nil, nil, choice
+    end
 end
+
 
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
