@@ -121,7 +121,7 @@ function ENT:Think()
 	
 	self.target = fishingmod.AquaMineTarget
 	
-	self:GetPhysicsObject():Wake()
+	self:PhysWake()
 	
 	if self.NextShock < CurTime() then
 		local entsphere = ents.FindInSphere(self:GetPos(), 16)
