@@ -107,6 +107,14 @@ function ENT:AddItemByIndex(index, entity)
 					end
 				end)
 			end)
+			entity:CallOnRemove("FishingMod:Shelf", function(self)
+				if IsValid(item) then 
+					item.shelf_stored = nil
+				end
+				if IsValid(self) then
+					self.shelf_storage[index] = nil
+				end
+			end)
 			self:SaveShelf()
 		end
 	end)
