@@ -123,19 +123,20 @@ local function RouletteRandom(t, r_func)
     return best, choice
 end
 
+local exp = 1.6677992676221
+
 local sizes = {
-    [1.4677992676221^12]  = {n = "Colossal"	, min = 7.0, max = 10.0},
-    [1.4677992676221^11] = {n = "Nano"       , min = 0.3, max = 0.4},
-    [1.4677992676221^10] = {n = "Micro"      , min = 0.4, max = 0.5},
-    [1.4677992676221^9]  = {n = "Mini"       , min = 0.5, max = 0.8},
-    [1.4677992676221^8]  = {n = "Small"      , min = 0.8, max = 1.1},
-    [1.4677992676221^7]  = {n = "Medium"     , min = 1.1, max = 1.4},
-    [1.4677992676221^6]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
-    [1.4677992676221^5]  = {n = "Large"      , min = 1.8, max = 2.5},
-    [1.4677992676221^4]  = {n = "Huge"       , min = 2.5, max = 3.2},
-    [1.4677992676221^3]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
-    [1.4677992676221^2]  = {n = "Humongous"  , min = 4.0, max = 7.0},
-    [1.4677992676221^1]  = {n = "Colossal"	, min = 7.0, max = 10.0},
+    [exp^9] = {n = "Nano"       , min = 0.3, max = 0.4},
+    [exp^8.5] = {n = "Micro"      , min = 0.4, max = 0.5},
+    [exp^8]  = {n = "Mini"       , min = 0.5, max = 0.8},
+    [exp^7.7]  = {n = "Small"      , min = 0.8, max = 1.1},
+    [exp^7.5]  = {n = "Medium"     , min = 1.1, max = 1.4},
+    [exp^7]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
+    [exp^6.5]  = {n = "Large"      , min = 1.8, max = 2.5},
+    [exp^6]  = {n = "Huge"       , min = 2.5, max = 3.2},
+    [exp^5.5]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
+    [exp^5]  = {n = "Humongous"  , min = 4.0, max = 7.0},
+    [exp^3]  = {n = "Colossal"	, min = 7.0, max = 10.0},
 }
 
 function fishingmod.GenerateSize()
