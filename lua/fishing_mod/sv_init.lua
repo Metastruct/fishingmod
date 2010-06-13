@@ -134,9 +134,9 @@ local sizes = {
     [exp^7]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
     [exp^6.5]  = {n = "Large"      , min = 1.8, max = 2.5},
     [exp^6]  = {n = "Huge"       , min = 2.5, max = 3.2},
-    [exp^5.5]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
-    [exp^5]  = {n = "Humongous"  , min = 4.0, max = 7.0},
-    [exp^3]  = {n = "Colossal"	, min = 7.0, max = 10.0},
+    [exp^4]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
+    [exp^3]  = {n = "Humongous"  , min = 4.0, max = 7.0},
+    [exp^2]  = {n = "Colossal"	, min = 7.0, max = 10.0},
 }
 
 function fishingmod.GenerateSize()
@@ -185,7 +185,12 @@ hook.Add("Think","FishingMod:Think", function()
  				if 
 					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
 					fishingmod.LevelToExp(data.levelrequired) <= tonumber(ply.fishingmod.exp) and
-					math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2),1)/divider:GetFloat(),1)) == 1 and
+					
+					math.random(math.max(math.max(data.rareness-
+						math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2)-
+						math.min(math.ceil(rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4),data.rareness/2)
+					,1)/divider:GetFloat(),1)) == 1 and
+					
 					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth and
 					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
 				then
