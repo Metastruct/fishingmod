@@ -189,7 +189,7 @@ hook.Add("Think","FishingMod:Think", function()
 					math.random(math.max(math.max(data.rareness-
 						math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2)-
 						math.min(math.ceil(rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4),data.rareness/2)
-					,1)/divider:GetFloat(),1)) == 1 and
+					,1)/divider:GetFloat(),1))) == 1 and
 					
 					rod:GetDepth() < data.maxdepth and rod:GetDepth() > data.mindepth and
 					fishingmod.CheckBait(data.friendly, rod:GetHook():GetHookedBait())
