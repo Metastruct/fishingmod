@@ -8,6 +8,7 @@ fishingmod.AddCatch{
 	expgain = 300,
 	levelrequired = 10,
 	remove_on_release = false,
+	scalable = "box"
 	value = 700,
 	bait = {
 		"models/weapons/w_bugbait.mdl",
@@ -40,7 +41,6 @@ function ENT:Initialize()
 	self:SetModel(table.Random(self.Models))
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:PhysicsInitBox(Vector(-5, -1, -10),Vector(5, 1, 10))
 	self:StartMotionController()
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self.avoider_angles = Angle(0)
