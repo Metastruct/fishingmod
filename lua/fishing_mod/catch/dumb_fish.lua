@@ -8,7 +8,7 @@ fishingmod.AddCatch{
 	expgain = 300,
 	levelrequired = 10,
 	remove_on_release = false,
-	scalable = "box"
+	scalable = "box",
 	value = 700,
 	bait = {
 		"models/weapons/w_bugbait.mdl",
