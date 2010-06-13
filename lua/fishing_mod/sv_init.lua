@@ -171,8 +171,8 @@ hook.Add("Think","FishingMod:Think", function()
 						catch.data.fried = math.Clamp(catch.data.fried + math.ceil(distance), 0, 1000)
 
 						catch:SetColor(fishingmod.FriedToColor(catch.data.fried))
-						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function() 
-							catch.data.value = catch.data.value * (1-math.abs((catch.data.fried/1000-0.5)*2))*4
+						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()
+							catch.data.value = catch.data.originalvalue * (1-math.abs((catch.data.fried/1000-0.5)*2))*4
 							fishingmod.SetClientInfo(catch)
 						end)
 					end
