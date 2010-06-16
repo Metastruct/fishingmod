@@ -9,7 +9,7 @@ fishingmod.AddCatch{
 	levelrequired = 8,
 	remove_on_release = false,
 	value = 600,
-	scalbale = "sphere",
+	scalable = "sphere",
 	bait = {
 		"models/props_junk/watermelon01.mdl",
 		"models/props_junk/watermelon01_chunk01a.mdl",
