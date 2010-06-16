@@ -69,6 +69,7 @@ function ENT:Hook( entitytype, data )
 		entitytype.data = data
 		entitytype.data.caught = os.time()
 		entitytype.data.owner = self.bobber.rod:GetPlayer():Nick()
+		entitytype.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
 		
 		entitytype:SetPos(self:GetPos())
 		entitytype:SetOwner(self)
@@ -124,6 +125,7 @@ function ENT:Hook( entitytype, data )
 		entity.data = data
 		entity.data.caught = os.time()
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
+		entity.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
 		entity.data.value = (entity.data.value or 0) * (size*1.5)
 		
 		entity:SetNWString("fishingmod friendly", name .. " " .. data.friendly or "Unknown")

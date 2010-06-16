@@ -20,8 +20,9 @@ function ENT:SpawnFunction(ply, trace)
 end
 
 function ENT:OnRemove()
-	if IsValid(player.GetByUniqueID(self.uniqueid)) then
-		player.GetByUniqueID(self.uniqueid).has_shelf = false
+	local ply = player.GetByUniqueID(self.uniqueid)
+	if IsValid(ply) then
+		ply.has_shelf = false
 	end
 	
 	for key, item in pairs(self.shelf_storage) do
