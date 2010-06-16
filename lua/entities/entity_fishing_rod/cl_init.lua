@@ -38,7 +38,7 @@ function ENT:KeyRelease(ply, key)
 end
 
 function ENT:HUDPaint()
-	if not self:GetPlayer().fishingmod then return end
+	if self:GetPlayer() and not self:GetPlayer().fishingmod then return end
 	
 	if self:GetPlayer() ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
