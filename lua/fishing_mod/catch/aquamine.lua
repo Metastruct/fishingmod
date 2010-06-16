@@ -57,8 +57,13 @@ timer.Create("AquaMine:FindTarget", 1, 0, function()
 		if entity:GetClass() == "fishing_mod_catch_angry_baby" and not entity.dead and entity:WaterLevel() >= 1 then
 			fishingmod.AquaMineTarget = entity
 			return
+		end
+		if entity:GetClass() == "prop_physics" and entity:WaterLevel() >= 1 and string.find(entity:GetModel() or "", "melon") then
+			fishingmod.AquaMineTarget = entity
+			return
 		else
 			fishingmod.AquaMineTarget = nil
+			return
 		end
 	end		
 end)
