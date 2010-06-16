@@ -36,6 +36,8 @@ function ENT:Initialize()
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self:StartMotionController()
 	
+	self.is_recatchable = true
+	
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
 		phys:SetMaterial("zombieflesh")
