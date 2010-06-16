@@ -2,15 +2,15 @@ fishingmod = fishingmod or {}
 
 --Prices for upgrades
  
-fishingmod.RodLengthPrice = 200
-fishingmod.MaxRodLength = 50
+fishingmod.RodLengthPrice = 800
+fishingmod.MaxRodLength = 30
 
-fishingmod.StringLengthPrice = 50
+fishingmod.StringLengthPrice = 500
 
-fishingmod.ReelSpeedPrice = 300
+fishingmod.ReelSpeedPrice = 800
 fishingmod.MaxReelSpeed = 100
 
-fishingmod.HookForcePrice = 100
+fishingmod.HookForcePrice = 600
 
 function _R.Player:GetFishingRod()
 	return ValidEntity(self:GetNWEntity("fishing rod")) and self:GetNWEntity("fishing rod") or false

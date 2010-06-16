@@ -114,7 +114,7 @@ function ENT:Think()
 	
 	self.target = fishingmod.AngryBabyTarget
 	
-	self:GetPhysicsObject():Wake()
+	self:PhysWake()
 		
 	self:NextThink(CurTime()+0.3)
 	return true
