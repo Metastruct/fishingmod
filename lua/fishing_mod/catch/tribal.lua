@@ -1,0 +1,103 @@
+fishingmod.AddCatch{
+	friendly = "Tribal Figurine",
+	type = "fishing_mod_catch_figurine",
+	rareness = 1500, 
+	yank = 0, 
+	mindepth = 300, 
+	maxdepth = 30000,
+	expgain = 700,
+	levelrequired = 18,
+	remove_on_release = false,
+	value = 200,
+	bait = "none",
+	scalable = "sphere",
+	bait = {
+		"models/props_lab/huladoll.mdl"
+	}
+}
+ 
+local ENT = {}
+
+ENT.Type = "anim"
+ENT.Base = "fishing_mod_base"
+
+local materials = {
+	"models/humans/male/group01/joe_facemap",
+	"models/humans/male/group01/van_facemap",
+	"models/humans/male/group01/vance_facemap",
+	"models/humans/male/group01/ted_facemap",
+	"models/humans/male/group01/sandro_facemap",
+	"models/humans/male/group01/mike_facemap",
+	"models/humans/male/group01/eric_facemap",
+	"models/humans/male/group01/erdim_facemap",
+	"models/humans/male/group01/art_facemap",
+	"models/police/barneyface",
+	"models/monk/grigori_head",
+	"models/kleiner/walter_face",
+	"models/gman/gman_face_map3",
+	"models/eli/eli_tex4z",	
+	"models/humans/male/group01/art_facemap", 
+	"models/odessa/odessa_face",
+	"models/humans/female/group01/chau_facemap",
+	"models/humans/female/group01/joey_facemap",
+	--"models/humans/female/group01/kanisha_facemap",
+	"models/humans/female/group01/kim_facemap", 
+	"models/humans/female/group01/lakeetra_facemap", 
+	--"models/humans/female/group01/naeomi_facemap", 
+	"models/alyx/alyx_faceandhair",
+	--"models/mossman/mossman_facemodels/mossman/mossman_face"
+}
+
+local sounds = {
+	"vo/npc/female01/hi01.wav",
+	"vo/npc/female01/hi02.wav",
+	"vo/npc/male01/hi01.wav",
+	"vo/npc/male01/hi02.wav"
+}
+
+function ENT:Initialize()
+	self:SetModel("models/dav0r/hoverball.mdl")
+	self:SetMaterial(table.Random(materials))
+	self:SetMoveType( MOVETYPE_VPHYSICS )
+	self:SetSolid( SOLID_VPHYSICS )
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
+	self:StartMotionController()
+	local phys = self:GetPhysicsObject()
+	if IsValid(phys) then
+		phys:SetMass(10)
+		phys:Wake()
+		phys:SetBuoyancyRatio( 1.5 )
+		phys:EnableGravity(false)
+	end
+end
+
+function ENT:PhysicsSimulate(phys)
+	if math.random() > 0.9 then self:EmitSound(table.Random(sounds), 70	, math.random(200,255)) end
+	phys:Wake()
+	local figurines = ents.FindByClass("fishing_mod_catch_figurine")
+	local velocity = Vector(0)
+	for key, figurine in pairs(figurines) do
+		velocity = velocity + (figurine:GetPos() - self:GetPos())
+	end
+	velocity = velocity / #figurines
+	phys:AddVelocity(velocity+(VectorRand()*100)-(phys:GetVelocity()*0.05))
+end
+
+scripted_ents.Register(ENT, "fishing_mod_catch_figurine", true)
+
+All"fishing_mod_catch_figurine":Remove()
+
+for i=1,20 do 
+	local e=ents.Create"fishing_mod_catch_figurine" 
+	e:SetPos(nero.GetPlayer"caps":GetEyeTrace().HitPos+Vector(0,0,50)) 
+	e:Spawn() 
+	
+	local size = math.random()+1*2
+	e:SetNWBool("fishingmod scalable", true)
+	e:SetNWFloat("fishingmod scale", size)
+	e:PhysicsInitSphere(size)
+	
+	e:StartMotionController()
+	e:PhysWake()
+end
