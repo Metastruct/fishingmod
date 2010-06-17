@@ -8,7 +8,7 @@ fishingmod.AddCatch{
 	expgain = 125,
 	levelrequired = 9,
 	remove_on_release = false,
-	value = 300,
+	value = 100,
 	bait = {
 		"models/Combine_Helicopter/bomb_debris_1.mdl",
 		"models/Combine_Helicopter/bomb_debris_2.mdl",

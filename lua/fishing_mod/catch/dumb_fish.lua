@@ -1,7 +1,7 @@
 fishingmod.AddCatch{
 	friendly = "Dumb Fish",
 	type = "fishing_mod_catch_fish",
-	rareness = 2000, 
+	rareness = 4000, 
 	yank = 0, 
 	mindepth = 50, 
 	maxdepth = 700,
