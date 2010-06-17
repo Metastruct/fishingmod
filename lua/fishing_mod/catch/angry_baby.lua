@@ -8,7 +8,7 @@ fishingmod.AddCatch{
 	expgain = 50,
 	levelrequired = 3,
 	remove_on_release = false,
-	value = 200,
+	value = 150,
 	scalable = "box",
 	bait = {
 		"models/props_junk/watermelon01.mdl",

@@ -1,14 +1,14 @@
 fishingmod.AddCatch{
 	friendly = "Sawray",
 	type = "fishing_mod_catch_sawray",
-	rareness = 2500, 
+	rareness = 3500, 
 	yank = 0, 
 	mindepth = 640, 
 	maxdepth = 20000,
 	expgain = 60,
 	levelrequired = 8,
 	remove_on_release = false,
-	value = 600,
+	value = 300,
 	scalable = "sphere",
 	bait = {
 		"models/props_junk/watermelon01.mdl",

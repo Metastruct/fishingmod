@@ -1,7 +1,7 @@
 fishingmod.AddCatch{
 	friendly = "Aquamine",
 	type = "fishing_mod_catch_aquamine",
-	rareness = 2000, 
+	rareness = 3000, 
 	yank = 0, 
 	mindepth = 640, 
 	maxdepth = 20000,
@@ -9,7 +9,7 @@ fishingmod.AddCatch{
 	levelrequired = 3,
 	remove_on_release = false,
 	scalable = "sphere",
-	value = 300,
+	value = 250,
 	bait = {
 		"models/props_junk/watermelon01.mdl",
 		"models/props_junk/watermelon01_chunk01a.mdl",
