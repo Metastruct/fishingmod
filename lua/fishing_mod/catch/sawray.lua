@@ -1,9 +1,9 @@
 fishingmod.AddCatch{
 	friendly = "Sawray",
 	type = "fishing_mod_catch_sawray",
-	rareness = 2000, 
+	rareness = 2500, 
 	yank = 0, 
-	mindepth = 400, 
+	mindepth = 640, 
 	maxdepth = 20000,
 	expgain = 60,
 	levelrequired = 8,

@@ -1,7 +1,7 @@
 fishingmod.AddCatch{
 	friendly = "Gnome",
 	type = "fishing_mod_catch_gnome",
-	rareness = 3000, 
+	rareness = 4000, 
 	yank = 0, 
 	mindepth = 400, 
 	maxdepth = 800,
@@ -16,6 +16,9 @@ fishingmod.AddCatch{
 		"models/props_junk/garbage_glassbottle001a.mdl",
 		"models/props_junk/garbage_glassbottle002a.mdl",
 		"models/weapons/w_models/w_bottle.mdl",
+		"models/props_junk/GlassBottle01a.mdl",
+		"models/props_junk/glassjug01.mdl",
+		"models/props_junk/garbage_glassbottle003a.mdl",
 	},
 }
 
@@ -46,6 +49,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use(activator, caller)
+	if self.dead then return end
 	
 	if self.TauntTime <= CurTime() then
 		
@@ -80,7 +84,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 		
 	else
 		phys:AddAngleVelocity(Vector(0,0,math.Rand(-100,100)))
-		if math.random() > 0.95 and self.TauntTime <= CurTime() then
+		if math.random() > 0.99 and self.TauntTime <= CurTime() then
 			
 			local num = math.random(1,19)
 			if num <= 9 then

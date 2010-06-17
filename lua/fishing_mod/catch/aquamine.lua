@@ -3,7 +3,7 @@ fishingmod.AddCatch{
 	type = "fishing_mod_catch_aquamine",
 	rareness = 2000, 
 	yank = 0, 
-	mindepth = 200, 
+	mindepth = 640, 
 	maxdepth = 20000,
 	expgain = 30,
 	levelrequired = 3,
