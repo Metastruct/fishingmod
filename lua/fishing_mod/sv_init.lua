@@ -152,9 +152,9 @@ end
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
-		if entity.data.cant_sell and entity.Use then entity:Use(ply) return end
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
+		if entity.data.cant_sell and entity.Use then entity:Use(ply) return end
 		entity:Remove()
 		fishingmod.GiveMoney(ply, entity.data.value or 0)
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
