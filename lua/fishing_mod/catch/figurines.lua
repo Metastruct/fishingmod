@@ -85,19 +85,3 @@ function ENT:PhysicsSimulate(phys)
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_figurine", true)
-
-All"fishing_mod_catch_figurine":Remove()
-
-for i=1,20 do 
-	local e=ents.Create"fishing_mod_catch_figurine" 
-	e:SetPos(nero.GetPlayer"caps":GetEyeTrace().HitPos+Vector(0,0,50)) 
-	e:Spawn() 
-	
-	local size = math.random()+1*2
-	e:SetNWBool("fishingmod scalable", true)
-	e:SetNWFloat("fishingmod scale", size)
-	e:PhysicsInitSphere(size)
-	
-	e:StartMotionController()
-	e:PhysWake()
-end
