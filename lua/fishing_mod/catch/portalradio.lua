@@ -30,12 +30,8 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	self.sound = CreateSound(self, "ambient/music/looping_radio_mix.wav")
-	self.sound:SetSoundLevel(80)
+	self.sound:SetSoundLevel(100)
 	self.sound:Play()
-end
-
-function ENT:OnTakeDamage()
-	self.shot = true
 end
 
 ENT.DeathSounds = {
@@ -44,20 +40,16 @@ ENT.DeathSounds = {
 	"ambient/dinosaur_fizzle3.wav"
 }
 
-function ENT:Think()
-	if self.shot and not self.NoMoreSound then
-		self.sound:Stop()
-		self:EmitSound(table.Random(self.DeathSounds),70,100)
-		self.NoMoreSound = true
-	end
-	self:NextThink(CurTime())
-	return true
+function ENT:OnTakeDamage()
+	self.shot = true
+	self.sound:Stop()
+	self:EmitSound(table.Random(self.DeathSounds),70,100)
 end
 
 function ENT:OnRemove()
 	self.sound:Stop()
 	if not self.shot then
-		self:EmitSound(table.Random(self.DeathSounds),100,100)
+		self:EmitSound(table.Random(self.DeathSounds),50,100)
 	end
 end
 
