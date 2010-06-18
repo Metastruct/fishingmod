@@ -152,7 +152,7 @@ end
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
-		if entity.data.cant_sell then entity:Fire("use") return end
+		if entity.data.cant_sell and entity.Use then entity:Use(ply) return end
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
 		entity:Remove()

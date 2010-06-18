@@ -59,7 +59,7 @@ usermessage.Hook("Fishingmod:Entity", function(um)
 	local fried = um:ReadShort()
 	local value = um:ReadLong()
 	
-	value = value == -1 and "????" or value
+	value = value == 0 and "????" or value
 
 	fishingmod.InfoTable[entity] = {
 		friendly = friendly,
