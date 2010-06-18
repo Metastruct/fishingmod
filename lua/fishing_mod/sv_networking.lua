@@ -15,7 +15,7 @@ function fishingmod.SetClientInfo(entity, ply)
 		umsg.Long(entity.data.caught or 0)
 		umsg.String(entity.data.owner or "unknown")
 		umsg.Short(entity.data.fried or 0)
-		umsg.Long(entity.data.value or 0)
+		umsg.Long(entity.data.value or -1)
 	umsg.End()
 end
 

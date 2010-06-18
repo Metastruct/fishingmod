@@ -152,6 +152,7 @@ end
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
+		if entity.data.cant_sell then entity:Fire("use") return end
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
 		entity:Remove()
@@ -173,7 +174,8 @@ hook.Add("Think","FishingMod:Think", function()
 						catch.data.fried = math.Clamp(catch.data.fried + math.ceil(distance), 0, 1000)
 
 						catch:SetColor(fishingmod.FriedToColor(catch.data.fried))
-						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()
+						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()	
+							if not catch.data then return end
 							catch.data.originalvalue = catch.data.originalvalue or catch.data.value
 							catch.data.value = catch.data.originalvalue * ((2-math.abs((catch.data.fried/1000-0.5)*2))*4)
 							fishingmod.SetClientInfo(catch)
