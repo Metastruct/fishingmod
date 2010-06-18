@@ -75,12 +75,15 @@ end
 function ENT:PhysicsSimulate(phys)
 	if math.random() > 0.9 then self:EmitSound(table.Random(sounds), 70	, math.random(200,255)) end
 	phys:Wake()
-	local figurines = ents.FindByClass("fishing_mod_catch_figurine")
+	local figurines = 0
 	local velocity = Vector(0)
-	for key, figurine in pairs(figurines) do
-		velocity = velocity + (figurine:GetPos() - self:GetPos())
+	for key, figurine in pairs(ents.FindByClass("fishing_mod_catch_figurine")) do
+		if self:GetPos():Distance(figurine:GetPos()) < 2000 then
+			velocity = velocity + (figurine:GetPos() - self:GetPos())
+			figurines = figurines + 1
+		end
 	end
-	velocity = velocity / #figurines
+	if figurines > 0 then velocity = velocity / figurines end
 	phys:AddVelocity(velocity+(VectorRand()*100)-(phys:GetVelocity()*0.05))
 end
 
