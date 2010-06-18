@@ -8,7 +8,7 @@ fishingmod.AddCatch{
 	expgain = 50,
 	levelrequired = 0,
 	remove_on_release = false,
-	value = 0,
+	cant_sell = true,
 	bait = {
 		"models/props_c17/cashregister01a.mdl",
 		"models/props_misc/cash_register.mdl",
@@ -36,6 +36,7 @@ end
 scripted_ents.Register(ENT, "fishing_mod_catch_money", true)
 
 fishingmod.AddCatch{
+	cant_sell = true,
 	friendly = "Big Money",
 	type = "fishing_mod_catch_money_big",
 	rareness = 20000, 

@@ -1,4 +1,5 @@
 fishingmod.AddCatch{
+	cant_sell = true,
 	friendly = "Present",
 	type = "fishing_mod_catch_present",
 	rareness = 20000, 
