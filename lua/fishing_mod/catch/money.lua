@@ -29,7 +29,7 @@ end
 
 function ENT:Use(ply)
 	ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
-	fishingmod.GiveMoney(ply, math.random(100,500))
+	fishingmod.GiveMoney(ply, math.random(300))
 	self:Remove()
 end
 
