@@ -32,7 +32,7 @@ function ENT:Initialize()
 	self:SetModel("models/props_junk/gnome.mdl")
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:PhysicsInit(SOLID_VPHYSICS)
+	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 	self:StartMotionController()
 	
@@ -48,23 +48,30 @@ function ENT:Initialize()
 	
 end
 
+function ENT:Talk()
+	
+	local num = math.random(1,19)
+	if num <= 9 then
+		num = "0"..num
+	end	
+	
+	self:EmitSound("vo/taunts/heavy_taunts"..num..".wav", 100, math.random(110,120))
+	
+	self.TauntTime = CurTime()+10
+	
+end
+
 function ENT:Use(activator, caller)
 	if self.dead then return end
 	
 	if self.TauntTime <= CurTime() then
 		
-		local num = math.random(1,19)
-		if num <= 9 then
-			num = "0"..num
-		end
+		self:Talk()
 		
-		self:EmitSound("vo/taunts/heavy_taunts"..num..".wav", 100, math.random(110,120))
-		
-		self.TauntTime = CurTime()+10
 	end
 	
 end
-
+	
 function ENT:PhysicsSimulate(phys, deltatime)
 	if self.dead then return end
 	phys:Wake()
@@ -83,19 +90,7 @@ function ENT:PhysicsSimulate(phys, deltatime)
 		phys:AddAngleVelocity(Vector(0,0,360))
 		
 	else
-		phys:AddAngleVelocity(Vector(0,0,math.Rand(-100,100)))
-		if math.random() > 0.99 and self.TauntTime <= CurTime() then
-			
-			local num = math.random(1,19)
-			if num <= 9 then
-				num = "0"..num
-			end
-			
-			self:EmitSound("vo/taunts/heavy_taunts"..num..".wav", 100, math.random(110,120))
-			
-			self.TauntTime = CurTime()+10
-			
-		end
+		phys:AddVelocity(VectorRand()*10)
 	end
 end
 
@@ -103,21 +98,41 @@ function ENT:Revive()
 	self.dead = false
 end
 
+ENT.DeathSound = {
+	"vo/heavy_paincrticialdeath01.wav",
+	"vo/heavy_paincrticialdeath02.wav",
+	"vo/heavy_paincrticialdeath03.wav",
+	"vo/heavy_painsevere01.wav",
+	"vo/heavy_painsevere02.wav",
+	"vo/heavy_painsevere03.wav",
+	"vo/heavy_painsharp01.wav",
+	"vo/heavy_painsharp02.wav",
+	"vo/heavy_painsharp04.wav"
+}
+
 function ENT:OnTakeDamage(dmginfo)
 	self:TakePhysicsDamage(dmginfo)
 	if (dmginfo:GetDamageType() == DMG_BURN or dmginfo:GetDamage() > 50) and not self.dead then
 		self.dead = true
-		self:EmitSound("ambient/creatures/teddy.wav", 80, math.random(80,100))
+		self:EmitSound(table.Random(self.DeathSound), 100, math.random(110,120))
 	end
 end
 
 function ENT:Think()
 	if self.dead then return end
 	
-	self:GetPhysicsObject():Wake()
-	
-	self:NextThink(CurTime()+0.3)
+	if self:WaterLevel() < 3 then
+		
+		if math.random() > 0.95 and self.TauntTime <= CurTime() then
+			
+			self:Talk()
+			
+		end
+		
+	end
+	self:NextThink(CurTime()+0.5)
 	return true
+	
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_gnome", true)
