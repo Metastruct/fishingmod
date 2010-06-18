@@ -27,8 +27,9 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply)
-	fishingmod.GiveMoney(ply, math.random(100, 2000))
-	timer.Create("Fishingmod:Present"..ply:EntIndex(), 0.2, 20, function()
+	local num = math.random(100, 2000)
+	fishingmod.GiveMoney(ply, num)
+	timer.Create("Fishingmod:Present"..ply:EntIndex(), 0.2, math.Round(num/100), function()
 		if not IsValid(ply) then timer.Destroy("Fishingmod:Present"..ply:EntIndex()) return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 	end)
