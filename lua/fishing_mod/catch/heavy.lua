@@ -5,7 +5,7 @@ fishingmod.AddCatch{
 		"models/player/heavy.mdl",
 	},
 	size = 8,
-	rareness = 1000, 
+	rareness = 2500, 
 	yank = 100000, 
 	mindepth = 100, 
 	maxdepth = 20000,

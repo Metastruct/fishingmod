@@ -1,5 +1,5 @@
 local size = 10
-local rareness = 700
+local rareness = 4000
 local yank = 500
 local force = 0
 local mindepth = 200
