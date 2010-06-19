@@ -234,11 +234,3 @@ function ENT:Think()
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_ichthyosaur", true)
-
-for k,v in pairs(ents.FindByClass("fishing_mod_catch_ichthyosaur"))do v:Remove() end
-for i=1,1 do
-local ent=ents.Create("fishing_mod_catch_ichthyosaur")
-ent:SetPos(nero.GetPlayer"cowthing":GetEyeTrace().HitPos+Vector(0,0,80)+VectorRand()*100)
-ent:Spawn()
-end
-
