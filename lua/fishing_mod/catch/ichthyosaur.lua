@@ -9,7 +9,6 @@ fishingmod.AddCatch{
 	levelrequired = 40,
 	remove_on_release = false,
 	value = 800,
-	scalable = "sphere",
 	bait = {
 		"models/Gibs/Antlion_gib_Large_1.mdl",
 		"models/Gibs/Antlion_gib_Large_2.mdl",
