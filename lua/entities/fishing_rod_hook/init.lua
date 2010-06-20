@@ -50,7 +50,7 @@ function ENT:GetHookedBait()
 	return IsValid(self.dt.bait) and self.dt.bait or false
 end
 
-function ENT:Hook( entitytype, data )
+function ENT:Hook( entity, data )
 	if IsValid(self.dt.hooked) then return end
 	if IsValid(self.dt.bait) then
 		self.dt.bait:Remove()
@@ -58,33 +58,36 @@ function ENT:Hook( entitytype, data )
 		
 	data = data or {}
 		
-	if IsEntity(entitytype) and IsValid(entitytype) then
-		local oldname = entitytype:GetNWString("fishingmod friendly")
-		entitytype:SetNWString("fishingmod friendly", oldname ~= "" and oldname or data.friendly or "Unknown")
-		entitytype:SetNWBool("fishingmod catch", true)
+	if IsEntity(entity) and IsValid(entity) then
+        if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), true) == false then return end
+		local oldname = entity:GetNWString("fishingmod friendly")
+		entity:SetNWString("fishingmod friendly", oldname ~= "" and oldname or data.friendly or "Unknown")
+		entity:SetNWBool("fishingmod catch", true)
 		if data.size then
-			entitytype:SetNWFloat("fishingmod size", data.size)
+			entity:SetNWFloat("fishingmod size", data.size)
 		end
-		entitytype.is_catch = true
-		entitytype.data = data
-		entitytype.data.caught = os.time()
-		entitytype.data.owner = self.bobber.rod:GetPlayer():Nick()
-		entitytype.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
+		entity.is_catch = true
+		entity.data = data
+		entity.data.caught = os.time()
+		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
+		entity.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
 		
-		entitytype:SetPos(self:GetPos())
-		entitytype:SetOwner(self)
-		entitytype.is_catch = true
-		if entitytype:IsNPC() then
-			entitytype.oldmovetype = entitytype:GetMoveType()
-			entitytype:SetMoveType(MOVETYPE_NONE)
-			entitytype:SetParent(self)
+		entity:SetPos(self:GetPos())
+		entity:SetOwner(self)
+		entity.is_catch = true
+		if entity:IsNPC() then
+			entity.oldmovetype = entity:GetMoveType()
+			entity:SetMoveType(MOVETYPE_NONE)
+			entity:SetParent(self)
 		else
-			constraint.Weld(entitytype, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
+			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
-		fishingmod.SetClientInfo(entitytype)
-		self.dt.hooked = entitytype
+		fishingmod.SetClientInfo(entity)
+		self.dt.hooked = entity
+        if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), true) end
 	else
 		local entity = ents.Create(data.type or "")
+        if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), false) == false then entity:Remove() return end
 		local size, name = 1, ""
 		
 		if data.scalable then 
@@ -122,13 +125,15 @@ function ENT:Hook( entitytype, data )
 			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
 		
-		entity.data = data
+		entity.data = table.Copy(data)
 		entity.data.caught = os.time()
 		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
 		entity.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
 		entity.data.value = (entity.data.value or 0) * (size*1.5)
+		entity.data.friendly = name .. " " .. entity.data.friendly
 		
-		entity:SetNWString("fishingmod friendly", name .. " " .. data.friendly or "Unknown")
+		entity:SetNWString("fishingmod friendly", entity.data.friendly)
+		
 		entity:SetNWBool("fishingmod catch", true)
 		
 		if data.size then
@@ -142,6 +147,7 @@ function ENT:Hook( entitytype, data )
 		entity.is_catch = true
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
+        if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), false) end
 	end
 end
 
@@ -150,21 +156,24 @@ function ENT:GetHookedEntity()
 end
 
 function ENT:UnHook()
-	if IsValid(self.dt.hooked) then
-		if self.dt.hooked.remove_on_release then
-			self.remove_on_release = self.dt.hooked
+    local entity = entity
+	if IsValid(entity) then
+        if entity.PreRelease and entity:PreRelease(self.bobber.rod:GetPlayer()) == false then return end
+		if entity.remove_on_release then
+			self.remove_on_release = entity
 		end
-		self.dt.hooked.just_unhooked = true
-		local entity = self.dt.hooked
+		entity.just_unhooked = true
+		local entity = entity
 		timer.Simple(1, function() if IsValid(entity) then entity.just_unhooked = false end end)
-		if self.dt.hooked:IsNPC() then
-			self.dt.hooked:SetAngles(Angle(0))
-			self.dt.hooked:SetMoveType(self.dt.hooked.oldmovetype)
-			self.dt.hooked:SetParent()
+		if entity:IsNPC() then
+			entity:SetAngles(Angle(0))
+			entity:SetMoveType(entity.oldmovetype)
+			entity:SetParent()
 		else
-			constraint.RemoveConstraints(self.dt.hooked, "Weld")
+			constraint.RemoveConstraints(entity, "Weld")
 		end
-		self.dt.hooked = nil
+        if entity.PostRelease then entity:PostRelease(self.bobber.rod:GetPlayer()) end
+		entity = nil
 	end
 end
 

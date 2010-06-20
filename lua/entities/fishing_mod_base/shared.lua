@@ -15,3 +15,7 @@ end
 function ENT:IsCatch()
 	return self:GetNWBool("fishingmod catch")
 end
+
+function ENT:GetSize()
+	return entity:GetNWFloat("fishingmod scale", 1)
+end

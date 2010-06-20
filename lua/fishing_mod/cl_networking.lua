@@ -69,7 +69,8 @@ usermessage.Hook("Fishingmod:Entity", function(um)
 		value = value,
 	}
 	local text = Format([[
-		This catch is called %s and it is %s
+		This catch is called %s 
+		and it is %s
 		%s caught this
 		{TIME}
 		You can sell this catch by holding

@@ -1,3 +1,5 @@
+fishingmod = fishingmod or {}
+
 include("sv_networking.lua")
 include("sv_player_stats.lua")
 include("sv_upgrades.lua")
@@ -28,7 +30,9 @@ function fishingmod.RemoveCatch(name)
 end
 
 for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
-	include("fishing_mod/catch/"..name)
+	local path = "fishing_mod/catch/"..name
+	include(path)
+	AddCSLuaFile(path)
 end
 
 local function BreakWeld(ply,entity)
@@ -131,12 +135,12 @@ local sizes = {
     [exp^8]  = {n = "Mini"       , min = 0.5, max = 0.8},
     [exp^7.7]  = {n = "Small"      , min = 0.8, max = 1.1},
     [exp^7.5]  = {n = "Medium"     , min = 1.1, max = 1.4},
-    [exp^3]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
-    [exp^2.5]  = {n = "Large"      , min = 1.8, max = 2.5},
-    [exp^2]  = {n = "Huge"       , min = 2.5, max = 3.2},
-    [exp^1.5]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
-    [exp^1.2]  = {n = "Humongous"  , min = 4.0, max = 7.0},
-    [exp]  = {n = "Colossal"	, min = 7.0, max = 10.0},
+    [exp^5]  = {n = "Big-ish"    , min = 1.4, max = 1.8},
+    [exp^4.5]  = {n = "Large"      , min = 1.8, max = 2.5},
+    [exp^3]  = {n = "Huge"       , min = 2.5, max = 3.2},
+    [exp^2.5]  = {n = "Gigantic"   , min = 3.2, max = 4.0},
+    [exp^2]  = {n = "Humongous"  , min = 4.0, max = 7.0},
+    [exp^1.5]  = {n = "Colossal"	, min = 7.0, max = 10.0},
 }
 
 function fishingmod.GenerateSize()
@@ -148,6 +152,13 @@ function fishingmod.GenerateSize()
     end
 end
 
+function fishingmod.Sell(ply, entity, value)
+	if entity.PreSell and entity:PreSell(ply, value) == false then return false end
+	entity:Remove()
+	fishingmod.GiveMoney(ply, value or 0)
+	return true
+end
+
 
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
@@ -155,9 +166,8 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
 		if entity.data.cant_sell and entity.Use then entity:Use(ply) return end
-		entity:Remove()
-		fishingmod.GiveMoney(ply, entity.data.value or 0)
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
+        fishingmod.Sell(ply, entity, entity.data.value or 0)
 	end
 end)
 

@@ -1,5 +1,3 @@
-fishingmod = fishingmod or {}
-
 --Prices for upgrades
  
 fishingmod.RodLengthPrice = 800

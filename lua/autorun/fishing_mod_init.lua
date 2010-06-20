@@ -4,15 +4,10 @@ if SERVER then
 	AddCSLuaFile("fishing_mod/cl_init.lua")
 	AddCSLuaFile("fishing_mod/cl_networking.lua")
 	AddCSLuaFile("fishing_mod/cl_shop_menu.lua")
+	include("fishing_mod/sv_init.lua")
 	resource.AddFile("sound/fishingrod/reel.wav")
+else
+	include("fishing_mod/cl_init.lua")
 end
 
-hook.Add("InitPostEntity", "Init Fish Mod", function()
-	include("fishing_mod/sh_init.lua")
-	if SERVER then
-		include("fishing_mod/sv_init.lua")
-	else
-		include("fishing_mod/cl_init.lua")
-		RunConsoleCommand"fishing_mod_request_init"
-	end
-end)
+include("fishing_mod/sh_init.lua")
