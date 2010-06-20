@@ -177,18 +177,23 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 end)
 
 hook.Add("FishingModCaught", "FishingMod:Seagull", function(ply, entity)
-	if math.random(5) ~= 1 then return end
-
+	if not IsValid(ply) or not IsValid(entity) then return end
+	--print("BEFORE RANDOM")
+	if math.random(3) ~= 1 then return end
+	--print("AFTER RANDOM")
 	local random = ply:GetPos()+VectorRand()*2000
 	random.z = math.abs(random.z)
 	
 	if not util.IsInWorld(random) then return end
+	--print("NOT IN WORLD")
 	
 	local seagull = ents.Create("fishing_mod_seagull")
 	seagull:SetPos(random)
 	seagull:SetTarget(entity)
 	seagull:SetTargetOwner(ply)
 	seagull:Spawn()
+	
+	--print("SUCCESS")
 		
 end)
 
