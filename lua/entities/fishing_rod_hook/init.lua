@@ -156,7 +156,7 @@ function ENT:GetHookedEntity()
 end
 
 function ENT:UnHook()
-    local entity = entity
+    local entity = self.dt.hooked
 	if IsValid(entity) then
         if entity.PreRelease and entity:PreRelease(self.bobber.rod:GetPlayer()) == false then return end
 		if entity.remove_on_release then

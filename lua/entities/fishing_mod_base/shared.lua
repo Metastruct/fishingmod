@@ -17,5 +17,5 @@ function ENT:IsCatch()
 end
 
 function ENT:GetSize()
-	return entity:GetNWFloat("fishingmod scale", 1)
+	return self:GetNWFloat("fishingmod scale", 1)
 end
