@@ -94,7 +94,12 @@ end
 
 function fishingmod.IsBait(entity)
 	if not IsValid(entity) then return end
-	local model = string.lower(entity:GetModel()) or ""
+	local model
+	if entity.AttachedEntity then
+		model = (entity.AttachedEntity and string.lower(entity.AttachedEntity:GetModel())) or "none"
+	else
+		model = (entity and string.lower(entity:GetModel())) or "none"
+	end
 	for name, catch in pairs(fishingmod.CatchTable) do
 		if type(catch.bait) == "table" then
 			for key, bait in pairs(catch.bait) do
@@ -169,6 +174,22 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
         fishingmod.Sell(ply, entity, entity.data.value or 0)
 	end
+end)
+
+hook.Add("FishingModCaught", "FishingMod:Seagull", function(ply, entity)
+	if math.random(5) ~= 1 then return end
+
+	local random = VectorRand()*2000
+	random.z = math.abs(random.z)
+	
+	if not util.IsInWorld(random) then return end
+	
+	local seagull = ents.Create("fishing_mod_seagull")
+	seagull:SetPos(ply:GetPos()+random)
+	seagull:SetTarget(entity)
+	seagull:SetTargetOwner(ply)
+	seagull:Spawn()
+		
 end)
 
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)

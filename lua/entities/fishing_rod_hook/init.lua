@@ -87,8 +87,9 @@ function ENT:Hook( entity, data )
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), true) end
+		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
 	else
-		local entity = ents.Create(data.type or "")
+		entity = ents.Create(data.type or "")
         if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), false) == false then entity:Remove() return end
 		local size, name = 1, ""
 		
@@ -150,6 +151,7 @@ function ENT:Hook( entity, data )
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), false) end
+		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
 	end
 end
 
