@@ -18,6 +18,9 @@ local ENT = {}
 
 ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
+
+PrecacheParticleSystem("bday_confetti")
+
 if SERVER then
 	function ENT:Initialize()
 		local num = math.random(1,4)
@@ -28,6 +31,8 @@ if SERVER then
 	end
 
 	function ENT:Use(ply)
+		ParticleEffect("bday_confetti",ply:GetPos(),Angle(0,0,0),ply)
+		ply:EmitSound("misc/happy_birthday.wav",100,100)
 		local num = math.random(100, 2000)
 		if not fishingmod.Sell(ply, self, num) then return end
 		timer.Create("Fishingmod:Present"..ply:EntIndex(), 0.2, math.Round(num/100), function()
