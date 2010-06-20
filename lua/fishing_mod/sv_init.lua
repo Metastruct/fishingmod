@@ -176,27 +176,29 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	end
 end)
 
+
 hook.Add("FishingModCaught", "FishingMod:Seagull", function(ply, entity)
-	if not IsValid(ply) or not IsValid(entity) then return end
-	--print("BEFORE RANDOM")
-	if math.random(3) ~= 1 then return end
-	--print("AFTER RANDOM")
-	local random = VectorRand()*2000
-	random.z = math.abs(random.z)
-	
-	local position = ply:GetPos()+random
-	
-	if not util.IsInWorld(position) then return end
-	--print("NOT IN WORLD")
-	
-	local seagull = ents.Create("fishing_mod_seagull")
-	seagull:SetPos(position)
-	seagull:SetTarget(entity)
-	seagull:SetTargetOwner(ply)
-	seagull:Spawn()
-	
-	--print("SUCCESS")
+	--print("player",ply,"catch",entity)
+	if IsValid(ply) and IsValid(entity) then
+		--print("BEFORE RANDOM")
+		if math.random(3) ~= 1 then return end
+		--print("AFTER RANDOM")
+		local random = VectorRand()*2000
+		random.z = math.abs(random.z)
 		
+		local position = ply:GetPos()+random
+		
+		if not util.IsInWorld(position) then return end
+		--print("NOT IN WORLD")
+		
+		local seagull = ents.Create("fishing_mod_seagull")
+		seagull:SetPos(position)
+		seagull:SetTarget(entity)
+		seagull:SetTargetOwner(ply)
+		seagull:Spawn()
+		
+		--print("SUCCESS")
+	end
 end)
 
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)

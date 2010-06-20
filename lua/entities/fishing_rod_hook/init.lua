@@ -151,7 +151,7 @@ function ENT:Hook( entity, data )
 		fishingmod.SetClientInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), false) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		hook.Call("FishingModCaught", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
 	end
 end
 
