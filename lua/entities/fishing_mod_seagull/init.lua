@@ -111,10 +111,10 @@ function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 		ragdoll:SetPos(self:GetPos())
 		ragdoll:SetAngles(self:GetAngles())
 		ragdoll.data = {}
-		ragdoll.data.owner = data:GetAttacker():Nick()
-		ragdoll.data.ownerid = data:GetAttacker():UniqueID()
+		ragdoll.data.owner = attacker:Nick()
+		ragdoll.data.ownerid = attacker:UniqueID()
 		ragdoll.data = {
-			value = 7000,
+			value = 2500,
 			friendly = "Dead Seagull",
 			caught = os.time()
 		}
