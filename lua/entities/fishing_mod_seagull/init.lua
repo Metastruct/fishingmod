@@ -63,7 +63,8 @@ function ENT:PhysicsSimulate(phys)
 	local owner = IsValid(self.owner) and self.owner
 			
 	phys:Wake()
-
+	phys:EnableMotion(false)
+	
 	if owner and target and owner:GetPos():Distance(self:GetPos()) > 13000 then 
 		self:Remove()
 	end
