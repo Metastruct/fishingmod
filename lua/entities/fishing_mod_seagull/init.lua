@@ -105,18 +105,17 @@ end
 
 function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 	if ent ~= self then return end
-	if data:IsBulletDamage() then
+	if data:IsBulletDamage() and attacker:IsPlayer() then
 		local ragdoll = ents.Create("prop_ragdoll")
 		ragdoll:SetModel(self:GetModel())
 		ragdoll:SetPos(self:GetPos())
 		ragdoll:SetAngles(self:GetAngles())
-		ragdoll.data = {}
-		ragdoll.data.owner = attacker:Nick()
-		ragdoll.data.ownerid = attacker:UniqueID()
 		ragdoll.data = {
 			value = 2500,
 			friendly = "Dead Seagull",
-			caught = os.time()
+			caught = os.time(),
+			owner = attacker:Nick(),
+			ownerid = attacker:UniqueID(),
 		}
 		ragdoll:SetNWBool("fishingmod catch", true)
 		ragdoll:Spawn()
