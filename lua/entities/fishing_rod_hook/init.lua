@@ -31,8 +31,11 @@ end
 
 function ENT:HookBait(bait)
 	if not IsValid(self.dt.bait) then
-		bait:GetPhysicsObject():EnableMotion(true)
-		bait:PhysWake()
+		local phys = bait:GetPhysicsObject()
+		if IsValid(phys) then
+			phys:EnableMotion(true)
+			phys:Wake()
+		end
 		bait:SetPos(self:GetPos())
 		self.dt.bait = bait
 		constraint.Weld(self, self.dt.bait)
