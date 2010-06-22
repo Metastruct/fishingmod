@@ -76,7 +76,6 @@ function ENT:AssignPlayer(ply)
 	
 	local bait = util.QuickTrace(ply:GetShootPos(), ply:GetAimVector()*400, {ply, self, bobber, fish_hook}).Entity
 	if IsValid(bait) then
-		PrintTable(bait:GetTable())
 		fishingmod.HookBait(ply, bait, fish_hook)
 	end
 	
