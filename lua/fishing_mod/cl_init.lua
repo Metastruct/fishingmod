@@ -61,23 +61,26 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	end
 end)
 
+local visible = false
+
+hook.Add("ChatTextChanged", "Fishingmod:ChatTextChanged", function(text)
+	visible = text ~= ""
+end)
+
 hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
-	if ply:GetFishingRod() then
-		if  
-			(ply:KeyDown(IN_USE) and ply:KeyPressed(IN_RELOAD)) or 
-			(ply:KeyDown(IN_RELOAD) and ply:KeyPressed(IN_USE))
-		then
+	if ply:GetFishingRod() and not visible then
+		if input.IsKeyDown(KEY_B) then
 			local menu = fishingmod.UpgradeMenu
 			if not menu:IsVisible() then
 				menu:SetVisible(true)
 				menu:MakePopup()
 			end
 		end	
-		if ply:KeyPressed(IN_USE) then
+		if input.IsKeyDown(KEY_E) then
 			RunConsoleCommand("fishing_mod_drop_bait")
 		end
-		if ply:KeyPressed(IN_RELOAD) then
+		if input.IsKeyDown(KEY_R) then
 			RunConsoleCommand("fishing_mod_drop_catch")
 		end	
 	end
