@@ -34,7 +34,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		self:SetColor(0,0,0,0)
 		
-		self.dt.Core = math.random(1,3)
+		self.dt.Core = math.random(0,3)
 		
 		self.body = ents.Create("prop_dynamic")
 		self.body:SetModel("models/props_bts/glados_ball_reference.mdl")
