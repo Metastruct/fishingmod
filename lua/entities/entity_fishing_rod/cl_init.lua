@@ -24,27 +24,6 @@ function ENT:RenderScene()
 	self:SetModelScale(Vector(1*self.dt.rod_length,1,1))
 end
 
-function ENT:Keys()
-	local ply = LocalPlayer()
-	if 
-		ply:GetFishingRod() and 
-		(ply:KeyPressed(IN_USE) and ply:KeyDown(IN_RELOAD)) or 
-		(ply:KeyPressed(IN_RELOAD) and ply:KeyDown(IN_USE))
-	then
-		local menu = fishingmod.UpgradeMenu
-		if not menu:IsVisible() then
-			menu:SetVisible(true)
-			menu:MakePopup()
-		end
-	end	
-	if ply:GetFishingRod() and ply:KeyPressed(IN_USE) then
-		RunConsoleCommand("fishing_mod_drop_bait")
-	end
-	if ply:GetFishingRod() and ply:KeyPressed(IN_RELOAD) then
-		RunConsoleCommand("fishing_mod_drop_catch")
-	end	
-end
-
 function ENT:HUDPaint()
 	if self:GetPlayer() and not self:GetPlayer().fishingmod then return end
 	
@@ -87,12 +66,10 @@ function ENT:Initialize()
 	self.last_length = 0
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
-	self:SetupHook("KeyRelease")
+	self:SetupHook("Tick")
 end
 
 function ENT:Think()	
-	self:Keys()
-
 	local delta = self.dt.length - self.last_length
 
 	local velocity_length = IsValid(self.dt.attach) and self.dt.attach:GetVelocity():Length() or 0
