@@ -104,7 +104,7 @@ else
 	
 	function ENT:Think()
 		
-		if self.LastSound <= CurTime() then
+		if self.LastSound <= CurTime() and not self.dt.Core == 0 then
 				local curSound = table.Random(self.Sounds[self.dt.Core])
 				
 				self:EmitSound(curSound, 80, 100)
