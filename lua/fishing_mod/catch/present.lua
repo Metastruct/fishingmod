@@ -28,13 +28,16 @@ if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
+		
+		num = math.Round(math.random(0,1))
+		self:SetSkin(num)
 	end
 
 	function ENT:Use(ply)
-		ParticleEffect("bday_confetti",ply:GetPos(),Angle(0,0,0),ply)
-		ply:EmitSound("misc/happy_birthday.wav",100,100)
 		local num = math.random(100, 2000)
 		if not fishingmod.Sell(ply, self, num) then return end
+		ParticleEffect("bday_confetti",ply:GetPos(),Angle(0,0,0),ply)
+		ply:EmitSound("misc/happy_birthday.wav",100,100)
 		timer.Create("Fishingmod:Present"..ply:EntIndex(), 0.2, math.Round(num/100), function()
 			if not IsValid(ply) then timer.Destroy("Fishingmod:Present"..ply:EntIndex()) return end
 			ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))

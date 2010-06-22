@@ -39,10 +39,10 @@ if SERVER then
 
 	function ENT:Initialize()
 		self:InitializeData()
-		self:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
+		self:SetModel("models/props_wasteland/rockcliff01g.mdl")
 		self:SetMoveType( MOVETYPE_VPHYSICS )
 		self:SetSolid( SOLID_VPHYSICS )
-		self:PhysicsInitSphere(48)
+		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		self:StartMotionController()
 		
@@ -62,17 +62,19 @@ if SERVER then
 		
 		self.body = ents.Create("prop_dynamic")
 		self.body:SetModel("models/ichthyosaur.mdl")
-		self.body:SetAngles(Angle(0,90,0))
-		self.body:SetPos(self:GetPos() + self.body:GetForward()*32)
+		local ang = self:GetAngles()
+		ang:RotateAroundAxis(self:GetRight(),90)
+		self.body:SetAngles(ang)
+		self.body:SetPos(self:GetPos() + self.body:GetForward()*64)
 		self.body:SetParent(self)
 		
-		self.NextMove = 1
+		
 		self.ShadowParams = {}
 		self.ShadowParams.secondstoarrive = 8
-		self.ShadowParams.maxangular = 10000
-		self.ShadowParams.maxangulardamp = 50000
+		self.ShadowParams.maxangular = 15000
+		self.ShadowParams.maxangulardamp = 20000
 		self.ShadowParams.maxspeed = 2000000
-		self.ShadowParams.maxspeeddamp = 100000
+		self.ShadowParams.maxspeeddamp = 10000
 		self.ShadowParams.dampfactor = 1
 		self.ShadowParams.teleportdistance = 0
 		
@@ -103,7 +105,8 @@ if SERVER then
 			self.dead = true
 			self.health = 0
 			self.Sounds.Breath:Stop()
-			self:EmitSound(table.Random(self.Sounds.Growl),150,math.random(80,90))
+			self:EmitSound(table.Random(self.Sounds.Growl),150,math.random(70,80))
+			return
 		end
 		
 	end
@@ -114,7 +117,7 @@ if SERVER then
 		self.Sounds.Breath:Stop()
 		
 	end
-
+	
 	function ENT:PhysicsSimulate(phys,deltatime)
 		if self.dead then return end
 		
@@ -123,66 +126,77 @@ if SERVER then
 		if self:WaterLevel() >= 3 then
 			
 			if constraint.FindConstraint(self, "Weld") then --hooked Move
+				
 				phys:AddVelocity(VectorRand()*100)
 				phys:AddAngleVelocity(VectorRand()*200)
-				return
-			end
-			
-			self.ShadowParams.secondstoarrive = 8
-			
-			local TR = {}
-			TR.start = self:GetPos()
-			TR.endpos = TR.start + self.body:GetForward()*1000
-			TR.filter = {self,self.body}
-			TR = util.TraceLine(TR)
-			
-			if IsValid(self.target) then --Target Move
+				
+			elseif IsValid(self.target) then --Target Move
 				
 				self.ShadowParams.secondstoarrive = self.random
-				local gotoang = (self.target:GetPos()-self:GetPos()):Angle()
-				gotoang:RotateAroundAxis(self:GetUp(),-90)
+				local gotoang = (self.target:GetPos()-self.body:GetPos()):Angle()
+				gotoang:RotateAroundAxis(self:GetRight(),-90)
+				
 				self.ShadowParams.angle = gotoang
 				
-				local trace = util.QuickTrace(self:GetPos(), self.body:GetForward()*100, {self,self.body})
+				local trace = util.QuickTrace(self.body:GetPos(), self.body:GetForward()*100, {self,self.body})
 				
-				local lerp = math.Clamp(self:GetPos():Distance(self.target:GetPos())/200, 0, 1)*trace.Fraction
+				local lerp = math.Clamp(self.body:GetPos():Distance(self.target:GetPos())/200, 0, 1)*trace.Fraction
 				self.ShadowParams.pos = LerpVector(
 					lerp,
 					self.target:GetPos(),
-					self:GetPos() + self.body:GetForward() * 200
+					self.body:GetPos() + self.body:GetForward() * 200
 				)
 				
 			else --Normal Move
 				
-				self.ShadowParams.pos = TR.HitPos+TR.HitNormal*32
-				if self.NextMove < CurTime() then
-					
-					self.ShadowParams.angle = Angle( 0, math.random(0,360), math.random(-10,0) )
-					self.ShadowParams.deltatime = deltatime
-					
-					self.NextMove=CurTime()+5
-					
+				self.ShadowParams.secondstoarrive = 4
+				
+				local TR = util.QuickTrace(self.body:GetPos(), self.body:GetForward()*1000 - Vector(0,0,32), {self,self.body})
+				
+				local gotopos = Vector()
+				if TR.Hit then
+					gotopos = TR.HitPos + TR.HitNormal*500
+				else
+					gotopos = TR.HitPos
 				end
+				
+				self.ShadowParams.pos = gotopos 
+				
+				local gotoang = Angle()
+				if TR.Hit then
+					gotoang = ((TR.HitPos + TR.HitNormal*500)-self.body:GetPos()):Angle()
+				else
+					gotoang = (TR.HitPos - self.body:GetPos()):Angle()
+				end
+				gotoang.p = 0
+				gotoang.r = 0
+				gotoang:RotateAroundAxis(self:GetRight(),-90)
+				
+				self.ShadowParams.angle = gotoang
 				
 			end
 			
+			self.ShadowParams.deltatime = deltatime
 			phys:ComputeShadowControl(self.ShadowParams)
 			
 		else
+			
 			phys:AddVelocity(VectorRand()*50)
 			phys:AddAngleVelocity(VectorRand()*100)
+			
 		end
 		
 	end
 
 	function ENT:Think()
 		if self.dead then --Dead Think
+			
+			self.body:SetPlaybackRate(1)
+			self.body:ResetSequence(self.body:LookupSequence("attackstart"))
+			self.body:SetCycle(7)
 			self.body:SetPlaybackRate(0)
-			self.body:ResetSequence(self.body:LookupSequence("attackmiss"))
-			self.body:SetCycle(100)
-			return
-		end
-		if self:WaterLevel() >= 3 then --In water Think
+			
+		elseif self:WaterLevel() >= 3 then --In water Think
 			
 			self.Sounds.Breath:Play()
 			
@@ -190,7 +204,7 @@ if SERVER then
 			self.body:SetPlaybackRate(speed/500)
 			self.body:ResetSequence(self.body:LookupSequence("swim"))
 			
-			for _,ent in pairs(ents.FindInSphere(self:GetPos(),1000)) do
+			for _,ent in pairs(ents.FindInSphere(self:GetPos(),1024)) do
 				
 				if ent:IsPlayer() and ent:WaterLevel()>=3 and ent:Alive() then
 					self.target = ent
@@ -218,24 +232,27 @@ if SERVER then
 			self.body:ResetSequence(self.body:LookupSequence("thrash"))
 			
 		end
-		for _,ent in pairs(ents.FindInSphere(self.body:GetPos()+self.body:GetForward()*16,12)) do
-			
-			if ent:IsPlayer() and ent:Alive() then
-				self.body:SetPlaybackRate(1)
-				self.body:ResetSequence(self.body:LookupSequence("attackstart"))
-				if self.NextAttackGrowl <= CurTime() then
-					self:EmitSound(table.Random(self.Sounds.Growl),150,math.random(90,110))
-					self.NextAttackGrowl = CurTime()+2
+		if not self.dead then
+			for _,ent in pairs(ents.FindInSphere(self.body:GetPos()+self.body:GetForward()*84,12)) do
+				
+				if ent:IsPlayer() and ent:Alive() then
+					self.body:SetPlaybackRate(1)
+					self.body:ResetSequence(self.body:LookupSequence("attackstart"))
+					if self.NextAttackGrowl <= CurTime() then
+						self:EmitSound(table.Random(self.Sounds.Growl),150,math.random(90,110))
+						self.NextAttackGrowl = CurTime()+2
+					end
+					ent:Kill()
 				end
-				ent:Kill()
+				
 			end
-			
 		end
 		
 		self:NextThink(CurTime()+0.5)
 		return true
 		
 	end
+	
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_ichthyosaur", true)
