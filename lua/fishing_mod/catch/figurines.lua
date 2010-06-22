@@ -1,14 +1,14 @@
 fishingmod.AddCatch{
 	friendly = "Tribal Figurine",
 	type = "fishing_mod_catch_figurine",
-	rareness = 1500, 
+	rareness = 2000, 
 	yank = 0, 
 	mindepth = 300, 
 	maxdepth = 30000,
-	expgain = 700,
+	expgain = 100,
 	levelrequired = 18,
 	remove_on_release = false,
-	value = 200,
+	value = 300,
 	bait = "none",
 	scalable = "sphere",
 	bait = {

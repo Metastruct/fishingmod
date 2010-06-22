@@ -31,7 +31,7 @@ if SERVER then
 		self:SetMoveType( MOVETYPE_VPHYSICS )
 		self:SetSolid( SOLID_VPHYSICS )
 		self:PhysicsInit(SOLID_VPHYSICS)
-		--self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
+		self.trail = util.SpriteTrail(self, 0, Color(255,255,0), false, 16, 0, 0.25, 1/(16+0)*0.5, "trails/smoke.vmt")
 		local phys = self:GetPhysicsObject()
 		if IsValid(phys) then
 			phys:SetMass(10)
@@ -44,7 +44,7 @@ if SERVER then
 		local random
 		repeat
 			random = VectorRand()*16000
-		until IsInWorld(random)
+		until util.IsInWorld(random)
 		
 		return util.TraceHull({start = random, endpos = random + Vector(0,0,-16000), filter = ply, mins = ply:OBBMins(), maxs = ply:OBBMaxs()}).HitPos
 	end
@@ -77,7 +77,7 @@ else
 			self.Timer = CurTime() + 0.1
 		
 			local particle = self.Emitter:Add( "effects/yellowflare", self.Pos + VectorRand() * 20 )
-			particle:SetVelocity( VectorRand() * 25 + Vector(0, 0, 10) )
+			particle:SetVelocity( VectorRand() * 40 + Vector(0, 0, 10) )
 			particle:SetColor( 150, 150, 0 )
 			particle:SetDieTime( 5 )
 			particle:SetStartAlpha( 255 )
@@ -115,6 +115,20 @@ else
 		end
 
 	end
+  
+	local matGlow = Material( "effects/blueflare1" ) 
+
+	function ENT:Draw()
+		
+		self.Alpha = 100 + math.sin( CurTime() ) * 100
+
+		render.SetMaterial( matGlow )
+		render.DrawSprite( self:GetPos() + (self:GetUp() * 3), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 0, self.Alpha ) )
+		
+		self:DrawModel()
+		
+	end
+
 
 end
 
