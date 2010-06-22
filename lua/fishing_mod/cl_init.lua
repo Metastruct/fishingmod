@@ -42,16 +42,20 @@ hook.Add("InitPostEntity", "Init Fish Mod", function()
 end)
 
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
-	local trace = LocalPlayer():GetEyeTrace()
-	if IsValid(trace.Entity) and (trace.Entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
-		local data = fishingmod.InfoTable.Catch[trace.Entity:EntIndex()]
+	local entity = LocalPlayer():GetEyeTrace().Entity
+	local redirect = IsValid(entity) and entity:GetNWEntity("FMRedirect", false)
+	if redirect then 
+		entity = redirect
+	end
+	if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
+		local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
 		if data and data.text then
 			local width = 250
 			local height = 85
 			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
 			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end
-		local data = fishingmod.InfoTable.Bait[trace.Entity:EntIndex()]
+		local data = fishingmod.InfoTable.Bait[entity:EntIndex()]
 		if data and data.text then
 			local width = 200
 			local height = 20

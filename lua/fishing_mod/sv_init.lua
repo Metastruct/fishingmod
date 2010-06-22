@@ -202,6 +202,10 @@ end
 
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
+	local redirect = IsValid(entity) and entity:GetNWEntity("FMRedirect", false)
+	if redirect then 
+		entity = redirect
+	end
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
