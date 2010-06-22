@@ -59,24 +59,28 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end
 	end
+end)
+
+hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
-	if 
-		ply:GetFishingRod() and 
-		(ply:KeyPressed(IN_USE) and ply:KeyDown(IN_RELOAD)) or 
-		(ply:KeyPressed(IN_RELOAD) and ply:KeyDown(IN_USE))
-	then
-		local menu = fishingmod.UpgradeMenu
-		if not menu:IsVisible() then
-			menu:SetVisible(true)
-			menu:MakePopup()
+	if ply:GetFishingRod() then
+		if  
+			(ply:KeyDown(IN_USE) and ply:KeyPressed(IN_RELOAD)) or 
+			(ply:KeyDown(IN_RELOAD) and ply:KeyPressed(IN_USE))
+		then
+			local menu = fishingmod.UpgradeMenu
+			if not menu:IsVisible() then
+				menu:SetVisible(true)
+				menu:MakePopup()
+			end
+		end	
+		if ply:KeyPressed(IN_USE) then
+			RunConsoleCommand("fishing_mod_drop_bait")
 		end
-	end	
-	if ply:GetFishingRod() and ply:KeyPressed(IN_USE) then
-		RunConsoleCommand("fishing_mod_drop_bait")
+		if ply:KeyPressed(IN_RELOAD) then
+			RunConsoleCommand("fishing_mod_drop_catch")
+		end	
 	end
-	if ply:GetFishingRod() and ply:KeyPressed(IN_RELOAD) then
-		RunConsoleCommand("fishing_mod_drop_catch")
-	end	
 end)
 
 hook.Add("ShouldDrawLocalPlayer", "Fishingmod:ShouldDrawLocalPlayer", function(ply)

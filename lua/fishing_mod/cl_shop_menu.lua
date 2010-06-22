@@ -114,7 +114,7 @@ do -- Bait Shop
 		
 			local icon = vgui.Create("SpawnIcon")
 			icon:SetModel(model)
-			icon:SetToolTip("This bait cost " .. data.price .. "\n It is a level "..levelrequired.." bait.")
+			icon:SetToolTip("This bait cost " .. data.price .. " and\nit is a level "..levelrequired.." bait.")
 			icon:SetIconSize(58)
 			
 			if level < levelrequired then
@@ -152,7 +152,7 @@ do -- Tab holder
 		self.sheet:SetSize(self:GetWide()-2, self:GetTall()-23)
 		
 		self.sheet:AddSheet("Upgrade", self.upgrade, "gui/silkicons/star", false, false)
-		self.sheet:AddSheet("Bait Shop", self.baitshop, "gui/silkicons/star", false, false)
+		self.sheet:AddSheet("Bait Shop", self.baitshop, "gui/silkicons/add", false, false)
 	end
 
 	vgui.Register( "Fishingmod:ShopMenu", PANEL, "DFrame" )
