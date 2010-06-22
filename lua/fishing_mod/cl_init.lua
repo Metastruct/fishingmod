@@ -1,7 +1,7 @@
 fishingmod = fishingmod or {}
 
---include("cl_networking.lua")
---include("cl_shop_menu.lua")
+include("cl_networking.lua")
+include("cl_shop_menu.lua")
 
 fishingmod.CatchTable = {}
 

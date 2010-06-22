@@ -1,8 +1,8 @@
 fishingmod = fishingmod or {}
 
---[[ include("sv_networking.lua")
+include("sv_networking.lua")
 include("sv_player_stats.lua")
-include("sv_upgrades.lua") ]]
+include("sv_upgrades.lua")
 
 local servertags = GetConVarString("sv_tags") --Thanks PHX!
 
