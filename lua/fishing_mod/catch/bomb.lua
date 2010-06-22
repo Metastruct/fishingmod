@@ -41,6 +41,13 @@ if SERVER then
 		self:NextThink(CurTime() + 0.25)
 		if self:IsOnFire() and !self.triggered then
 			self.triggered = true
+			
+			for _,bombs in pairs(ents.FindInSphere(self:GetPos(), 512)) do
+				if bombs:GetClass() == "fishing_mod_catch_helibomb" then
+					timer.Simple(2,function(bombs) bombs:Ignite(1) end, bombs)
+				end
+			end
+			
 			timer.Create("triggered_explode"..self:EntIndex(), 2, 1, function(ent) 
 				timer.Destroy("Resend Fishingmod Info"..ent:EntIndex()) 
 				ent:Remove() 
@@ -51,7 +58,7 @@ if SERVER then
 				effectdata:SetScale( 1 )
 				util.Effect( "HelicopterMegaBomb", effectdata )	
 				WorldSound("ambient/explosions/explode_4.wav", ent:GetPos(), 75, 100)
-			end, self.Entity) 
+			end, self.Entity)
 		end
 	end
 end
