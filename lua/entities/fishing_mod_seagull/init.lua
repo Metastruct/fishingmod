@@ -112,7 +112,7 @@ function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 		ragdoll:SetPos(self:GetPos())
 		ragdoll:SetAngles(self:GetAngles())
 		ragdoll.data = {
-			value = 2500, 
+			value = 1000, 
 			friendly = "Dead Seagull",
 			caught = os.time(),
 			owner = attacker:Nick(),
