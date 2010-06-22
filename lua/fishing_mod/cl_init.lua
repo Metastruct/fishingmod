@@ -1,7 +1,7 @@
 fishingmod = fishingmod or {}
 
-include("cl_networking.lua")
-include("cl_shop_menu.lua")
+--include("cl_networking.lua")
+--include("cl_shop_menu.lua")
 
 fishingmod.CatchTable = {}
 
@@ -43,10 +43,8 @@ end)
 
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local entity = LocalPlayer():GetEyeTrace().Entity
-	local redirect = IsValid(entity) and entity:GetNWEntity("FMRedirect", false)
-	if redirect then 
-		entity = redirect
-	end
+	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
+	
 	if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 		local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
 		if data and data.text then

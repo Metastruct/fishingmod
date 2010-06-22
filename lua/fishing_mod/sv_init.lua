@@ -1,8 +1,8 @@
 fishingmod = fishingmod or {}
 
-include("sv_networking.lua")
+--[[ include("sv_networking.lua")
 include("sv_player_stats.lua")
-include("sv_upgrades.lua")
+include("sv_upgrades.lua") ]]
 
 local servertags = GetConVarString("sv_tags") --Thanks PHX!
 
@@ -202,10 +202,7 @@ end
 
 hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	local entity = ply:GetEyeTrace().Entity
-	local redirect = IsValid(entity) and entity:GetNWEntity("FMRedirect", false)
-	if redirect then 
-		entity = redirect
-	end
+	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 	if IsValid(entity) and key == IN_USE and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") and ply:KeyDown(IN_RELOAD) then
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
