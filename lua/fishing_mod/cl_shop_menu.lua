@@ -114,7 +114,7 @@ do -- Bait Shop
 		
 			local icon = vgui.Create("SpawnIcon")
 			icon:SetModel(model)
-			icon:SetToolTip("This bait cost "..data.price)
+			icon:SetToolTip("This bait cost " .. data.price .. "\n It is a level "..levelrequired.." bait.")
 			icon:SetIconSize(58)
 			
 			if level < levelrequired then
@@ -141,6 +141,7 @@ do -- Tab holder
 		self:SetSize(205, 230)
 		self:MakePopup()
 		self:Center()
+		self:SetDeleteOnClose(false)
 		self:SetTitle("Fishing Mod")
 				
 		self.baitshop = vgui.Create("Fishingmod:BaitShop", self)

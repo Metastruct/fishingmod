@@ -26,9 +26,16 @@ end
 
 function ENT:Keys()
 	local ply = LocalPlayer()
-	if ply:GetFishingRod() and (ply:KeyPressed(IN_USE) and ply:KeyDown(IN_RELOAD)) or (ply:KeyPressed(IN_RELOAD) and ply:KeyDown(IN_USE)) and ((fishingmod.UpgradeMenu and not fishingmod.UpgradeMenu:IsVisible()) or not IsValid(fishingmod.UpgradeMenu)) then
-		if fishingmod.UpgradeMenu then fishingmod.UpgradeMenu:Remove() end
-		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu")
+	if 
+		ply:GetFishingRod() and 
+		(ply:KeyPressed(IN_USE) and ply:KeyDown(IN_RELOAD)) or 
+		(ply:KeyPressed(IN_RELOAD) and ply:KeyDown(IN_USE))
+	then
+		local menu = fishingmod.UpgradeMenu
+		if not menu:IsVisible() then
+			menu:SetVisible(true)
+			menu:MakePopup()
+		end
 	end	
 	if ply:GetFishingRod() and ply:KeyPressed(IN_USE) then
 		RunConsoleCommand("fishing_mod_drop_bait")
@@ -64,6 +71,12 @@ function ENT:HUDPaint()
 end
 
 function ENT:Initialize()
+	
+	if LocalPlayer() == self:GetPlayer() then 
+		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu") 
+		fishingmod.UpgradeMenu:SetVisible(false)
+	end
+	
 	self.sound_rope = CreateSound(self, "weapons/tripwire/ropeshoot.wav")
 	self.sound_rope:Play()
 	self.sound_rope:ChangePitch(0)
@@ -100,6 +113,12 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
+	if LocalPlayer() == self:GetPlayer() then 
+		if IsValid(fishingmod.UpgradeMenu) then
+			fishingmod.UpgradeMenu:Remove()
+		end
+	end
+
 	self.sound_reel:Stop()
 	self.sound_rope:Stop()
 end
