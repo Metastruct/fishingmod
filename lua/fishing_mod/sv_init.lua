@@ -22,6 +22,7 @@ end
 fishingmod.CatchTable = {}
 
 function fishingmod.AddCatch(data)
+	data.value = data.value or 0
 	fishingmod.CatchTable[data.friendly] = data
 end
 
@@ -58,6 +59,30 @@ hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
 	end
 end)
 
+concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
+	local type = table.concat(arguments, " ")
+		
+	local data = fishingmod.BaitTable[type]
+	
+	if not data then return end
+	
+	if not fishingmod.Pay(ply, data.price) then return end
+	
+	local bait = ents.Create("prop_physics")
+	bait.data = {}
+	bait.is_bait = true
+	bait.data.owner = ply
+	bait.data.ownerid = ply:UniqueID()
+	bait.data.friendly = type
+	bait:SetModel(table.Random(data.models))
+	bait:SetPos(util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 100, ply).HitPos)
+	bait:Spawn()
+
+	fishingmod.SetBaitInfo(bait)
+	
+	fishingmod.HookBait(ply, bait)
+end)
+
 concommand.Add("fishing_mod_drop_catch", function(ply)
 	local fishing_rod = ply:GetFishingRod()
 	if fishing_rod then
@@ -71,6 +96,16 @@ concommand.Add("fishing_mod_drop_bait", function(ply)
 		fishing_rod:GetHook():DropBait()
 	end
 end)
+
+function fishingmod.HookBait(ply, entity, hook)
+	if entity.is_bait and entity.data.owner == ply then
+		if hook then
+			hook:HookBait(entity)
+		elseif ply:GetFishingRod() and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
+			ply:GetFishingRod():GetHook():HookBait(entity)
+		end
+	end
+end
 
 function fishingmod.CheckBait(name, entity)
 	local bait = fishingmod.CatchTable[name].bait
@@ -218,7 +253,7 @@ hook.Add("Think","FishingMod:Think", function()
 							if not catch.data then return end
 							catch.data.originalvalue = catch.data.originalvalue or catch.data.value
 							catch.data.value = catch.data.originalvalue * ((2-math.abs((catch.data.fried/1000-0.5)*2))*4)
-							fishingmod.SetClientInfo(catch)
+							fishingmod.SetCatchInfo(catch)
 						end)
 					end
 				end
@@ -255,14 +290,8 @@ concommand.Add("fishing_mod_request_init", function(ply)
 	if ply.fishing_mod_spawned then return end
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod catch") then
-			fishingmod.SetClientInfo(entity, ply)
+			fishingmod.SetCatchInfo(entity, ply)
 		end
 	end
 	ply.fishing_mod_spawned = true
-end)
-
-hook.Add("PlayerSpawnedProp", "Fishingmod:PlayerSpawnedProp", function(ply, model, entity)
-	if ply:GetFishingRod() and fishingmod.IsBait(entity) and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
-		ply:GetFishingRod():GetHook():HookBait(entity)
-	end
 end)

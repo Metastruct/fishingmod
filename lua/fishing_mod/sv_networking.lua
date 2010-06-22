@@ -1,5 +1,4 @@
-function fishingmod.SetClientInfo(entity, ply)
-
+function fishingmod.SetCatchInfo(entity, ply)
 	local rp = RecipientFilter()
 	if not ply then 
 		rp:AddAllPlayers()
@@ -9,13 +8,30 @@ function fishingmod.SetClientInfo(entity, ply)
 	
 	entity.data = entity.data or {}
 	
-	umsg.Start("Fishingmod:Entity", rp)
+	umsg.Start("Fishingmod:Catch", rp)
 		umsg.Short(entity:EntIndex() or 0)
 		umsg.String(entity.data.friendly or "unknown")
 		umsg.Long(entity.data.caught or 0)
 		umsg.String(entity.data.owner or "unknown")
 		umsg.Short(entity.data.fried or 0)
 		umsg.Long(entity.data.value or 0)
+	umsg.End()
+end
+
+function fishingmod.SetBaitInfo(entity, ply)
+	local rp = RecipientFilter()
+	if not ply then 
+		rp:AddAllPlayers()
+	else 
+		rp:AddPlayer(ply) 
+	end
+	
+	entity.data = entity.data or {}
+	
+	umsg.Start("Fishingmod:Bait", rp)
+		umsg.Short(entity:EntIndex() or 0)
+		--umsg.String(entity.data.friendly or "unknown")
+		umsg.String(entity.data.ownerid or "unknown")
 	umsg.End()
 end
 

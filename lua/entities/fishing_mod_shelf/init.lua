@@ -34,23 +34,32 @@ end
 
 function ENT:SaveShelf()
 	if not IsValid(player.GetByUniqueID(self.uniqueid)) then return end
-	player.GetByUniqueID(self.uniqueid):SetPData("fishing mod shelf", glon.encode(self.shelf_storage))
+	file.Write("fishingmod/"..self.uniqueid.."/shelf.txt", glon.encode(self.shelf_storage))
 end
 
 function ENT:LoadShelf()
 	if not IsValid(player.GetByUniqueID(self.uniqueid)) then return end
-	local storage = glon.decode(player.GetByUniqueID(self.uniqueid):GetPData("fishing mod shelf"))
+	local path = "fishingmod/"..self.uniqueid.."/shelf.txt"
+	local storage = file.Exists(path) and glon.decode(file.Read(path)) or glon.decode(player.GetByUniqueID(self.uniqueid):GetPData("fishing mod shelf"))
 	if not storage then return end
 	for key, value in pairs(storage) do
 		local entity = ents.Create(value.class)
 		entity:SetModel(value.model)
 		entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		entity:PhysicsInitSphere(10/entity:BoundingRadius())
-		entity.is_catch = true
 		entity:SetOwner(self)
 		entity:Spawn()
+
 		fishingmod.SetData(entity, value.data)
-		timer.Simple(0.1, function() if IsValid(entity) then fishingmod.SetClientInfo(entity) end end)
+		
+		if value.type == "catch" then
+			entity.is_catch = true
+			timer.Simple(0.1, function() if IsValid(entity) then fishingmod.SetCatchInfo(entity) end end)
+		elseif value.type == "bait" then
+			entity.is_bait = true
+			timer.Simple(0.1, function() if IsValid(entity) then fishingmod.SetBaitInfo(entity) end end)
+		end
+		
 		self:AddItemByIndex(value.index, entity)
 	end
 end
@@ -73,7 +82,7 @@ end
 function ENT:Think()
 
 	for key, entity in pairs( ents.FindInBox( self:GetPos() + Vector( 6, -15, 37 ), self:GetPos() + Vector( 25, 15, -37 ) ) ) do
-		if entity.is_catch and not entity.shelf_stored and entity:GetClass() ~= "prop_ragdoll" then
+		if (entity.is_catch or entity.is_bait) and not entity.shelf_stored and entity:GetClass() ~= "prop_ragdoll" then
 			self:AddItem( entity )
 		end
 	end
@@ -86,7 +95,14 @@ function ENT:AddItemByIndex(index, entity)
 	entity:SetNWBool("in fishing shelf", true)
 	entity.weld_broke = false
 	
-	self.shelf_storage[index] = {entity = entity, index = index, class = entity:GetClass(), model = entity:GetModel(), data = entity.data}
+	self.shelf_storage[index] = {
+		entity = entity, 
+		index = index, 
+		class = entity:GetClass(), 
+		model = entity:GetModel(), 
+		data = entity.data, 
+		type = entity.is_bait and "bait" or entity.is_catch and "catch" or "unknown"
+	}	
 	
 	entity.shelf_stored = true
 	timer.Simple(0.1, function()
@@ -140,7 +156,14 @@ function ENT:AddItem( entity )
 		entity:SetNWBool("in fishing shelf", true)
 		entity.weld_broke = false
 		
-		self.shelf_storage[index] = {entity = entity, index = index, class = entity:GetClass(), model = entity:GetModel(), data = entity.data}
+		self.shelf_storage[index] = {
+			entity = entity, 
+			index = index, 
+			class = entity:GetClass(), 
+			model = entity:GetModel(), 
+			data = entity.data, 
+			type = entity.is_bait and "bait" or entity.is_catch and "catch" or "unknown"
+		}
 		
 		entity.shelf_stored = true
 				

@@ -1,22 +1,20 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Helicopter Bomb",
-		type = "fishing_mod_catch_helibomb",
-		rareness = 2000, 
-		yank = 0, 
-		mindepth = 50, 
-		maxdepth = 1250,
-		expgain = 125,
-		levelrequired = 9,
-		remove_on_release = false,
-		value = 100,
-		bait = {
-			"models/Combine_Helicopter/bomb_debris_1.mdl",
-			"models/Combine_Helicopter/bomb_debris_2.mdl",
-			"models/Combine_Helicopter/bomb_debris_3.mdl",
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Helicopter Bomb",
+	type = "fishing_mod_catch_helibomb",
+	rareness = 2000, 
+	yank = 0, 
+	mindepth = 50, 
+	maxdepth = 1250,
+	expgain = 125,
+	levelrequired = 9,
+	remove_on_release = false,
+	value = 100,
+	bait = {
+		"models/Combine_Helicopter/bomb_debris_1.mdl",
+		"models/Combine_Helicopter/bomb_debris_2.mdl",
+		"models/Combine_Helicopter/bomb_debris_3.mdl",
+	},
+}
 local ENT = {}
 
 ENT.Type = "anim"

@@ -22,6 +22,14 @@ function fishingmod.GiveMoney(ply, amount)
 	fishingmod.UpdatePlayerInfo(ply)
 end
 
+function fishingmod.Pay(ply, money)
+	if ply.fishingmod.money > money then
+		fishingmod.TakeMoney(ply, money)
+		return true
+	end
+	return false
+end
+
 function fishingmod.TakeMoney(ply, amount)
 	if me then me:Kill() return end -- nero lua prevention
 	ply.fishingmod.money = ply.fishingmod.money - amount

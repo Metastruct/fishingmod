@@ -20,13 +20,13 @@ function ENT:Initialize()
 	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0), 6000, 1200, 0, "", 0, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
-	fish_hook = self
 end
 
 function ENT:StartTouch(entity)
-	if fishingmod.IsBait(entity) then
+--[[ 	if fishingmod.IsBait(entity) then
 		self:HookBait(entity)
-	end
+	end ]]
+	fishingmod.HookBait(self.bobber.rod:GetPlayer(), entity)
 end
 
 function ENT:HookBait(bait)
@@ -84,10 +84,10 @@ function ENT:Hook( entity, data )
 		else
 			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
 		end
-		fishingmod.SetClientInfo(entity)
+		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), true) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		hook.Call("FishingModCaught", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
 	else
 		entity = ents.Create(data.type or "")
         if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), false) == false then entity:Remove() return end
@@ -148,7 +148,7 @@ function ENT:Hook( entity, data )
 		end
 		
 		entity.is_catch = true
-		fishingmod.SetClientInfo(entity)
+		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), false) end
 		hook.Call("FishingModCaught", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)

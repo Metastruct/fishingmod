@@ -1,22 +1,20 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Tribal Figurine",
-		type = "fishing_mod_catch_figurine",
-		rareness = 1500, 
-		yank = 0, 
-		mindepth = 300, 
-		maxdepth = 30000,
-		expgain = 700,
-		levelrequired = 18,
-		remove_on_release = false,
-		value = 200,
-		bait = "none",
-		scalable = "sphere",
-		bait = {
-			"models/props_lab/huladoll.mdl"
-		}
+fishingmod.AddCatch{
+	friendly = "Tribal Figurine",
+	type = "fishing_mod_catch_figurine",
+	rareness = 1500, 
+	yank = 0, 
+	mindepth = 300, 
+	maxdepth = 30000,
+	expgain = 700,
+	levelrequired = 18,
+	remove_on_release = false,
+	value = 200,
+	bait = "none",
+	scalable = "sphere",
+	bait = {
+		"models/props_lab/huladoll.mdl"
 	}
-end
+}
 
 local ENT = {}
 

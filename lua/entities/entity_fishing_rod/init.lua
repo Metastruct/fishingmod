@@ -74,9 +74,10 @@ function ENT:AssignPlayer(ply)
 	fish_hook:Spawn()
 	hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, fish_hook)
 	
-	local bait = ply:GetEyeTrace().Entity
-	if fishingmod.IsBait(bait) then
-		fish_hook:HookBait(bait)
+	local bait = util.QuickTrace(ply:GetShootPos(), ply:GetAimVector()*400, {ply, self, bobber, fish_hook}).Entity
+	if IsValid(bait) then
+		PrintTable(bait:GetTable())
+		fishingmod.HookBait(ply, bait, fish_hook)
 	end
 	
 	bobber.dt.hook = fish_hook

@@ -88,6 +88,52 @@ do -- Upgrade window
 	vgui.Register("Fishingmod:Upgrade", PANEL)
 end
 
+
+do -- Bait Shop
+	local PANEL = {}
+	
+	function PANEL:Init()
+		self:StretchToParent(5,5,5,5)			
+		
+		self.list = vgui.Create("DPanelList", self)
+		
+		local list = self.list
+		
+		list:StretchToParent(3,3,3,45)
+		list:EnableHorizontal(true)
+		list:EnableVerticalScrollbar(true)
+		
+		local tbl = {}
+		for key, data in pairs(fishingmod.BaitTable) do
+			tbl[data.models[1]] = {price = data.price, name = key}
+		end	
+				
+		for model, data in pairs(tbl) do
+			local level = LocalPlayer().fishingmod.level
+			local levelrequired = fishingmod.CatchTable[data.name].levelrequired
+		
+			local icon = vgui.Create("SpawnIcon")
+			icon:SetModel(model)
+			icon:SetToolTip("This bait cost "..data.price)
+			icon:SetIconSize(58)
+			
+			if level < levelrequired then
+				icon.PaintOver = function()
+					draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) )
+				end
+			else
+				icon.DoClick = function()
+					RunConsoleCommand("fishing_mod_buy_bait", data.name)
+				end
+			end
+			list:AddItem(icon)
+		end
+			
+	end
+	
+	vgui.Register("Fishingmod:BaitShop", PANEL)
+end
+
 do -- Tab holder
 	local PANEL = {}
 
@@ -97,6 +143,7 @@ do -- Tab holder
 		self:Center()
 		self:SetTitle("Fishing Mod")
 				
+		self.baitshop = vgui.Create("Fishingmod:BaitShop", self)
 		self.upgrade = vgui.Create("Fishingmod:Upgrade", self)
 		
 		self.sheet = vgui.Create("DPropertySheet", self)
@@ -104,6 +151,7 @@ do -- Tab holder
 		self.sheet:SetSize(self:GetWide()-2, self:GetTall()-23)
 		
 		self.sheet:AddSheet("Upgrade", self.upgrade, "gui/silkicons/star", false, false)
+		self.sheet:AddSheet("Bait Shop", self.baitshop, "gui/silkicons/star", false, false)
 	end
 
 	vgui.Register( "Fishingmod:ShopMenu", PANEL, "DFrame" )

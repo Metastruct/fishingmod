@@ -1,20 +1,18 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Tribal Cosmogram",
-		type = "fishing_mod_catch_cosmogram",
-		rareness = 4000, 
-		yank = 100, 
-		mindepth = 300, 
-		maxdepth = 30000,
-		expgain = 200,
-		levelrequired = 36,
-		remove_on_release = false,
-		value = 750,
-		bait = {
-			"models/props_lab/huladoll.mdl"
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Tribal Cosmogram",
+	type = "fishing_mod_catch_cosmogram",
+	rareness = 4000, 
+	yank = 100, 
+	mindepth = 300, 
+	maxdepth = 30000,
+	expgain = 200,
+	levelrequired = 36,
+	remove_on_release = false,
+	value = 750,
+	bait = {
+		"models/props_lab/huladoll.mdl"
+	},
+}
 
 local ENT = {}
 

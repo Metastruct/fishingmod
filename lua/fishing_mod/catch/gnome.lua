@@ -1,28 +1,26 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Gnome",
-		type = "fishing_mod_catch_gnome",
-		rareness = 4000, 
-		yank = 0, 
-		mindepth = 400, 
-		maxdepth = 800,
-		expgain = 80,
-		levelrequired = 15,
-		remove_on_release = false,
-		value = 500,
-		scalable = "box",
-		bait = {
-			"models/weapons/w_bugbait.mdl",
-			"models/props_gameplay/bottle001.mdl",
-			"models/props_junk/garbage_glassbottle001a.mdl",
-			"models/props_junk/garbage_glassbottle002a.mdl",
-			"models/weapons/w_models/w_bottle.mdl",
-			"models/props_junk/GlassBottle01a.mdl",
-			"models/props_junk/glassjug01.mdl",
-			"models/props_junk/garbage_glassbottle003a.mdl",
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Gnome",
+	type = "fishing_mod_catch_gnome",
+	rareness = 4000, 
+	yank = 0, 
+	mindepth = 400, 
+	maxdepth = 800,
+	expgain = 80,
+	levelrequired = 15,
+	remove_on_release = false,
+	value = 500,
+	scalable = "box",
+	bait = {
+		"models/weapons/w_bugbait.mdl",
+		"models/props_gameplay/bottle001.mdl",
+		"models/props_junk/garbage_glassbottle001a.mdl",
+		"models/props_junk/garbage_glassbottle002a.mdl",
+		"models/weapons/w_models/w_bottle.mdl",
+		"models/props_junk/GlassBottle01a.mdl",
+		"models/props_junk/glassjug01.mdl",
+		"models/props_junk/garbage_glassbottle003a.mdl",
+	},
+}
 
 local ENT = {}
 

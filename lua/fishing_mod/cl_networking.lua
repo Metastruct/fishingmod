@@ -1,4 +1,6 @@
 fishingmod.InfoTable = fishingmod.InfoTable or {}
+fishingmod.InfoTable.Catch = fishingmod.InfoTable.Catch or {}
+fishingmod.InfoTable.Bait = fishingmod.InfoTable.Bait or {}
 
 local function FriedToFriendly(number)
 	if number == 0 then
@@ -51,7 +53,7 @@ usermessage.Hook("Fishingmod:Player", function(um)
 	end
 end)
 
-usermessage.Hook("Fishingmod:Entity", function(um) 
+usermessage.Hook("Fishingmod:Catch", function(um) 
 	local entity = um:ReadShort()
 	local friendly = um:ReadString()
 	local caught = um:ReadLong()
@@ -61,7 +63,7 @@ usermessage.Hook("Fishingmod:Entity", function(um)
 	
 	value = value == 0 and "????" or value
 
-	fishingmod.InfoTable[entity] = {
+	fishingmod.InfoTable.Catch[entity] = {
 		friendly = friendly,
 		caught = caught,
 		owner = owner,
@@ -83,13 +85,72 @@ usermessage.Hook("Fishingmod:Entity", function(um)
 	)
 	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
 	local text = string.gsub(text, "{TIME}", time)
-	fishingmod.InfoTable[entity].text = text
+	fishingmod.InfoTable.Catch[entity].text = text
 end)
 
-hook.Add("Think", "Fishingmod:Think", function()
-	for key, value in pairs(fishingmod.InfoTable or {}) do
+usermessage.Hook("Fishingmod:Catch", function(um) 
+	local entity = um:ReadShort()
+	local friendly = um:ReadString()
+	local caught = um:ReadLong()
+	local owner = um:ReadString()
+	local fried = um:ReadShort()
+	local value = um:ReadLong()
+	
+	value = value == 0 and "????" or value
+
+	fishingmod.InfoTable.Catch[entity] = {
+		friendly = friendly,
+		caught = caught,
+		owner = owner,
+		cooked = FriedToFriendly(fried),
+		value = value,
+	}
+	local text = Format([[
+		This catch is called %s 
+		and it is %s
+		%s caught this
+		{TIME}
+		You can sell this catch by holding
+		reload and press use for $%s.
+	]],
+	friendly,
+	FriedToFriendly(fried),
+	owner,
+	value
+	)
+	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
+	local text = string.gsub(text, "{TIME}", time)
+	fishingmod.InfoTable.Catch[entity].text = text
+end)
+
+usermessage.Hook("Fishingmod:Bait", function(um) 
+	local entity = um:ReadShort()
+	local owner = um:ReadString()
+	
+	local ply = SinglePlayer() and LocalPlayer() or player.GetByUniqueID(owner)
+	
+	if not IsValid(ply) then return end
+
+	fishingmod.InfoTable.Bait[entity] = {
+		owner = owner,
+	}
+	local text = Format([[
+		This bait is owned by %s.
+	]],
+	ply:Nick()
+	)
+	fishingmod.InfoTable.Bait[entity].text = text
+end)
+
+hook.Add("Tick", "Fishingmod.CleanInfo:Tick", function()
+	for key, value in pairs(fishingmod.InfoTable.Catch) do
 		if not IsValid(Entity(key)) then
-			fishingmod.InfoTable[key] = nil
+			fishingmod.InfoTable.Catch[key] = nil
+		end
+	end
+	for key, value in pairs(fishingmod.InfoTable.Bait) do
+		if not IsValid(Entity(key)) then
+			fishingmod.InfoTable.Bait[key] = nil
 		end
 	end
 end)

@@ -1,24 +1,22 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Ichthyosaur",
-		type = "fishing_mod_catch_ichthyosaur",
-		rareness = 8000, 
-		yank = 100, 
-		mindepth = 700, 
-		maxdepth = 20000,
-		expgain = 7000,
-		levelrequired = 40,
-		remove_on_release = false,
-		value = 800,
-		bait = {
-			"models/Gibs/Antlion_gib_Large_1.mdl",
-			"models/Gibs/Antlion_gib_Large_2.mdl",
-			"models/Gibs/Antlion_gib_Large_3.mdl",
-			"models/Gibs/Strider_Gib1.mdl",
-			"models/Gibs/Strider_Gib2.mdl"
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Ichthyosaur",
+	type = "fishing_mod_catch_ichthyosaur",
+	rareness = 8000, 
+	yank = 100, 
+	mindepth = 700, 
+	maxdepth = 20000,
+	expgain = 7000,
+	levelrequired = 40,
+	remove_on_release = false,
+	value = 800,
+	bait = {
+		"models/Gibs/Antlion_gib_Large_1.mdl",
+		"models/Gibs/Antlion_gib_Large_2.mdl",
+		"models/Gibs/Antlion_gib_Large_3.mdl",
+		"models/Gibs/Strider_Gib1.mdl",
+		"models/Gibs/Strider_Gib2.mdl"
+	},
+}
 
 local ENT = {}
 

@@ -1,29 +1,24 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Aquamine",
-		type = "fishing_mod_catch_aquamine",
-		rareness = 3000, 
-		yank = 0, 
-		mindepth = 640, 
-		maxdepth = 20000,
-		expgain = 30,
-		levelrequired = 3,
-		remove_on_release = false,
-		scalable = "sphere",
-		scalable_extra = 1.7,
-		value = 250,
-		bait = {
-			"models/props_junk/watermelon01.mdl",
-			"models/props_junk/watermelon01_chunk01a.mdl",
-			"models/props_junk/watermelon01_chunk01b.mdl",
-			"models/props_junk/watermelon01_chunk01c.mdl",
-			"models/props_junk/watermelon01_chunk02a.mdl",
-			"models/props_junk/watermelon01_chunk02b.mdl",
-			"models/props_junk/watermelon01_chunk02b.mdl",
-			"models/props_junk/watermelon01_chunk02c.mdl",
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Aquamine",
+	type = "fishing_mod_catch_aquamine",
+	rareness = 3000, 
+	yank = 0, 
+	mindepth = 640, 
+	maxdepth = 20000,
+	expgain = 30,
+	levelrequired = 3,
+	remove_on_release = false,
+	scalable = "sphere",
+	scalable_extra = 1.7,
+	value = 250,
+	bait = {
+		"models/props_junk/watermelon01.mdl",
+		"models/props_junk/watermelon01_chunk01a.mdl",
+		"models/props_junk/watermelon01_chunk01b.mdl",
+		"models/props_junk/watermelon01_chunk01c.mdl",
+	},
+	bait
+}
 local ENT = {}
 
 ENT.Type = "anim"

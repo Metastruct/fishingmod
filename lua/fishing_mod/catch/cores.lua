@@ -1,20 +1,18 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Personality Core",
-		type = "fishing_mod_catch_cores",
-		rareness = 2500,
-		yank = 0,
-		mindepth = 400,
-		maxdepth = 20000,
-		expgain = 80,
-		levelrequired = 20,
-		remove_on_release = false,
-		value = 100,
-		bait = {
-			"models/props/sphere.mdl",
-		}
+fishingmod.AddCatch{
+	friendly = "Personality Core",
+	type = "fishing_mod_catch_cores",
+	rareness = 2500,
+	yank = 0,
+	mindepth = 400,
+	maxdepth = 20000,
+	expgain = 80,
+	levelrequired = 20,
+	remove_on_release = false,
+	value = 100,
+	bait = {
+		"models/props/sphere.mdl",
 	}
-end
+}
 
 local ENT = {}
 

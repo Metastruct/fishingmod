@@ -3,6 +3,17 @@ fishingmod = fishingmod or {}
 include("cl_networking.lua")
 include("cl_shop_menu.lua")
 
+fishingmod.CatchTable = {}
+
+function fishingmod.AddCatch(data)
+	data.value = data.value or 0
+	fishingmod.CatchTable[data.friendly] = data
+end
+
+function fishingmod.RemoveCatch(name)
+	fishingmod.CatchTable[name] = nil
+end
+
 for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
 	include("fishing_mod/catch/"..name)
 end
@@ -33,10 +44,17 @@ end)
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local trace = LocalPlayer():GetEyeTrace()
 	if IsValid(trace.Entity) and (trace.Entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
-		local data = fishingmod.InfoTable[trace.Entity:EntIndex()]
+		local data = fishingmod.InfoTable.Catch[trace.Entity:EntIndex()]
 		if data and data.text then
 			local width = 250
 			local height = 85
+			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
+			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
+		end
+		local data = fishingmod.InfoTable.Bait[trace.Entity:EntIndex()]
+		if data and data.text then
+			local width = 200
+			local height = 20
 			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
 			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end

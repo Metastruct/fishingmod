@@ -1,19 +1,18 @@
-if SERVER then
-	fishingmod.AddCatch{
-		cant_sell = true,
-		friendly = "Present",
-		type = "fishing_mod_catch_present",
-		rareness = 20000, 
-		yank = 100, 
-		force = 0, 
-		mindepth = 0, 
-		maxdepth = 20000,
-		expgain = 50,
-		levelrequired = 0,
-		remove_on_release = false,
-		bait = "none"
-	}
-end
+fishingmod.AddCatch{
+	cant_sell = true,
+	friendly = "Present",
+	type = "fishing_mod_catch_present",
+	rareness = 20000, 
+	yank = 100, 
+	force = 0, 
+	mindepth = 0, 
+	maxdepth = 20000,
+	expgain = 50,
+	levelrequired = 0,
+	remove_on_release = false,
+	bait = "none"
+}
+
 local ENT = {}
 
 ENT.Type = "anim"

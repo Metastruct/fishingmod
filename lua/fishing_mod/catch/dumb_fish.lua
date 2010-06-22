@@ -1,23 +1,19 @@
-if SERVER then
-
-	fishingmod.AddCatch{
-		friendly = "Dumb Fish",
-		type = "fishing_mod_catch_fish",
-		rareness = 4000, 
-		yank = 0, 
-		mindepth = 50, 
-		maxdepth = 700,
-		expgain = 300,
-		levelrequired = 10,
-		remove_on_release = false,
-		scalable = "box",
-		value = 700,
-		bait = {
-			"models/weapons/w_bugbait.mdl",
-		},
-	}
-
-end
+fishingmod.AddCatch{
+	friendly = "Dumb Fish",
+	type = "fishing_mod_catch_fish",
+	rareness = 4000, 
+	yank = 0, 
+	mindepth = 50, 
+	maxdepth = 700,
+	expgain = 300,
+	levelrequired = 10,
+	remove_on_release = false,
+	scalable = "box",
+	value = 700,
+	bait = {
+		"models/weapons/w_bugbait.mdl",
+	},
+}
 
 local ENT = {}
 

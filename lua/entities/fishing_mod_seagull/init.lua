@@ -112,7 +112,7 @@ function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 		ragdoll:SetPos(self:GetPos())
 		ragdoll:SetAngles(self:GetAngles())
 		ragdoll.data = {
-			value = 2500,
+			value = 2500, 
 			friendly = "Dead Seagull",
 			caught = os.time(),
 			owner = attacker:Nick(),
@@ -120,7 +120,7 @@ function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 		}
 		ragdoll:SetNWBool("fishingmod catch", true)
 		ragdoll:Spawn()
-		fishingmod.SetClientInfo(ragdoll)
+		fishingmod.SetCatchInfo(ragdoll)
 		self:Remove()
 	end
 end

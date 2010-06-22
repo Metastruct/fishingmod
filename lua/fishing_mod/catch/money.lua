@@ -1,23 +1,19 @@
-if SERVER then
-
-	fishingmod.AddCatch{
-		friendly = "Small Money",
-		type = "fishing_mod_catch_money",
-		rareness = 2000, 
-		yank = 100, 
-		mindepth = 0, 
-		maxdepth = 20000,
-		expgain = 50,
-		levelrequired = 0,
-		remove_on_release = false,
-		cant_sell = true,
-		bait = {
-			"models/props_c17/cashregister01a.mdl",
-			"models/props_misc/cash_register.mdl",
-		}
+fishingmod.AddCatch{
+	friendly = "Small Money",
+	type = "fishing_mod_catch_money",
+	rareness = 2000, 
+	yank = 100, 
+	mindepth = 0, 
+	maxdepth = 20000,
+	expgain = 50,
+	levelrequired = 0,
+	remove_on_release = false,
+	cant_sell = true,
+	bait = {
+		"models/props_c17/cashregister01a.mdl",
+		"models/props_misc/cash_register.mdl",
 	}
-	
-end
+}
 
 local ENT = {}
 

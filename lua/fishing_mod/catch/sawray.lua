@@ -1,28 +1,22 @@
-if SERVER then
-	fishingmod.AddCatch{
-		friendly = "Sawray",
-		type = "fishing_mod_catch_sawray",
-		rareness = 3500, 
-		yank = 0, 
-		mindepth = 640, 
-		maxdepth = 20000,
-		expgain = 60,
-		levelrequired = 8,
-		remove_on_release = false,
-		value = 300,
-		scalable = "sphere",
-		bait = {
-			"models/props_junk/watermelon01.mdl",
-			"models/props_junk/watermelon01_chunk01a.mdl",
-			"models/props_junk/watermelon01_chunk01b.mdl",
-			"models/props_junk/watermelon01_chunk01c.mdl",
-			"models/props_junk/watermelon01_chunk02a.mdl",
-			"models/props_junk/watermelon01_chunk02b.mdl",
-			"models/props_junk/watermelon01_chunk02b.mdl",
-			"models/props_junk/watermelon01_chunk02c.mdl",
-		},
-	}
-end
+fishingmod.AddCatch{
+	friendly = "Sawray",
+	type = "fishing_mod_catch_sawray",
+	rareness = 3500, 
+	yank = 0, 
+	mindepth = 640, 
+	maxdepth = 20000,
+	expgain = 60,
+	levelrequired = 8,
+	remove_on_release = false,
+	value = 300,
+	scalable = "sphere",
+	bait = {
+		"models/props_junk/watermelon01.mdl",
+		"models/props_junk/watermelon01_chunk01a.mdl",
+		"models/props_junk/watermelon01_chunk01b.mdl",
+		"models/props_junk/watermelon01_chunk01c.mdl",
+	},
+}
 
 local ENT = {}
 
