@@ -97,10 +97,12 @@ function ENT:Hook( entity, data )
 	else
 		entity = ents.Create(data.type or "")
         if entity.PreHook and entity:PreHook(ply, false) == false then entity:Remove() return end
-		local size, name = 1, ""
+		local size, name
 		
 		if data.scalable then 
 			size, name = fishingmod.GenerateSize()
+			size = size or 1
+			name = name or ""
 		end
 		
 		if not IsValid(entity) then return end
