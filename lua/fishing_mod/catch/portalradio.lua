@@ -34,9 +34,8 @@ if SERVER then
 	end
 
 	ENT.DeathSounds = {
-		"ambient/dinosaur_fizzle.wav",
-		"ambient/dinosaur_fizzle2.wav",
-		"ambient/dinosaur_fizzle3.wav"
+		"models/props_misc/antenna03.mdl",
+		"models/props_radiostation/radio_antenna01_stay.mdl",
 	}
 
 	function ENT:OnTakeDamage()
