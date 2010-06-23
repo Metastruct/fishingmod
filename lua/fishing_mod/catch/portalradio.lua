@@ -10,10 +10,8 @@ fishingmod.AddCatch{
 	remove_on_release = false,
 	value = 50,
 	bait = {
-		"models/props_radiostation/radio_antenna01_skybox.mdl",
 		"models/props_misc/antenna03.mdl",
 		"models/props/de_dust/du_antenna_A.mdl",
-		"models/props/de_dust/du_antenna_A_skybox.mdl",
 		"models/props_hydro/satellite_antenna01.mdl",
 		
 	},
