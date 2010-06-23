@@ -38,7 +38,8 @@ function ENT:SaveShelf()
 end
 
 function ENT:LoadShelf()
-	if not IsValid(player.GetByUniqueID(self.uniqueid)) then return end
+	local ply = player.GetByUniqueID(self.uniqueid)
+	if not IsValid(ply) then return end
 	local path = "fishingmod/"..self.uniqueid.."/shelf.txt"
 	local storage = file.Exists(path) and glon.decode(file.Read(path)) or glon.decode(player.GetByUniqueID(self.uniqueid):GetPData("fishing mod shelf"))
 	if not storage then return end
@@ -49,7 +50,7 @@ function ENT:LoadShelf()
 		entity:PhysicsInitSphere(10/entity:BoundingRadius())
 		entity:SetOwner(self)
 		entity:Spawn()
-
+		if entity.CPPISetOwner then entity:CPPISetOwner(ply) end
 		fishingmod.SetData(entity, value.data)
 		
 		if value.type == "catch" then

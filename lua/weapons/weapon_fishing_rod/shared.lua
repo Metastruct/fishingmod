@@ -68,6 +68,7 @@ else
 			self.fishing_rod:Spawn()
 			self.fishing_rod:AssignPlayer(self.Owner)
 			self.Owner:SetNWEntity("fishing rod", self.fishing_rod)
+			if self.fishing_rod.CPPISetOwner then self.fishing_rod:CPPISetOwner(ply) end
 			return true
 		end
 	end

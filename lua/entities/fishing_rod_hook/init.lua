@@ -62,9 +62,11 @@ function ENT:Hook( entity, data )
 	end
 		
 	data = data or {}
+	
+	local ply = self.bobber.rod:GetPlayer()
 		
 	if IsEntity(entity) and IsValid(entity) then
-        if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), true) == false then return end
+        if entity.PreHook and entity:PreHook(ply, true) == false then return end
 		local oldname = entity:GetNWString("fishingmod friendly")
 		entity:SetNWString("fishingmod friendly", oldname ~= "" and oldname or data.friendly or "Unknown")
 		entity:SetNWBool("fishingmod catch", true)
@@ -74,8 +76,8 @@ function ENT:Hook( entity, data )
 		entity.is_catch = true
 		entity.data = data
 		entity.data.caught = os.time()
-		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
-		entity.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
+		entity.data.owner = ply:Nick()
+		entity.data.ownerid = ply:UniqueID()
 		
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
@@ -85,15 +87,16 @@ function ENT:Hook( entity, data )
 			entity:SetMoveType(MOVETYPE_NONE)
 			entity:SetParent(self)
 		else
-			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
+			constraint.Weld(entity, self, 0, 0, ply.fishingmod.force * 700 + 1000 )
 		end
 		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
-        if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), true) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
+        if entity.PostHook then entity:PostHook(ply, true) end
+		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		if entity.CPPISetOwner then entity:CPPISetOwner(ply) end
 	else
 		entity = ents.Create(data.type or "")
-        if entity.PreHook and entity:PreHook(self.bobber.rod:GetPlayer(), false) == false then entity:Remove() return end
+        if entity.PreHook and entity:PreHook(ply, false) == false then entity:Remove() return end
 		local size, name = 1, ""
 		
 		if data.scalable then 
@@ -121,20 +124,20 @@ function ENT:Hook( entity, data )
 			if entity.Initialize then entity:Initialize() end
 		end
 		
-		hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
+		hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, entity)
 		
 		if entity:IsNPC() then
 			entity:SetParent(self)
 			entity.oldmovetype = entity:GetMoveType()
 			entity:SetMoveType(MOVETYPE_NONE)
 		else
-			constraint.Weld(entity, self, 0, 0, self.bobber.rod:GetPlayer().fishingmod.force * 700 + 1000 )
+			constraint.Weld(entity, self, 0, 0, ply.fishingmod.force * 700 + 1000 )
 		end
 		
 		entity.data = table.Copy(data)
 		entity.data.caught = os.time()
-		entity.data.owner = self.bobber.rod:GetPlayer():Nick()
-		entity.data.ownerid = self.bobber.rod:GetPlayer():UniqueID()
+		entity.data.owner = ply:Nick()
+		entity.data.ownerid = ply:UniqueID()
 		entity.data.value = (entity.data.value or 0) * (size*1.5)
 		entity.data.friendly = name .. " " .. entity.data.friendly
 		
@@ -153,8 +156,9 @@ function ENT:Hook( entity, data )
 		entity.is_catch = true
 		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
-        if entity.PostHook then entity:PostHook(self.bobber.rod:GetPlayer(), false) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), self.bobber.rod:GetPlayer(), entity)
+        if entity.PostHook then entity:PostHook(ply, false) end
+		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		if entity.CPPISetOwner then entity:CPPISetOwner(ply) end
 	end
 end
 

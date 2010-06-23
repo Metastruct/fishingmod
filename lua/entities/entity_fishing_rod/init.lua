@@ -64,6 +64,7 @@ function ENT:AssignPlayer(ply)
 	bobber:SetPos(position)
 	bobber:Spawn()
 	hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, bobber)
+	if bobber.CPPISetOwner then bobber:CPPISetOwner(ply) end
 	
 	self.dt.attach = bobber
 	
@@ -73,6 +74,7 @@ function ENT:AssignPlayer(ply)
 	fish_hook:SetPos(position)
 	fish_hook:Spawn()
 	hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, fish_hook)
+	if fish_hook.CPPISetOwner then fish_hook:CPPISetOwner(ply) end
 	
 	local bait = util.QuickTrace(ply:GetShootPos(), ply:GetAimVector()*400, {ply, self, bobber, fish_hook}).Entity
 	if IsValid(bait) then
