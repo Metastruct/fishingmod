@@ -61,6 +61,7 @@ if SERVER then
 		self.target = player
 		self.Heavy.owner = player
 		player.FMHeavy = self.Heavy
+		if self.Heavy.CPPISetOwner then self.Heavy:CPPISetOwner(player) end
 	end
 	
 	function ENT:PlaySound(path)
