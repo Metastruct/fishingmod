@@ -29,7 +29,7 @@ if SERVER then
 	end
 
 	function ENT:Use(ply)
-		fishingmod.Sell(ply, self, math.random(300))
+		if not fishingmod.Sell(ply, self, math.random(300)) then return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 		self:Remove()
 	end

@@ -193,6 +193,7 @@ function fishingmod.GenerateSize()
 end
 
 function fishingmod.Sell(ply, entity, value)
+	if player.GetByUniqueID(entity.data.ownerid) ~= ply then return end
 	if entity.PreSell and entity:PreSell(ply, value) == false then return false end
 	entity:Remove()
 	fishingmod.GiveMoney(ply, value or 0)
