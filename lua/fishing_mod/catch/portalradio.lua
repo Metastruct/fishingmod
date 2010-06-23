@@ -28,6 +28,7 @@ if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
+		self.shot = false
 		self.sound = CreateSound(self, "ambient/music/looping_radio_mix.wav")
 		self.sound:SetSoundLevel(100)
 		self.sound:Play()
@@ -37,6 +38,18 @@ if SERVER then
 		"models/props_misc/antenna03.mdl",
 		"models/props_radiostation/radio_antenna01_stay.mdl",
 	}
+	
+	function ENT:Think()
+		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 50)) do
+			if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
+					entity:Remove()
+					self.shot = false
+					self.sound = CreateSound(self, "ambient/music/looping_radio_mix.wav")
+					self.sound:SetSoundLevel(100)
+					self.sound:Play()
+			end
+		end
+	end
 
 	function ENT:OnTakeDamage()
 		self.shot = true

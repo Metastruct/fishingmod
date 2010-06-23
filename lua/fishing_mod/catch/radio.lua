@@ -47,7 +47,16 @@ if SERVER then
 	end
 
 	function ENT:Think()
-		if self.shot then
+	
+		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 50)) do
+			if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
+				entity:Remove()
+				self.shot = 101
+				self.sound:ChangePitch(self.shot)
+			end
+		end
+		
+		if self.shot and self.shot <=100 then
 			self.shot = math.Clamp(self.shot - 1, 0, 255)
 			self.sound:ChangePitch(self.shot)
 		end
@@ -60,4 +69,9 @@ if SERVER then
 	end
 	
 end
+
 scripted_ents.Register(ENT, "fishing_mod_catch_radio", true)
+
+
+
+
