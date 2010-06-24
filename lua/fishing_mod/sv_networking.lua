@@ -48,3 +48,10 @@ function fishingmod.UpdatePlayerInfo(ply, spawned)
 		umsg.Bool(spawned or false)
 	umsg.End()	
 end
+
+function fishingmod.SetBaitSale(bait, multiplier, ply)
+	umsg.Start("Fishingmod:BaitPrices", ply)
+		umsg.String(bait)
+		umsg.Float(multiplier)
+	umsg.End()
+end

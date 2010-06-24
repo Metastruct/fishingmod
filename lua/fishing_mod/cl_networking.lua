@@ -22,6 +22,14 @@ local function FriedToFriendly(number)
 	end
 end
 
+usermessage.Hook("Fishingmod:BaitPrices", function(um)
+	local name = um:ReadString()
+	local multiplier = um:ReadFloat()
+	if not fishingmod.BaitTable[name] then return end
+	fishingmod.BaitTable[name].multiplier = multiplier
+	fishingmod.UpdateSales()
+end)
+
 usermessage.Hook("Fishingmod:Player", function(um) 
 	local ply = um:ReadEntity()
 	local exp = um:ReadLong()

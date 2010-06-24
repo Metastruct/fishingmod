@@ -37,27 +37,24 @@ end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_money", true)
 
-if SERVER then
-
-	fishingmod.AddCatch{
-		cant_sell = true,
-		friendly = "Big Money",
-		type = "fishing_mod_catch_money_big",
-		rareness = 20000, 
-		yank = 100, 
-		force = 0, 
-		mindepth = 0, 
-		maxdepth = 20000,
-		expgain = 50,
-		levelrequired = 0,
-		remove_on_release = false,
-		bait = {
-			"models/props_c17/cashregister01a.mdl",
-			"models/props_misc/cash_register.mdl",
-		}
+fishingmod.AddCatch{
+	cant_sell = true,
+	friendly = "Big Money",
+	type = "fishing_mod_catch_money_big",
+	rareness = 20000, 
+	yank = 100, 
+	force = 0, 
+	mindepth = 0, 
+	maxdepth = 20000,
+	expgain = 50,
+	levelrequired = 0,
+	remove_on_release = false,
+	bait = {
+		"models/props_c17/cashregister01a.mdl",
+		"models/props_misc/cash_register.mdl",
 	}
-	
-end
+}
+
 
 local ENT = {}
 

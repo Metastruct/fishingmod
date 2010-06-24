@@ -66,7 +66,7 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	
 	if not data then return end
 	
-	if not fishingmod.Pay(ply, data.price) then return end
+	if not fishingmod.Pay(ply, math.Round(data.price)) then return end
 	
 	local bait = ents.Create("prop_physics")
 	bait.data = {}
@@ -290,10 +290,28 @@ end)
 
 concommand.Add("fishing_mod_request_init", function(ply)
 	if ply.fishing_mod_spawned then return end
+	
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod catch") then
 			fishingmod.SetCatchInfo(entity, ply)
 		end
 	end
+	
+	for bait, data in pairs(fishingmod.BaitTable) do
+		fishingmod.SetBaitSale(bait, data.multiplier, ply)
+	end
+	
 	ply.fishing_mod_spawned = true
+end)
+
+local lasttime = 0
+
+hook.Add("Tick", "FishingMod:UpdateSales", function()
+	local time = math.Round(os.time()/300)*300
+	if time ~= lasttime then
+		for bait, data in pairs(fishingmod.BaitTable) do
+			fishingmod.SetBaitSale(bait, math.random())
+		end
+		lasttime = time
+	end
 end)

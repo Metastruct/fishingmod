@@ -57,14 +57,15 @@ local function GetAveragePrice(tbl)
 			end
 		end
 	end
-	return count > 0 and (price / count)
+	return count > 0 and (price / (count * 0.5))
 end
 
 for key, catch in pairs(fishingmod.CatchTable) do
 	if catch.bait ~= "none" then
 		fishingmod.BaitTable[key] = {
-			price = math.Round((GetAveragePrice(catch.bait) or catch.value) / 3), 
+			price = math.Round((GetAveragePrice(catch.bait) or catch.value) / 2), 
 			models = catch.bait,
+			multiplier = 1,
 		}
 	end
 end

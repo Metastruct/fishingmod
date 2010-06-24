@@ -88,6 +88,37 @@ do -- Upgrade window
 	vgui.Register("Fishingmod:Upgrade", PANEL)
 end
 
+do -- Markup Tooltip
+	local PANEL = {}
+	
+	function PANEL:Init()
+		self.BaseClass.Init(self)
+		self.percent = 0
+	end
+	
+	function PANEL:SetSale(multiplier)
+		self.percent = math.Round((multiplier*-1+1)*100)
+	end
+	
+	function PANEL:SetGrey(bool)
+		self.grey = bool
+	end
+	
+	function PANEL:OnCursorEntered()
+	
+	end
+
+	function PANEL:OnCursorExited()
+	
+	end
+
+	function PANEL:PaintOver()
+		draw.SimpleText( self.percent.."% OFF", "DefaultFixedOutline", 4, 2, HSVToColor(math.Clamp(self.percent+40,0,160),1,1), TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
+		if self.grey then draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) ) end
+	end
+	
+	vgui.Register("Fishingmod:SpawnIcon", PANEL, "SpawnIcon")
+end
 
 do -- Bait Shop
 	local PANEL = {}
@@ -112,15 +143,14 @@ do -- Bait Shop
 			local level = LocalPlayer().fishingmod.level
 			local levelrequired = fishingmod.CatchTable[data.name].levelrequired
 		
-			local icon = vgui.Create("SpawnIcon")
+			local icon = vgui.Create("Fishingmod:SpawnIcon")
 			icon:SetModel(model)
 			icon:SetToolTip("This bait cost " .. data.price .. " and\nit is a level "..levelrequired.." bait.")
 			icon:SetIconSize(58)
+			fishingmod.BaitTable[data.name].icon = icon
 			
 			if level < levelrequired then
-				icon.PaintOver = function()
-					draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) )
-				end
+				icon:SetGrey(true)
 			else
 				icon.DoClick = function()
 					RunConsoleCommand("fishing_mod_buy_bait", data.name)
@@ -143,8 +173,11 @@ do -- Tab holder
 		self:Center()
 		self:SetDeleteOnClose(false)
 		self:SetTitle("Fishing Mod")
-				
+		
 		self.baitshop = vgui.Create("Fishingmod:BaitShop", self)
+		
+		fishingmod.BaitIcons = self.baitshop.list:GetItems()
+		
 		self.upgrade = vgui.Create("Fishingmod:Upgrade", self)
 		
 		self.sheet = vgui.Create("DPropertySheet", self)
@@ -153,7 +186,26 @@ do -- Tab holder
 		
 		self.sheet:AddSheet("Upgrade", self.upgrade, "gui/silkicons/star", false, false)
 		self.sheet:AddSheet("Bait Shop", self.baitshop, "gui/silkicons/add", false, false)
+		
+		fishingmod.UpdateSales()
 	end
 
 	vgui.Register( "Fishingmod:ShopMenu", PANEL, "DFrame" )
+end
+
+function fishingmod.UpdateSales()
+	for key, bait in pairs(fishingmod.BaitTable) do
+		local levelrequired = fishingmod.CatchTable[key].levelrequired
+		local saleprice = math.Round(bait.price * bait.multiplier)
+		local sale = "This bait now cost " .. math.Round(bait.price * bait.multiplier) .. "!\nIts original price is " .. bait.price .. "."
+		
+		if saleprice == 0 then
+			sale = "This bait is free! "
+		end
+		
+		if bait.icon then
+			bait.icon:SetToolTip(sale .. "\nYou need to be level "..levelrequired.." or higher to use this bait.")
+			bait.icon:SetSale(bait.multiplier)
+		end
+	end
 end
