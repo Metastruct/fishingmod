@@ -17,7 +17,7 @@ function ENT:Initialize()
 	self.last_velocity = Vector(0)
 	self.last_angular_velocity = Vector(0)
 	
-	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,6), Vector(0), 6000, 1200, 0, "", 0, 1 )
+	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,10), Vector(0), 6000, 1200, 0, "", 0, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
 end
@@ -97,12 +97,10 @@ function ENT:Hook( entity, data )
 	else
 		entity = ents.Create(data.type or "")
         if entity.PreHook and entity:PreHook(ply, false) == false then entity:Remove() return end
-		local size, name
+		local size, name = 0, ""
 		
 		if data.scalable then 
 			size, name = fishingmod.GenerateSize()
-			size = size or 1
-			name = name or ""
 		end
 		
 		if not IsValid(entity) then return end

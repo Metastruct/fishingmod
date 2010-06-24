@@ -188,7 +188,7 @@ function fishingmod.GenerateSize()
     if size_category then
         return size_category.min+math.random()*(size_category.max-size_category.min), size_category.n, choice
     else
-        return nil, nil, choice
+        return 1, "", choice
     end
 end
 

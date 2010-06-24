@@ -107,6 +107,7 @@ hook.Add("Tick", "Fishingmod:Tick", function()
 end)
 
 hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
+	if GetViewEntity() ~= ply then return end
 	if ply:GetFishingRod() and not ply:InVehicle() then
 					
 		local offset = ply:GetShootPos() + 
