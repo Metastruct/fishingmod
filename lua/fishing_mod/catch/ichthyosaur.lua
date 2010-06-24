@@ -251,6 +251,13 @@ if SERVER then
 		
 	end
 	
+else
+	
+	function ENT:Draw()
+		self:DrawShadow(false)
+		return false
+	end
+
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_ichthyosaur", true)
