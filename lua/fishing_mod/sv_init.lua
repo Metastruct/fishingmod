@@ -306,12 +306,20 @@ end)
 
 local lasttime = 0
 
+function fishingmod.SetRandomSale()
+	for bait, data in pairs(fishingmod.BaitTable) do
+		fishingmod.SetBaitSale(bait, math.random())
+	end
+end
+
 hook.Add("Tick", "FishingMod:UpdateSales", function()
 	local time = math.Round(os.time()/300)*300
 	if time ~= lasttime then
-		for bait, data in pairs(fishingmod.BaitTable) do
-			fishingmod.SetBaitSale(bait, math.random())
-		end
+		fishingmod.SetRandomSale()
 		lasttime = time
 	end
+end)
+
+hook.Add("InitPostEntity", "FishingMod:SetSales", function()
+	fishingmod.SetRandomSale()
 end)
