@@ -53,7 +53,10 @@ if SERVER then
 	end
 	
 	function ENT:Think()
-		
+	
+		if self.data.fried then
+			self.body:SetColor(fishingmod.FriedToColor(self.data.fried))
+		end
 		self.body:ResetSequence(self.Anim)
 		
 	end
@@ -112,6 +115,13 @@ else
 				self.LastSound = CurTime()+SoundDuration(curSound)+0.1
 		end
 		
+	end
+	
+	function ENT:Draw()
+
+		self:DrawShadow(false)
+		return false
+		 
 	end
 	
 end
