@@ -187,6 +187,10 @@ if SERVER then
 	end
 
 	function ENT:Think()
+		if self.data.fried then
+			self.body:SetColor(fishingmod.FriedToColor(self.data.fried))
+		end
+	
 		if self.dead then --Dead Think
 			
 			self.body:SetPlaybackRate(1)
