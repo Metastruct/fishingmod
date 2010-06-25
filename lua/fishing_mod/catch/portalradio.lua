@@ -40,8 +40,14 @@ if SERVER then
 	}
 	
 	function ENT:Think()
-		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 50)) do
+		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 15)) do
 			if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
+					local effectdata = EffectData()
+					effectdata:SetOrigin( self:GetPos() + (self:GetUp() * 5) )
+					effectdata:SetMagnitude( 4 )
+					effectdata:SetScale( 1 )
+					effectdata:SetRadius( 1 ) 
+					util.Effect( "Sparks", effectdata )
 					entity:Remove()
 					self.shot = false
 					self.sound = CreateSound(self, "ambient/music/looping_radio_mix.wav")

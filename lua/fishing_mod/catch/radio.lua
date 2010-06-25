@@ -32,27 +32,35 @@ if SERVER then
 		self.sound:SetSoundLevel(150)
 		self.sound:ChangeVolume(500)
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(90,110))
+		self.sound:ChangePitch(math.random(100,110))
 	end
 
 	function ENT:Use()
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(90,110))
+		self.sound:ChangePitch(math.random(100,110))
 	end
 
 	function ENT:OnTakeDamage()
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(90,110))
+		self.sound:ChangePitch(math.random(100,110))
 		self.shot = 100
 	end
 
 	function ENT:Think()
 	
-		for key, entity in pairs(ents.FindInSphere(self:GetPos(), 50)) do
-			if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
-				entity:Remove()
-				self.shot = 101
-				self.sound:ChangePitch(self.shot)
+		if self.shot then
+			for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
+				if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
+					local effectdata = EffectData()
+					effectdata:SetOrigin( self:GetPos() + (self:GetUp() * 5) )
+					effectdata:SetMagnitude( 4 )
+					effectdata:SetScale( 1 )
+					effectdata:SetRadius( 1 ) 
+					util.Effect( "Sparks", effectdata )
+					entity:Remove()
+					self.shot = 101
+					self.sound:ChangePitch(self.shot)
+				end
 			end
 		end
 		
