@@ -53,12 +53,8 @@ if SERVER then
 	end
 	
 	function ENT:Think()
-	
-		if self.data.fried then
-			self.body:SetColor(fishingmod.FriedToColor(self.data.fried))
-		end
+		self.body:SetColor(self:GetColor())
 		self.body:ResetSequence(self.Anim)
-		
 	end
 	
 	function ENT:OnRemove()
