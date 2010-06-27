@@ -66,7 +66,7 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	
 	if not data then return end
 	
-	if not fishingmod.Pay(ply, math.Round(data.price)) then return end
+	if not fishingmod.Pay(ply, math.Round(data.price*data.multiplier)) then return end
 	
 	local bait = ents.Create("prop_physics")
 	bait.data = {}
