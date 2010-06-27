@@ -35,8 +35,9 @@ if SERVER then
 	end
 
 	ENT.DeathSounds = {
-		"models/props_misc/antenna03.mdl",
-		"models/props_radiostation/radio_antenna01_stay.mdl",
+		"ambient/dinosaur_fizzle.wav",
+		"ambient/dinosaur_fizzle2.wav",
+		"ambient/dinosaur_fizzle3.wav"
 	}
 	
 	function ENT:Think()
@@ -60,9 +61,11 @@ if SERVER then
 	end
 
 	function ENT:OnTakeDamage()
+		if not self.shot then
+			self:EmitSound(table.Random(self.DeathSounds),70,100)
+		end
 		self.shot = true
 		self.sound:Stop()
-		self:EmitSound(table.Random(self.DeathSounds),70,100)
 	end
 
 	function ENT:OnRemove()
