@@ -244,14 +244,16 @@ local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
 hook.Add("Think","FishingMod:Think", function()
 	for key, fire in pairs(ents.GetAll()) do 
-		if fire:IsOnFire() then
+		if fire:IsOnFire() and fire:BoundingRadius() < 100 then
 			for key, catch in pairs(ents.FindInSphere(fire:GetPos(), fire:BoundingRadius()*2)) do
 				if catch:GetNWBool("fishingmod catch") then
 					local distance = math.max((catch:GetPos()+catch:OBBCenter()):Distance(fire:GetPos()) * -1 + fire:BoundingRadius()*2, 0) / 50
 					if distance ~= 0 then
 						catch.data.fried = catch.data.fried or 0
-						catch.data.fried = math.Clamp(catch.data.fried + math.ceil(distance), 0, 1000)
-
+						catch.data.fried = math.Clamp(catch.data.fried + (distance^math.pi*0.1), 0, 1000)
+						
+						if catch:IsOnFire() then catch.data.fried = 1000 end
+		
 						catch:SetColor(fishingmod.FriedToColor(catch.data.fried))
 						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()	
 							if not catch.data then return end
@@ -289,6 +291,7 @@ hook.Add("Think","FishingMod:Think", function()
 		end
 	end
 end)
+
 
 concommand.Add("fishing_mod_request_init", function(ply)
 	if ply.fishing_mod_spawned then return end
