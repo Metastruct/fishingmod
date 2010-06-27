@@ -48,7 +48,7 @@ if SERVER then
 
 	function ENT:Think()
 	
-		if self.shot then
+		if self.shot and self.shot <=100 then
 			for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
 				if entity:GetModel() and string.find(entity:GetModel():lower(), "wrench") then
 					local effectdata = EffectData()
