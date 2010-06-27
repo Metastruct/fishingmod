@@ -53,7 +53,6 @@ if SERVER then
 	end
 	
 	function ENT:Think()
-		self.body:SetColor(self:GetColor())
 		self.body:ResetSequence(self.Anim)
 	end
 	
@@ -103,21 +102,22 @@ else
 	
 	function ENT:Think()
 		
-		if self.LastSound <= CurTime() and not self.dt.Core == 0 then
-				local curSound = table.Random(self.Sounds[self.dt.Core])
-				
-				self:EmitSound(curSound, 80, 100)
-				
-				self.LastSound = CurTime()+SoundDuration(curSound)+0.1
+		if (self.LastSound <= CurTime()) and not(self.dt.Core == 0) then
+			local curSound = table.Random(self.Sounds[self.dt.Core])
+			
+			self:EmitSound(curSound, 80, 100)
+			
+			self.LastSound = CurTime()+SoundDuration(curSound)+0.1
 		end
 		
 	end
 	
 	function ENT:Draw()
-
+		
 		self:DrawShadow(false)
-		return false
-		 
+		self:SetColor(0,0,0,0)
+		self.body:DrawModel()
+		
 	end
 	
 end
