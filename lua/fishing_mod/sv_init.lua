@@ -240,6 +240,16 @@ hook.Add("FishingModCaught", "FishingMod:Seagull", function(ply, entity)
 	end
 end)
 
+function fishingmod.FriedToMultiplier(number)
+	local tri = ((1-math.abs((number/1000-0.5)*2))*8) + 1
+	
+	if number > 500 then
+		tri = tri - (number/1000)
+	end
+	
+	return tri
+end
+
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
 hook.Add("Think","FishingMod:Think", function()
@@ -258,7 +268,7 @@ hook.Add("Think","FishingMod:Think", function()
 						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()	
 							if not catch.data then return end
 							catch.data.originalvalue = catch.data.originalvalue or catch.data.value
-							catch.data.value = catch.data.originalvalue * ((2-math.abs((catch.data.fried/1000-0.5)*2))*4)
+							catch.data.value = catch.data.originalvalue * fishingmod.FriedToMultiplier(catch.data.fried)
 							fishingmod.SetCatchInfo(catch)
 						end)
 					end
