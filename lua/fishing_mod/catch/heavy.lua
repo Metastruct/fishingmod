@@ -90,17 +90,18 @@ if SERVER then
 				phys:EnableGravity(true)	
 			end
 		end
-	end
+	end 
 
 	function ENT:Think()
 		self.Heavy:SetColor(self:GetColor())
 		
-		if self.dt.dead then 
+		if self.dt.dead or self.health != max_health then 
 			for key, entity in pairs(ents.FindInSphere(self.Heavy:GetPos(), 50)) do
 				if entity:GetModel() and string.find(entity:GetModel():lower(), "medkit") then
 					entity:Remove()
 					self.dt.dead = false
 					self.health = max_health
+					self:PlaySound("vo/heavy_positivevocalization0"..math.random(5)..".wav")
 				end
 			end
 			
