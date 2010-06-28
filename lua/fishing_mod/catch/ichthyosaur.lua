@@ -1,14 +1,14 @@
 fishingmod.AddCatch{
 	friendly = "Ichthyosaur",
 	type = "fishing_mod_catch_ichthyosaur",
-	rareness = 8000, 
+	rareness = 10000, 
 	yank = 100, 
 	mindepth = 700, 
 	maxdepth = 20000,
-	expgain = 7000,
-	levelrequired = 40,
+	expgain = 1000,
+	levelrequired = 52,
 	remove_on_release = false,
-	value = 800,
+	value = 1600,
 	bait = {
 		"models/Gibs/Antlion_gib_Large_1.mdl",
 		"models/Gibs/Antlion_gib_Large_2.mdl",
