@@ -187,7 +187,7 @@ if SERVER then
 	end
 
 	function ENT:Think()
-		self.body:SetColor(self:GetColor())
+		--self.body:SetColor(self:GetColor())
 			
 		if self.dead then --Dead Think
 			
