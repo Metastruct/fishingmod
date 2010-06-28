@@ -194,6 +194,8 @@ else
 		for key, data in pairs(self.storage) do
 		
 			local catch = data.item
+			
+			catch = IsValid(catch) and IsValid(catch:GetNWEntity("FMRedirect")) and catch:GetNWEntity("FMRedirect") or catch
 				
 			if catch and #constraint.FindConstraints(catch) == 0 then 
 				catch.shelf_stored = nil
@@ -264,9 +266,12 @@ else
 			timer.Simple(0.1, function()
 				if IsValid(self) and IsValid(entity) then
 					local isragdoll = entity:GetClass() == "prop_ragdoll" or entity.is_ragdoll or false
-					local phys = entity:GetPhysicsObjectNum(0)
-					phys:SetAngle( self:GetAngles() )
-					phys:SetPos( self:GetPos() + ( self:GetUp() * (data.position.z + 3) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
+					entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
+					local phys = entity:GetPhysicsObject()
+					if IsValid(phys) then
+						phys:SetAngle( self:GetAngles() )
+						phys:SetPos( self:GetPos() + ( self:GetUp() * (data.position.z + 3) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
+					end
 					constraint.Weld(self, entity, 0, 0, isragdoll and 2500 or 90, true)
 				end
 			end)
