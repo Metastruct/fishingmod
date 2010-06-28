@@ -22,6 +22,10 @@ function ENT:GetData(name)
 	return self.data[name]
 end
 
+function ENT:PostEntityPaste()
+	self:Remove()
+end
+
 function ENT:PreHook(ply, recatch) end
 function ENT:PreRelease(ply) end
 function ENT:PreSell(ply) end

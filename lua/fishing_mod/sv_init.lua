@@ -253,35 +253,11 @@ end
 local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 
 hook.Add("Think","FishingMod:Think", function()
-	for key, fire in pairs(ents.GetAll()) do 
-		if fire:IsOnFire() and fire:BoundingRadius() < 100 then
-			for key, catch in pairs(ents.FindInSphere(fire:GetPos(), fire:BoundingRadius()*2)) do
-				if catch:GetNWBool("fishingmod catch") then
-					local distance = math.max((catch:GetPos()+catch:OBBCenter()):Distance(fire:GetPos()) * -1 + fire:BoundingRadius()*2, 0) / 50
-					if distance ~= 0 then
-						catch.data.fried = catch.data.fried or 0
-						catch.data.fried = math.Clamp(catch.data.fried + (distance^math.pi*0.1), 0, 1000)
-						
-						if catch:IsOnFire() then catch.data.fried = 1000 end
-		
-						catch:SetColor(fishingmod.FriedToColor(catch.data.fried))
-						timer.Create("Resend Fishingmod Info"..catch:EntIndex(), 0.1, 1, function()	
-							if not catch.data then return end
-							catch.data.originalvalue = catch.data.originalvalue or catch.data.value
-							catch.data.value = catch.data.originalvalue * fishingmod.FriedToMultiplier(catch.data.fried)
-							fishingmod.SetCatchInfo(catch)
-						end)
-					end
-				end
-			end
-		end
-	end
-	
 	for key, ply in pairs(player.GetAll()) do
 		local rod = ply:GetFishingRod()
 		if rod then
 			for key, data in RandomPairs(fishingmod.CatchTable) do
- 				if 
+				if 
 					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
 					fishingmod.LevelToExp(data.levelrequired) <= tonumber(ply.fishingmod.exp) and
 					

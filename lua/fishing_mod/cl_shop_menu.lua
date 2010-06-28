@@ -203,7 +203,7 @@ function fishingmod.UpdateSales()
 			sale = "This bait is free! "
 		end
 		
-		if bait.icon then
+		if IsValid(bait.icon) then
 			bait.icon:SetToolTip(sale .. "\nYou need to be level "..levelrequired.." or higher to use this bait.")
 			bait.icon:SetSale(bait.multiplier)
 		end
