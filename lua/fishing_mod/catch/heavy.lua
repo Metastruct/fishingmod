@@ -31,6 +31,7 @@ if SERVER then
 
 	function ENT:Initialize()
 		self:InitializeData()
+		self.is_ragdoll = true
 		self:SetupHook("EntityTakeDamage")
 		self:SetModel("models/props_junk/PopCan01a.mdl")
 		self:SetNoDraw(true)

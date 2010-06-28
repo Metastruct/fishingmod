@@ -37,8 +37,8 @@ for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
 end
 
 local function BreakWeld(ply,entity)
-	if entity.shelf_stored and IsValid(entity.weld) then
-		entity.weld:Fire("break")
+	if entity.shelf_stored then
+		constraint.RemoveAll(entity)
 		entity.weld_broke = true
 	end
 end

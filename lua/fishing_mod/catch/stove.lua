@@ -5,6 +5,7 @@ fishingmod.AddCatch{
 	yank = 1000, 
 	force = 0, 
 	mindepth = 0, 
+	value = 600,
 	maxdepth = 20000,
 	expgain = 150,
 	levelrequired = 5,
@@ -169,14 +170,8 @@ else
 		self:SetMoveType( MOVETYPE_VPHYSICS )
 		self:SetSolid( SOLID_VPHYSICS )
 		self:SetUseType(SIMPLE_USE)
-		
+		self:PhysWake()
 		self.smoothheat = 1
-		
-		local phys = self:GetPhysicsObject()
-		if phys:IsValid() then
-			phys:Wake()
-			phys:EnableMotion(false)
-		end
 	end
 	
 	function ENT:Use(ply)
@@ -211,11 +206,11 @@ else
 				catch.data.fried = catch.data.fried or 0
 				catch.data.fried = math.Clamp(catch.data.fried + (catch.data.fried*self.dt.heat/700), 1, 1000)
 				
-				if (lastprint or 0) < CurTime() then 
+--[[ 				if (lastprint or 0) < CurTime() then 
 					print(catch.data.fried, self.smoothheat)
 					print(key, catch)
 					lastprint = CurTime() + 0.2
-				end
+				end ]]
 				
 				if catch.data.fried == 1000 and not catch:IsOnFire() then catch:Ignite(1000) end
 
@@ -233,7 +228,7 @@ else
 		if (self.next_search or 0) < CurTime() then
 		
 			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() ) ) do
-				if (entity.is_catch or entity.is_bait) and entity ~= self and entity:GetClass() ~= "prop_ragdoll" and not entity.shelf_stored then
+				if entity.data and entity ~= self and not entity.shelf_stored then
 					self:AddItem( entity )
 				end
 			end
@@ -268,10 +263,11 @@ else
 								
 			timer.Simple(0.1, function()
 				if IsValid(self) and IsValid(entity) then
-					entity:GetPhysicsObject():Sleep()
-					entity:SetAngles( self:GetAngles() )
-					entity:SetPos( self:GetPos() + ( self:GetUp() * (data.position.z + 3) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
-					constraint.Weld(self, entity, 0, 0, 90, true)
+					local isragdoll = entity:GetClass() == "prop_ragdoll" or entity.is_ragdoll or false
+					local phys = entity:GetPhysicsObjectNum(0)
+					phys:SetAngle( self:GetAngles() )
+					phys:SetPos( self:GetPos() + ( self:GetUp() * (data.position.z + 3) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
+					constraint.Weld(self, entity, 0, 0, isragdoll and 2500 or 90, true)
 				end
 			end)
 		end

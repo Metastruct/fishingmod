@@ -2,6 +2,7 @@ include("shared.lua")
 AddCSLuaFile("shared.lua")
 
 function ENT:Initialize()
+	self.is_ragdoll = true
 	self:SetModel("models/seagull.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:StartMotionController()
