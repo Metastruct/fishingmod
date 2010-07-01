@@ -83,43 +83,8 @@ usermessage.Hook("Fishingmod:Catch", function(um)
 		and it is %s
 		%s caught this
 		{TIME}
-		You can sell this catch by holding
-		reload and press use for $%s.
-	]],
-	friendly,
-	FriedToFriendly(fried),
-	owner,
-	value
-	)
-	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
-	local text = string.gsub(text, "{TIME}", time)
-	fishingmod.InfoTable.Catch[entity].text = text
-end)
-
-usermessage.Hook("Fishingmod:Catch", function(um) 
-	local entity = um:ReadShort()
-	local friendly = um:ReadString()
-	local caught = um:ReadLong()
-	local owner = um:ReadString()
-	local fried = um:ReadShort()
-	local value = um:ReadLong()
-	
-	value = value == 0 and "????" or value
-
-	fishingmod.InfoTable.Catch[entity] = {
-		friendly = friendly,
-		caught = caught,
-		owner = owner,
-		cooked = FriedToFriendly(fried),
-		value = value,
-	}
-	local text = Format([[
-		This catch is called %s 
-		and it is %s
-		%s caught this
-		{TIME}
-		You can sell this catch by holding
-		reload and press use for $%s.
+		You can sell this catch 
+		by pressing reload for $%s.
 	]],
 	friendly,
 	FriedToFriendly(fried),
