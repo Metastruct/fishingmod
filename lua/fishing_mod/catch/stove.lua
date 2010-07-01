@@ -219,7 +219,7 @@ else
 				catch:SetColor(fishingmod.FriedToColor(catch.data.fried))
 				
 				if (catch.last_sent or 0) < CurTime() then
-					catch.data.originalvalue = catch.data.originalvalue or catch.data.value
+					catch.data.originalvalue = catch.data.originalvalue or catch.data.value or 0
 					catch.data.value = math.max(catch.data.originalvalue * fishingmod.FriedToMultiplier(catch.data.fried), 1)
 					fishingmod.SetCatchInfo(catch)
 					catch.last_sent = CurTime() + 0.3
