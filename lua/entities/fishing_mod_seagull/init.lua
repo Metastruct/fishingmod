@@ -121,6 +121,7 @@ function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
 		}
 		ragdoll:SetNWBool("fishingmod catch", true)
 		ragdoll:Spawn()
+		if ragdoll.CPPISetOwner then ragdoll:CPPISetOwner(attacker) end
 		fishingmod.SetCatchInfo(ragdoll)
 		self:Remove()
 	end
