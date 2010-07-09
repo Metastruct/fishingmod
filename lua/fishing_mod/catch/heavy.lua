@@ -1,21 +1,21 @@
-local heavy_enabled = CreateConVar("fish_heavy", "1", {FCVAR_ARCHIVE})
+local heavy_enabled = CreateConVar("fish_heavy", "1", FCVAR_ARCHIVE)
 if file.Exists("../models/player/heavy.mdl") and heavy_enabled:GetBool() then
-fishingmod.AddCatch{
-	friendly = "Stoned Heavy",
-	type = "fishing_mod_catch_heavy",
-	size = 8,
-	rareness = 3500, 
-	yank = 100000, 
-	mindepth = 100, 
-	maxdepth = 20000,
-	expgain = 70,
-	value = 300,
-	levelrequired = 8,
-	remove_on_release = false,
-	bait = {
-		"models/weapons/c_models/c_sandwich/c_sandwich.mdl",
-	},
-}
+	fishingmod.AddCatch{
+		friendly = "Stoned Heavy",
+		type = "fishing_mod_catch_heavy",
+		size = 8,
+		rareness = 3500, 
+		yank = 100000, 
+		mindepth = 100, 
+		maxdepth = 20000,
+		expgain = 70,
+		value = 300,
+		levelrequired = 8,
+		remove_on_release = false,
+		bait = {
+			"models/weapons/c_models/c_sandwich/c_sandwich.mdl",
+		},
+	}
 end
 
 local ENT = {}
