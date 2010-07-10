@@ -1,6 +1,6 @@
 SWEP.Author = "CapsAdmin"
 SWEP.Category = "Fishing Mod"
-SWEP.Instructions = "Left click to start fishing"
+SWEP.Instructions = "To reel down, hold left mouse button\nTo reel up, hold right mouse button\nTo reel faster, hold shift\nTo reel slower, hold alt\nTo release bait, press e\nTo release catch, press r\nTo access the menu, press B"
 SWEP.Spawnable = true 
 SWEP.ViewModel = ""
 SWEP.WorldModel = ""
