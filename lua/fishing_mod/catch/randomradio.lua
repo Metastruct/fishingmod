@@ -55,12 +55,12 @@ if SERVER then
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
 		local song = table.Random(musics)
-		if type(self.song) == "table" then
-			self.Restart = CurTime() + self.song[2]
-			self.Duration = self.song[2]
-			self.song = self.song[1]
+		if type(song) == "table" then
+			self.Restart = CurTime() + song[2]
+			self.Duration = song[2]
+			song = song[1]
 		end
-		self.sound = CreateSound(self, self.song)
+		self.sound = CreateSound(self, song)
 		self.sound:SetSoundLevel(150)
 		self.sound:ChangeVolume(500)
 		self.sound:Play()
