@@ -10,7 +10,7 @@ fishingmod.AddCatch{
 	remove_on_release = false,
 	value = 50,
 	bait = {
-		"models/props_radiostation/radio_antenna01_stay.mdl",
+		"models/props_lab/tpplug.mdl",
 		--"models/props_misc/antenna03.mdl",
 	},
 }
