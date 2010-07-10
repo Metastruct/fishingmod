@@ -1,6 +1,6 @@
 fishingmod.AddCatch{
 	friendly = "Annoying Country Radio",
-	type = "fishing_mod_catch_annoying_radio",
+	type = "fishing_mod_catch_aradio",
 	rareness = 1000, 
 	yank = 100, 
 	mindepth = 100, 
@@ -14,16 +14,12 @@ fishingmod.AddCatch{
 		--"models/props_misc/antenna03.mdl",
 	},
 }
-
 local ENT = {}
 
 ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
 
-
-
 if SERVER then
-
 	function ENT:Initialize()
 
 		self:SetModel("models/props_lab/citizenradio.mdl")
@@ -80,4 +76,4 @@ if SERVER then
 	
 end
 
-scripted_ents.Register(ENT, "fishing_mod_catch_annoying_radio", true)
+scripted_ents.Register(ENT, "fishing_mod_catch_aradio", true)
