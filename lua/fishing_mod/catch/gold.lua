@@ -1,12 +1,12 @@
 fishingmod.AddCatch{
 	friendly = "Gold Ingot",
 	type = "fishing_mod_catch_gold",
-	rareness = 10000, 
+	rareness = 7500, 
 	yank = 100, 
 	mindepth = 300, 
 	maxdepth = 30000,
-	expgain = 1500,
-	levelrequired = 86,
+	expgain = 500,
+	levelrequired = 44,
 	remove_on_release = false,
 	bait = {
 		"models/props_2fort/pick001.mdl"
@@ -67,7 +67,7 @@ if SERVER then
 	end
 	
 	function ENT:Use(ply)
-		local num = math.random(3000, 9000) 
+		local num = math.random(3000, 6000) 
 		if not fishingmod.Sell(ply, self, num) then return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 		self:Remove()
@@ -123,11 +123,5 @@ else
 	end
 
 end
-
-
-
-
-
-	
 	
 scripted_ents.Register(ENT, "fishing_mod_catch_gold", true)
