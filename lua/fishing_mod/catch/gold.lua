@@ -7,7 +7,7 @@ fishingmod.AddCatch{
 	force = 0,
 	mindepth = 0, 
 	maxdepth = 30000,
-	expgain = 500,
+	expgain = 250,
 	levelrequired = 44,
 	remove_on_release = false,
 	bait = {
@@ -60,8 +60,8 @@ if SERVER then
 	function ENT:Think()
 	
 		if self.ThinkNext < CurTime() then
-			self:EmitSound("ambient/levels/canals/windchime4.wav", 100, math.random(100, 255)) -- thanks to hunter for this sound
-			self.ThinkNext = CurTime() + 2
+			self:EmitSound("ambient/levels/canals/windchime4.wav", 75, math.random(100, 255)) -- thanks to hunter for this sound
+			self.ThinkNext = CurTime() + 1
 		end
 	
 	end
@@ -79,6 +79,7 @@ else
 
 		self.Emitter = ParticleEmitter( self:GetPos() )
 		self.Timer = 0
+		self.Alpha = 0
 
 	end
 
@@ -86,11 +87,11 @@ else
 
 		if self.Timer < CurTime() then
 		
-			self.Timer = CurTime() + 2
+			self.Timer = CurTime() + 1
 		
-			local particle = self.Emitter:Add( "particles/fire_glow", self:GetPos() + VectorRand() * 5 )
+			local particle = self.Emitter:Add( "effects/yellowflare", self:GetPos() + VectorRand() * 5 )
 			local vecrand = VectorRand() * 20
-			particle:SetVelocity( Vector(math.abs(vecrand.x), math.abs(vecrand.y), math.abs(vecrand.z)))
+			particle:SetVelocity( Vector(vecrand.x, vecrand.y, math.abs(vecrand.z) + 10))
 			particle:SetColor( 255, 255, 255 )
 			particle:SetDieTime( 4 )
 			particle:SetStartAlpha( 255 )
@@ -116,12 +117,22 @@ else
 		end
 
 	end
-  
-	local matGlow = Material( "effects/blueflare1" ) 
+	
+	local glow = Material("effects/yellowflare") -- "particles/fire_glow
+	glow:SetMaterialInt( "$ignorez", 1 ) 
 
 	function ENT:Draw()
-	
+		
+		self.Alpha = math.Clamp(100 + math.sin( CurTime() ) * 100, 50, 255)
+
+		render.SetMaterial( glow )
+		render.DrawSprite( self:GetPos() - (self:GetForward() * 2), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		render.DrawSprite( self:GetPos() - (self:GetForward() * 2) + (self:GetUp() * 7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		render.DrawSprite( self:GetPos() - (self:GetForward() * 2) + (self:GetUp() * -7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		
 	end
+	
+	
 
 end
 	
