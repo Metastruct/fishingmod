@@ -230,7 +230,7 @@ else
 		if (self.next_search or 0) < CurTime() then
 		
 			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() ) ) do
-				if entity.data and entity ~= self and not entity.shelf_stored then
+				if entity.data and entity ~= self and not entity.shelf_stored and entity:GetClass() != "fishing_mod_catch_stove" then
 					self:AddItem( entity )
 				end
 			end
