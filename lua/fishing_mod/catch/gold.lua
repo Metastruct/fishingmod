@@ -1,9 +1,11 @@
 fishingmod.AddCatch{
+	cant_sell = true,
 	friendly = "Gold Ingot",
 	type = "fishing_mod_catch_gold",
 	rareness = 7500, 
 	yank = 100, 
-	mindepth = 300, 
+	force = 0,
+	mindepth = 0, 
 	maxdepth = 30000,
 	expgain = 500,
 	levelrequired = 44,
