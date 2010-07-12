@@ -23,38 +23,12 @@ if SERVER then
 	
 	function ENT:Initialize()
 		self.ThinkNext = 0
-		self:SetModel("models/props_junk/PopCan01a.mdl")
+		self:SetModel("models/props_mining/ingot001.mdl")
 		self:SetMoveType( MOVETYPE_VPHYSICS )
 		self:SetSolid( SOLID_VPHYSICS )
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
-		
-		local w = 4 * 2
-		local l = 4.5 * 2
-		local h = 7 * 2
-		
-		local min=Vector(0-(w/2),0-(l/2),0-(h/2))
-		local max=Vector(w/2,l/2,h/2)
-		
-		self:PhysicsInitBox(min,max)
-		self:SetCollisionBounds(min,max)
-		
-		self:SetAngles(Angle(-90, 0, 180)) 
-		
-		self.bar = ents.Create("prop_physics")
-		self.bar:SetModel("models/props_mining/ingot001.mdl")
-		self.bar:SetPos(self:GetPos() - Vector(0, 0, 4))
-		self.bar:SetParent(self)
-		self.bar:Spawn()
 
-	end
-	
-	function ENT:OnRemove()
-	
-		if IsValid(self.bar) then
-			self.bar:Remove()
-		end
-	
 	end
 	
 	function ENT:Think()
@@ -127,8 +101,10 @@ else
 
 		render.SetMaterial( glow )
 		render.DrawSprite( self:GetPos() - (self:GetForward() * 2), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
-		render.DrawSprite( self:GetPos() - (self:GetForward() * 2) + (self:GetUp() * 7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
-		render.DrawSprite( self:GetPos() - (self:GetForward() * 2) + (self:GetUp() * -7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		render.DrawSprite( self:GetPos() - (self:GetForward() * 7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		render.DrawSprite( self:GetPos() + (self:GetForward() * 7 ), 50 + math.sin( CurTime() * 6 ) * 5, 50 + math.sin( CurTime() * 6 ) * 5, Color( 255, 255, 255, self.Alpha ) )
+		
+		self:DrawModel()
 		
 	end
 	
