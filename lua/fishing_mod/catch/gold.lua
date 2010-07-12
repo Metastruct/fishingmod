@@ -44,8 +44,6 @@ if SERVER then
 		self.bar:SetPos(self:GetPos() - Vector(0, 0, 4))
 		self.bar:SetParent(self)
 		self.bar:Spawn()
-		
-		self:EmitSound("ambient/gas/steam_loop1.wav", 60, 150) 
 
 	end
 	
@@ -60,8 +58,8 @@ if SERVER then
 	function ENT:Think()
 	
 		if self.ThinkNext < CurTime() then
-			self:EmitSound("weapons/crowbar/crowbar_impact"..math.random(1,2)..".wav", 60, math.random(225, 255))
-			self.ThinkNext = CurTime() + 0.6
+			self:EmitSound("ambient/levels/canals/windchime4.wav", 100, math.random(100, 255)) -- thanks to hunter for this sound
+			self.ThinkNext = CurTime() + 2
 		end
 	
 	end
@@ -86,18 +84,19 @@ else
 
 		if self.Timer < CurTime() then
 		
-			self.Timer = CurTime() + 0.5
+			self.Timer = CurTime() + 2
 		
-			local particle = self.Emitter:Add( "effects/spark", self:GetPos() + VectorRand() * 5 )
-			particle:SetVelocity( VectorRand() * 15)
+			local particle = self.Emitter:Add( "particles/fire_glow", self:GetPos() + VectorRand() * 5 )
+			local vecrand = VectorRand() * 20
+			particle:SetVelocity( Vector(math.abs(vecrand.x), math.abs(vecrand.y), math.abs(vecrand.z)))
 			particle:SetColor( 255, 255, 255 )
-			particle:SetDieTime( 5 )
+			particle:SetDieTime( 4 )
 			particle:SetStartAlpha( 255 )
 			particle:SetEndAlpha( 0 )
-			particle:SetStartSize( 4 )
-			particle:SetEndSize( 0 )
+			particle:SetStartSize( 1 )
+			particle:SetEndSize( 6 )
 			particle:SetRoll( math.Rand( -360, 360 ) )
-			particle:SetRollDelta( math.Rand( -30, 30 ) )
+			particle:SetRollDelta( math.random( -30, 30 ) )
 			particle:SetCollide( true )
 			particle:SetBounce( 0.1 )
 			particle:SetGravity(Vector(0, 0, -20))
