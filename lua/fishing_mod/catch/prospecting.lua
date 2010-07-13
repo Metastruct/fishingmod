@@ -43,7 +43,7 @@ if SERVER then
 	end
 	
 	function ENT:Use(ply)
-		local num = math.random(25, 100)
+		local num = math.random(1, 100)
 		if not fishingmod.Sell(ply, self, num) then return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 		self:Remove()
@@ -65,7 +65,7 @@ fishingmod.AddCatch{
 	force = 0,
 	mindepth = 0, 
 	maxdepth = 30000,
-	expgain = 160,
+	expgain = 125,
 	levelrequired = 44,
 	remove_on_release = false,
 	bait = {
@@ -208,7 +208,7 @@ fishingmod.AddCatch{
 	cant_sell = true,
 	friendly = "Silver Ingot",
 	type = "fishing_mod_catch_silver",
-	rareness = 5750, 
+	rareness = 5500, 
 	yank = 100, 
 	force = 0,
 	mindepth = 0, 
@@ -331,12 +331,12 @@ fishingmod.AddCatch{
 	cant_sell = true,
 	friendly = "Gold Ingot",
 	type = "fishing_mod_catch_gold",
-	rareness = 7500, 
+	rareness = 8000, 
 	yank = 100, 
 	force = 0,
 	mindepth = 0, 
 	maxdepth = 30000,
-	expgain = 250,
+	expgain = 475,
 	levelrequired = 44,
 	remove_on_release = false,
 	bait = {
@@ -450,7 +450,7 @@ fishingmod.AddCatch{
 	cant_sell = true,
 	friendly = "Platinum Ingot",
 	type = "fishing_mod_catch_platinum",
-	rareness = 12500, 
+	rareness = 15000, 
 	yank = 100, 
 	force = 0,
 	mindepth = 0, 
@@ -493,7 +493,7 @@ if SERVER then
 	end
 	
 	function ENT:Use(ply)
-		local num = math.random(12000, 24000) 
+		local num = math.random(6000, 17500) 
 		if not fishingmod.Sell(ply, self, num) then return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 		self:Remove()
@@ -573,12 +573,12 @@ fishingmod.AddCatch{
 	cant_sell = true,
 	friendly = "Diamond",
 	type = "fishing_mod_catch_diamond",
-	rareness = 25000, 
+	rareness = 27500, 
 	yank = 100, 
 	force = 0,
 	mindepth = 0, 
 	maxdepth = 30000,
-	expgain = 14000, 
+	expgain = 2500, 
 	levelrequired = 44,
 	remove_on_release = false,
 	bait = {
@@ -606,7 +606,7 @@ if SERVER then
 	end
 	
 	function ENT:Use(ply)
-		local num = math.random(24000, 32000)
+		local num = math.random(32000, 44000)
 		if not fishingmod.Sell(ply, self, num) then return end
 		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 		self:Remove()
@@ -679,19 +679,21 @@ scripted_ents.Register(ENT, "fishing_mod_catch_pottery", true)
 ------------------------------------------------
 
 fishingmod.AddCatch{
-	friendly = "VALUE PLACEHOLDER", -- this is to give the pickaxe bait a price
+	friendly = "PICKAXE VALUE PLACEHOLDER", -- this is to give the pickaxe bait a price
 	type = "prop_physics",
 	models = {
 		"models/props_junk/Shoe001a.mdl"	
 	},
 	size = 10,
-	rareness = 200000, 
+	rareness = 10000, 
 	yank = 100, 
-	mindepth = 20000, 
-	maxdepth = 20001,
+	mindepth = 233233, 
+	maxdepth = 233234,
 	expgain = 20,
+	value = 25000,
 	levelrequired = 44,
 	remove_on_release = true,
-	bait = "models/props_2fort/pick001.mdl",
-	value = 2500,
+		bait = {
+		"models/props_2fort/pick001.mdl"
+	}
 }
