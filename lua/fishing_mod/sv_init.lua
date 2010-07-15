@@ -292,6 +292,8 @@ concommand.Add("fishing_mod_request_init", function(ply)
 		fishingmod.SetBaitSale(bait, data.multiplier, ply)
 	end
 	
+	fishingmod.InitPlayerStats(ply)
+	
 	ply.fishing_mod_spawned = true
 end)
 
