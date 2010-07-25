@@ -199,6 +199,7 @@ function fishingmod.Sell(ply, entity, value)
 	if entity.PreSell and entity:PreSell(ply, value) == false then return false end
 	entity:Remove()
 	fishingmod.GiveMoney(ply, value or 0)
+	ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
 	return true
 end
 
@@ -210,7 +211,6 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
 		if entity.data.cant_sell and entity.Use then entity:Use(ply) return end
-		ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
         fishingmod.Sell(ply, entity, entity.data.value or 0)
 	end
 end)
