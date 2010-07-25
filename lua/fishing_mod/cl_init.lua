@@ -63,15 +63,9 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	end
 end)
 
-local visible = false
-
-hook.Add("ChatTextChanged", "Fishingmod:ChatTextChanged", function(text)
-	visible = text ~= ""
-end)
-
 hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
-	if ply:GetFishingRod() and not visible then
+	if ply:GetFishingRod() and not vgui.CursorVisible() then
 		if input.IsKeyDown(KEY_B) then
 			local menu = fishingmod.UpgradeMenu
 			if not menu:IsVisible() then
