@@ -113,7 +113,9 @@ function ENT:Hook( entity, data )
 		entity:SetOwner(self)
 		entity:Spawn()
 		
-		if not file.Exists("../"..entity:GetModel():lower()) then entity:PhysicsInitBox(Vector()*-7,Vector()*7) end
+		if not entity:IsNPC() and not file.Exists("../"..entity:GetModel():lower()) then
+			entity:PhysicsInitBox(Vector()*-7,Vector()*7) 
+		end
 		
 		if data.scalable == "box" then
 			entity:PhysicsInitBox(entity:OBBMins()*size,entity:OBBMaxs()*size)

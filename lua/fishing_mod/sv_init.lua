@@ -78,7 +78,7 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	bait:SetPos(util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 100, ply).HitPos)
 	bait:Spawn()
 
-	if not file.Exists("../"..bait:GetModel()) then bait:PhysicsInitBox(Vector()*-7,Vector()*7) end
+	if not util.IsValidProp(bait:GetModel():lower()) then bait:PhysicsInitBox(Vector()*-7,Vector()*7) end
 	
 	fishingmod.SetBaitInfo(bait)
 	
