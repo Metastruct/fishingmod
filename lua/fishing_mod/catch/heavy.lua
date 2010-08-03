@@ -1,5 +1,5 @@
 local heavy_enabled = CreateConVar("fish_heavy", "1", FCVAR_ARCHIVE)
-if file.Exists("../models/player/heavy.mdl") and heavy_enabled:GetBool() then
+if util.IsValidRagdoll("models/player/heavy.mdl") and heavy_enabled:GetBool() then
 	fishingmod.AddCatch{
 		friendly = "Stoned Heavy",
 		type = "fishing_mod_catch_heavy",
