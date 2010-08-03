@@ -116,7 +116,6 @@ else
 		
 		self:DrawShadow(false)
 		self:SetColor(0,0,0,0)
-		self.body:DrawModel()
 		
 	end
 	
