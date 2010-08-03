@@ -113,7 +113,7 @@ function ENT:Hook( entity, data )
 		entity:SetOwner(self)
 		entity:Spawn()
 		
-		if not entity:IsNPC() or not util.IsValidProp(entity:GetModel():lower()) then
+		if not entity:IsNPC() and not (util.IsValidProp(entity:GetModel():lower()) or util.IsValidRagdoll(entity:GetModel():lower())) then			
 			entity:PhysicsInitBox(Vector()*-7,Vector()*7) 
 		end
 		
