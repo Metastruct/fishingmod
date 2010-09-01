@@ -19,6 +19,12 @@ function ENT:Initialize()
 	if IsValid(phys) then
 		phys:SetMass(1000)
 	end
+	
+	timer.Create("SeagullRemove "..self:EntIndex(), 200, 1, function()
+		if IsValid(self) then
+			self:Remove()
+		end
+	end)
 end
 
 function ENT:PickTarget()
