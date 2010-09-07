@@ -175,7 +175,7 @@ if SERVER then
 			lefthand:AddVelocity(velocity)
 			righthand:AddVelocity(velocity)
 			
-			head:AddAngleVelocity(Angle(-100,0,0))
+			head:AddAngleVelocity(Vector(-100,0,0))
 			-- leftfoot:AddVelocity(gravity)
 			
 			for i=0,15 do
