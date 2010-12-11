@@ -83,7 +83,7 @@ if SERVER then
 				figurines = figurines + 1
 			end
 		end
-		if figurines > 0 then velocity = velocity / figurines end
+		if figurines > 1 then velocity = velocity / figurines end
 		phys:AddVelocity(velocity+(VectorRand()*100)-(phys:GetVelocity()*0.05))
 	end
 
