@@ -88,7 +88,7 @@ hook.Add("ShouldDrawLocalPlayer", "Fishingmod:ShouldDrawLocalPlayer", function(p
 	end
 end)
 
-hook.Add("Tick", "Fishingmod:Tick", function()	
+timer.Create("Fishingmod:Tick", 2, 0, function()
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod scalable") then
 			entity:SetModelScale(Vector()*entity:GetNWFloat("fishingmod scale", 1))
