@@ -91,7 +91,7 @@ usermessage.Hook("Fishingmod:Catch", function(um)
 	owner,
 	value
 	)
-	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return tonumber(n)..STNDRD(n) end)
+	local time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return n..STNDRD(tonumber(n)) end)
 	local text = string.gsub(text, "{TIME}", time)
 	fishingmod.InfoTable.Catch[entity].text = text
 end)
