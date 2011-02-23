@@ -12,7 +12,11 @@ function fishingmod.SetCatchInfo(entity, ply)
 		umsg.Short(entity:EntIndex() or 0)
 		umsg.String(entity.data.friendly or "unknown")
 		umsg.Long(entity.data.caught or 0)
-		umsg.String(entity.data.owner.Nick and entity.data.owner:Nick() or entity.data.owner or "unknown")
+		umsg.String(
+			entity.data.owner and
+ValidEntity(entity.data.owner.Nick) and 
+			entity.data.owner:Nick() or 
+			"Unknown")
 		umsg.Short(entity.data.fried or 0)
 		umsg.Long(entity.data.value or 0)
 	umsg.End()
