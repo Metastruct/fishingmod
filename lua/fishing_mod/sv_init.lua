@@ -258,7 +258,8 @@ hook.Add("Think","FishingMod:Think", function()
 		if rod then
 			for key, data in RandomPairs(fishingmod.CatchTable) do
 				if 
-					not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1 and 
+					
+					(rod:GetHook() and not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1) and
 					fishingmod.LevelToExp(data.levelrequired) <= tonumber(ply.fishingmod.exp) and
 					
 					math.random(math.max(math.max(data.rareness-
