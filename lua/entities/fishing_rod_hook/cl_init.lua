@@ -1,3 +1,5 @@
+language.Add("fishing_rod_hook","Fishing SOMETHING")
+
 include("shared.lua")
 
 function ENT:Initialize()

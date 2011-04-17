@@ -1,3 +1,5 @@
+language.Add("entity_fishing_rod","Fishing Rod")
+
 include("shared.lua")
 
 local rope_material = Material("cable/rope")
@@ -51,7 +53,7 @@ end
 
 function ENT:Initialize()
 	
-	if LocalPlayer() == self:GetPlayer() then 
+	if LocalPlayer() == self:GetPlayer() and not ValidPanel(fishingmod.UpgradeMenu) then 
 		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu") 
 		fishingmod.UpgradeMenu:SetVisible(false)
 	end

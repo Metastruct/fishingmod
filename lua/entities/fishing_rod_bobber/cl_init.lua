@@ -1,3 +1,5 @@
+language.Add("fishing_rod_bobber","Fishing Bobber")
+
 include("shared.lua")
 
 local rope_material = Material("cable/rope")
