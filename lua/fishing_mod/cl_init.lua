@@ -13,9 +13,14 @@ end
 function fishingmod.RemoveCatch(name)
 	fishingmod.CatchTable[name] = nil
 end
-
-for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
-	include("fishing_mod/catch/"..name)
+if VERSION >= 150 then
+	for key, name in pairs(file.Find("fishing_mod/catch/*.lua", LUA_PATH)) do
+		include("fishing_mod/catch/"..name)
+	end
+else
+	for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
+		include("fishing_mod/catch/"..name)
+	end
 end
 
 hook.Add("InitPostEntity", "Init Fish Mod", function()

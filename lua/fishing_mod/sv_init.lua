@@ -29,11 +29,18 @@ end
 function fishingmod.RemoveCatch(name)
 	fishingmod.CatchTable[name] = nil
 end
-
-for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
-	local path = "fishing_mod/catch/"..name
-	include(path)
-	AddCSLuaFile(path)
+if VERSION >= 150 then
+	for key, name in pairs(file.Find("fishing_mod/catch/*.lua", LUA_PATH)) do
+		local path = "fishing_mod/catch/"..name
+		include(path)
+		AddCSLuaFile(path)
+	end
+else
+	for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
+		local path = "fishing_mod/catch/"..name
+		include(path)
+		AddCSLuaFile(path)
+	end
 end
 
 local function BreakWeld(ply,entity)
