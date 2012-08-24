@@ -30,8 +30,9 @@ usermessage.Hook("Fishingmod:BaitPrices", function(um)
 	fishingmod.UpdateSales()
 end)
 
-usermessage.Hook("Fishingmod:Player", function(um) 
-	local ply = um:ReadEntity()
+
+local function UpdatePlayer(ply,um) 
+	
 	local exp = um:ReadLong()
 	local catch = um:ReadLong()
 	local money = um:ReadLong()
@@ -59,6 +60,26 @@ usermessage.Hook("Fishingmod:Player", function(um)
 	if ply.fishingmod.level ~= 0 and ply.fishingmod.last_level ~= ply.fishingmod.level and not spawned then
 		ply:EmitSound("ambient/levels/canals/windchime2.wav", 100, 200)
 	end
+end
+
+local function UpdatePlayerWait(ply,um,time)
+	if time<CurTime() then return end
+	if IsValid(ply) then 
+		print("Delayed update",ply)
+		UpdatePlayer(ply,um)
+		return
+	end
+	timer.Simple(0,function() 
+		UpdatePlayerWait(ply,um,time)
+	end)
+end
+
+usermessage.Hook("Fishingmod:Player", function(um) 
+	local ply = um:ReadEntity()
+	if not IsValid(ply) then
+		UpdatePlayerWait(ply,um,CurTime()+5)
+	end
+	UpdatePlayer(ply,um)
 end)
 
 usermessage.Hook("Fishingmod:Catch", function(um) 
