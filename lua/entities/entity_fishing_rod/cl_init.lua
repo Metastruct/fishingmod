@@ -53,10 +53,6 @@ end
 
 function ENT:Initialize()
 	
-	if LocalPlayer() == self:GetPlayer() and not ValidPanel(fishingmod.UpgradeMenu) then 
-		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu") 
-		fishingmod.UpgradeMenu:SetVisible(false)
-	end
 	
 	self.sound_rope = CreateSound(self, "weapons/tripwire/ropeshoot.wav")
 	self.sound_rope:Play()
@@ -66,6 +62,12 @@ function ENT:Initialize()
 	self.sound_reel:Play()
 	self.sound_reel:ChangePitch(0)
 	self.last_length = 0
+	
+	if LocalPlayer() == self:GetPlayer() and not ValidPanel(fishingmod.UpgradeMenu) then 
+		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu") 
+		fishingmod.UpgradeMenu:SetVisible(false)
+	end
+	
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
 	self:SetupHook("Tick")
