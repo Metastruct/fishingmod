@@ -42,8 +42,6 @@ local function UpdatePlayer(ply,um)
 	local force = um:ReadShort()
 	local spawned = um:ReadBool()
 	
-	ply.fishingmod = ply.fishingmod or {}
-	
 	ply.fishingmod.length = length
 	ply.fishingmod.reel_speed = reel_speed
 	ply.fishingmod.string_length = string_length
@@ -64,10 +62,13 @@ end
 
 local function UpdatePlayerWait(ply,um,time)
 	if time<CurTime() then return end
-	if IsValid(ply) then 
-		print("Delayed update",ply)
-		UpdatePlayer(ply,um)
-		return
+	if IsValid(ply) and ply:IsPlayer() then
+		ply.fishingmod = ply.fishingmod or {}
+		if ply.fishingmod then
+			--print("Delayed update",ply)
+			UpdatePlayer(ply,um)
+			return
+		end
 	end
 	timer.Simple(0,function() 
 		UpdatePlayerWait(ply,um,time)
@@ -76,7 +77,7 @@ end
 
 usermessage.Hook("Fishingmod:Player", function(um) 
 	local ply = um:ReadEntity()
-	if not IsValid(ply) then
+	if not IsValid(ply) or not ply:IsPlayer() or not ply.fishingmod then
 		UpdatePlayerWait(ply,um,CurTime()+5)
 	end
 	UpdatePlayer(ply,um)
