@@ -59,10 +59,12 @@ else
 	
 	function SWEP:Initialize()
 		self.distance = 0
+    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
 	end
 	
 	function SWEP:Deploy()
-		if not IsValid(self.fishing_rod) then
+	  self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+  	if not IsValid(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			self.fishing_rod.dt.rod_length = self.Owner.fishingmod.length / 10 + 1
 			self.fishing_rod:Spawn()
@@ -81,7 +83,19 @@ else
 			return true
 		end
 	end
-		
+
+  function SWEP:OwnerChanged() 
+    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+  end
+  function SWEP:OnDrop() 
+    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+    self.Owner=self.lastowner 
+    if IsValid(self.Owner) then
+      self:Holster() 
+    end
+    self:Remove() 
+  end
+  
 	AddCSLuaFile( "shared.lua" )
 	SWEP.Weight = 5
 	SWEP.AutoSwitchTo = false
