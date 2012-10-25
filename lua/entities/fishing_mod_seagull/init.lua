@@ -112,6 +112,11 @@ function ENT:Touch(entity)
 end
 
 function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
+  data=inflictor
+  inflictor=data:GetInflictor()
+  attacker=data:GetAttacker()
+  amount=data:GetDamage()
+  
 	if ent ~= self then return end
 	if data:IsBulletDamage() and attacker:IsPlayer() then
 		local ragdoll = ents.Create("prop_ragdoll")
