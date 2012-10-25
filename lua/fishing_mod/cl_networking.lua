@@ -41,7 +41,8 @@ local function UpdatePlayer(ply,um)
 	local string_length = um:ReadShort()
 	local force = um:ReadShort()
 	local spawned = um:ReadBool()
-	
+  ply.fishingmod=ply.fishingmod or {}
+  if not ply.fishingmod then return end
 	ply.fishingmod.length = length
 	ply.fishingmod.reel_speed = reel_speed
 	ply.fishingmod.string_length = string_length
