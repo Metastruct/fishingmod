@@ -65,7 +65,7 @@ if SERVER then
 		end		
 	end)
 
-	local smoothmove = Vector()
+	local smoothmove = Vector(1,1,1)
 	local function MoveSmooth(NewVec)
 		smoothmove = LerpVector(0.05,smoothmove,NewVec)
 		return smoothmove
@@ -82,7 +82,7 @@ if SERVER then
 				return
 			end
 		
-			if ValidEntity(self.target) then
+			if IsValid(self.target) then
 				phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*10)
 				phys:AddAngleVelocity(VectorRand()*10)
 			else
@@ -92,7 +92,7 @@ if SERVER then
 		else
 			phys:SetDamping(1, 0)
 			if math.random() > 0.95 then
-				if ValidEntity(self.target) then
+				if IsValid(self.target) then
 					phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*10)
 					phys:AddAngleVelocity(VectorRand()*10)
 				else

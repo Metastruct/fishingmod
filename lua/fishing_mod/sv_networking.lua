@@ -16,7 +16,7 @@ function fishingmod.SetCatchInfo(entity, ply)
 			entity.data.owner and (
 			type(entity.data.owner)=="string" and entity.data.owner or 
 			
-				ValidEntity(entity.data.owner) and 
+				IsValid(entity.data.owner) and 
 				entity.data.owner:Nick()
 			) or 
 			"Unknown")

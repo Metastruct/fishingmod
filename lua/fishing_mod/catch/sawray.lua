@@ -68,7 +68,7 @@ if SERVER then
 				return
 			end
 			
-			if ValidEntity(self.target) then
+			if IsValid(self.target) then
 				phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*80)
 				phys:AddAngleVelocity(Vector(0,0,360))
 			else

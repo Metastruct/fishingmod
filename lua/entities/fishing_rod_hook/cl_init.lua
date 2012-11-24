@@ -3,7 +3,7 @@ language.Add("fishing_rod_hook","Fishing SOMETHING")
 include("shared.lua")
 
 function ENT:Initialize()
-	self:SetModelScale(Vector()*0.3)
+	self:SetModelScale(Vector(1,1,1)*0.3)
 end
 
 function ENT:Draw()
@@ -11,5 +11,5 @@ function ENT:Draw()
 end
 
 function ENT:GetHookedEntity()
-	return ValidEntity(self.dt.hooked) and self.dt.hooked or false
+	return IsValid(self.dt.hooked) and self.dt.hooked or false
 end

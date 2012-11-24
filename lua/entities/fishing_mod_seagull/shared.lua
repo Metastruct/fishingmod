@@ -4,7 +4,7 @@ ENT.AutomaticFrameAdvance = true
 
 if CLIENT then
 	function ENT:Think()
-		--self:SetModelScale(Vector()*10)
+		--self:SetModelScale(Vector(1,1,1)*10)
 		self.cycle = self.cycle or 0
 		self.cycle = self.cycle + FrameTime() * 4
 		

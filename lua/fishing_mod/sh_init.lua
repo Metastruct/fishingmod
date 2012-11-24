@@ -11,7 +11,7 @@ fishingmod.MaxReelSpeed = 100
 fishingmod.HookForcePrice = 600
 
 function _R.Player:GetFishingRod()
-	return ValidEntity(self:GetNWEntity("fishing rod")) and self:GetNWEntity("fishing rod") or false
+	return IsValid(self:GetNWEntity("fishing rod")) and self:GetNWEntity("fishing rod") or false
 end
 
 function fishingmod.FriedToColor(amount)

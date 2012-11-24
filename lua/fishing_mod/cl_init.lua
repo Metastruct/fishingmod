@@ -92,11 +92,11 @@ end)
 timer.Create("Fishingmod:Tick", 2, 0, function()
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod scalable") then
-			entity:SetModelScale(Vector()*entity:GetNWFloat("fishingmod scale", 1))
+			entity:SetModelScale(Vector(1,1,1)*entity:GetNWFloat("fishingmod scale", 1))
 		end
 		local size = entity:GetNWFloat("fishingmod size")
 		if entity:GetNWBool("in fishing shelf") and size ~= 0 then
-			entity:SetModelScale(Vector()*size/entity:BoundingRadius())
+			entity:SetModelScale(Vector(1,1,1)*size/entity:BoundingRadius())
 		end
 	end
 end)

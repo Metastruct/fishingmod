@@ -151,7 +151,7 @@ if SERVER then
 				
 				local TR = util.QuickTrace(self.body:GetPos(), self.body:GetForward()*1000 - Vector(0,0,32), {self,self.body})
 				
-				local gotopos = Vector()
+				local gotopos = Vector(1,1,1)
 				if TR.Hit then
 					gotopos = TR.HitPos + TR.HitNormal*500
 				else

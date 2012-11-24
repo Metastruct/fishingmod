@@ -5,7 +5,7 @@ include("shared.lua")
 local rope_material = Material("cable/rope")
 
 function ENT:Draw()
-	if ValidEntity(self:GetBobber()) then
+	if IsValid(self:GetBobber()) then
 		render.SetMaterial(rope_material)
 		render.DrawBeam(self:LocalToWorld(Vector(40,0,0) * self.dt.rod_length), self:GetBobber():LocalToWorld(self:GetBobber().TopOffset), 0.1, 0, 0, Color(255,200,200,50))
 	end
@@ -22,7 +22,7 @@ function ENT:RenderScene()
 	local new_position, new_angles = LocalToWorld(Vector(26.5-(self.dt.rod_length/13),-0.17,-44) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
-	self:SetRenderBounds(Vector()*-1000, Vector()*1000)
+	self:SetRenderBounds(Vector(1,1,1)*-1000, Vector(1,1,1)*1000)
 	self:SetModelScale(Vector(1*self.dt.rod_length,1,1))
 end
 

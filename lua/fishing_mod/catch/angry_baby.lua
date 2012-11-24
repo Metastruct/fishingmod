@@ -73,7 +73,7 @@ if SERVER then
 				return
 			end
 		
-			if ValidEntity(self.target) then
+			if IsValid(self.target) then
 				phys:AddVelocity((self.target:GetPos() - self:GetPos()))
 				phys:AddAngleVelocity(VectorRand()*2000)
 			else
@@ -83,7 +83,7 @@ if SERVER then
 		else
 			phys:SetDamping(1, 0)
 			if math.random() > 0.95 then
-				if ValidEntity(self.target) then
+				if IsValid(self.target) then
 					phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*100)
 					phys:AddAngleVelocity(VectorRand()*2000)
 				else

@@ -114,7 +114,7 @@ function ENT:Hook( entity, data )
 		entity:Spawn()
 		
 		if not entity:IsNPC() and not (util.IsValidProp(entity:GetModel():lower()) or util.IsValidRagdoll(entity:GetModel():lower())) then			
-			entity:PhysicsInitBox(Vector()*-7,Vector()*7) 
+			entity:PhysicsInitBox(Vector(1,1,1)*-7,Vector(1,1,1)*7) 
 		end
 		
 		if data.scalable == "box" then
