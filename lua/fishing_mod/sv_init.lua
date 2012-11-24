@@ -4,19 +4,11 @@ include("sv_networking.lua")
 include("sv_player_stats.lua")
 include("sv_upgrades.lua")
 
-local servertags = GetConVarString("sv_tags") --Thanks PHX!
-
 function fishingmod.SetData(entity, data)
 	entity.data = data
 	entity:SetColor(fishingmod.FriedToColor(data.fried or 0))
 	entity:SetNWBool("fishingmod catch", true)
 	entity:SetNWFloat("fishingmod size", data.size)
-end
-
-if servertags == nil then
-	RunConsoleCommand("sv_tags", "fishingmod")
-elseif not string.find(servertags, "fishingmod") then
-	RunConsoleCommand("sv_tags", "fishingmod," .. servertags)
 end
 
 fishingmod.CatchTable = {}
@@ -29,18 +21,10 @@ end
 function fishingmod.RemoveCatch(name)
 	fishingmod.CatchTable[name] = nil
 end
-if VERSION >= 150 then
-	for key, name in pairs(file.Find("fishing_mod/catch/*.lua", LUA_PATH)) do
-		local path = "fishing_mod/catch/"..name
-		include(path)
-		AddCSLuaFile(path)
-	end
-else
-	for key, name in pairs(file.FindInLua("fishing_mod/catch/*.lua")) do
-		local path = "fishing_mod/catch/"..name
-		include(path)
-		AddCSLuaFile(path)
-	end
+for key, name in pairs(file.Find("fishing_mod/catch/*.lua", LUA_PATH)) do
+	local path = "fishing_mod/catch/"..name
+	include(path)
+	AddCSLuaFile(path)
 end
 
 local function BreakWeld(ply,entity)

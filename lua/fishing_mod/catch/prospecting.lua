@@ -1,4 +1,3 @@
-local GM13=VERSION>150
 fishingmod.AddCatch{
 	cant_sell = true,
 	friendly = "Rock",
@@ -304,11 +303,8 @@ else
 	end
 	
 	local glow = Material("effects/yellowflare") -- "particles/fire_glow
-	if GM13 then
-		glow:SetInt( "$ignorez", 1 ) 
-	else
-		glow:SetMaterialInt( "$ignorez", 1 ) 
-	end
+	glow:SetInt( "$ignorez", 1 ) 
+
 	
 	function ENT:Draw()
 		
@@ -427,11 +423,7 @@ else
 	end
 	
 	local glow = Material("effects/yellowflare") -- "particles/fire_glow
-	if GM13 then
 		glow:SetInt( "$ignorez", 1 ) 
-	else
-		glow:SetMaterialInt( "$ignorez", 1 ) 
-	end
 	function ENT:Draw()
 		
 		self.Alpha = math.Clamp(100 + math.sin( CurTime() ) * 100, 50, 255)
@@ -553,11 +545,7 @@ else
 	end
 	
 	local glow = Material("effects/yellowflare") -- "particles/fire_glow
-	if GM13 then
 		glow:SetInt( "$ignorez", 1 ) 
-	else
-		glow:SetMaterialInt( "$ignorez", 1 ) 
-	end
 	
 	function ENT:Draw()
 		
