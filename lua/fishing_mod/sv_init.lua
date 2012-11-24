@@ -21,7 +21,7 @@ end
 function fishingmod.RemoveCatch(name)
 	fishingmod.CatchTable[name] = nil
 end
-for key, name in pairs(file.Find("fishing_mod/catch/*.lua", LUA_PATH)) do
+for key, name in pairs(file.Find("fishing_mod/catch/*.lua", "LUA")) do
 	local path = "fishing_mod/catch/"..name
 	include(path)
 	AddCSLuaFile(path)

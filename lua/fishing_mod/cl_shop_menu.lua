@@ -88,7 +88,7 @@ function PANEL:Init()
 		local icon = vgui.Create("Fishingmod:SpawnIcon")
 		icon:SetModel(model)
 		icon:SetToolTip("This bait cost " .. data.price .. " and\nit is a level "..levelrequired.." bait.")
-		icon:SetIconSize(58)
+		icon:SetSize(58,58)
 		
 		fishingmod.BaitTable[data.name].icon = icon
 		
