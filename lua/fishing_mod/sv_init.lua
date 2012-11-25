@@ -201,7 +201,7 @@ hook.Add("KeyPress", "Fishingmod:KeyPress", function(ply, key)
 	if IsValid(entity) and key == IN_RELOAD and entity:GetPos():Distance(ply:GetShootPos()) < 120 and entity:GetNWBool("fishingmod catch") then
 		local owner = player.GetByUniqueID(entity.data.ownerid)
 		if owner ~= ply then return end
-		if entity.data.cant_sell and entity.Use then pcall(entity.Use,entity,ply) return end
+		--if entity.data.cant_sell and entity.Use then pcall(entity.Use,entity,ply) return end
         fishingmod.Sell(ply, entity, entity.data.value or 0)
 	end
 end)
