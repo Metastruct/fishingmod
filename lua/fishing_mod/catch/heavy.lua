@@ -79,8 +79,9 @@ if SERVER then
 		end)
 	end	
 	
-	function ENT:EntityTakeDamage(entity, weapon, attacker, amount, data)
+	function ENT:EntityTakeDamage(entity, data)
 		if entity ~= self.Heavy then return end
+		local amount=data:GetDamage() > 50 and 50 or data:GetDamage()
 		
 		if self.health > 0 then
 			self:PlaySound("vo/heavy_painsharp0"..math.random(5)..".wav")
