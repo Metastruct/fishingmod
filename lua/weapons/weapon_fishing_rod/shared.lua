@@ -18,7 +18,7 @@ SWEP.Secondary.Ammo = "none"
 
 function SWEP:PrimaryAttack()
 	if SERVER then
-		if not IsValid(self.fishing_rod) then return end
+		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then return end
 		
 		local speed = 5
 		if self.Owner:KeyDown(IN_SPEED) then
@@ -57,14 +57,19 @@ if CLIENT then
 	
 else
 	
+	AddCSLuaFile( "shared.lua" )
+	SWEP.Weight = 5
+	SWEP.AutoSwitchTo = false
+	SWEP.AutoSwitchFrom	= false
+	
 	function SWEP:Initialize()
 		self.distance = 0
-    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
 	end
-	
+
 	function SWEP:Deploy()
-	  self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
-  	if not IsValid(self.fishing_rod) then
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		if not IsValid(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			self.fishing_rod.dt.rod_length = self.Owner.fishingmod.length / 10 + 1
 			self.fishing_rod:Spawn()
@@ -74,30 +79,36 @@ else
 			return true
 		end
 	end
-	
-	function SWEP:Holster()
+
+	function SWEP:KillRod()
 		if IsValid(self) and IsValid(self.Owner) and IsValid(self.fishing_rod) then
 			self.Owner:SetNWEntity("fishing rod", NULL)
+			return true
+		end
+		if IsValid(self.fishing_rod) then
 			self.fishing_rod:Remove()
 			self.fishing_rod = nil
-			return true
 		end
 	end
 
-  function SWEP:OwnerChanged() 
-    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
-  end
-  function SWEP:OnDrop() 
-    self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
-    self.Owner=self.lastowner 
-    if IsValid(self.Owner) then
-      self:Holster() 
-    end
-    self:Remove() 
-  end
-  
-	AddCSLuaFile( "shared.lua" )
-	SWEP.Weight = 5
-	SWEP.AutoSwitchTo = false
-	SWEP.AutoSwitchFrom	= false
+	function SWEP:OnRemove()
+		self:KillRod()
+	end
+	function SWEP:Holster()
+		self:KillRod()
+	end
+	
+	function SWEP:OwnerChanged() 
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+	end
+	
+	function SWEP:OnDrop() 
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self.Owner=self.lastowner 
+		if IsValid(self.Owner) then
+		  self:KillRod() 
+		end
+		self:Remove() 
+	end
+
 end
