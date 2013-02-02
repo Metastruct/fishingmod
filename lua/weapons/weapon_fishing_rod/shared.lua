@@ -96,6 +96,7 @@ else
 	end
 	function SWEP:Holster()
 		self:KillRod()
+		return true
 	end
 	
 	function SWEP:OwnerChanged() 
