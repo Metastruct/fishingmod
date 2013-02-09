@@ -33,8 +33,10 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+	
+	
 	if SERVER then
-		if not IsValid(self.fishing_rod) then return end
+		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then return end
 		
 		local speed = 5
 		if self.Owner:KeyDown(IN_SPEED) then
@@ -90,7 +92,12 @@ else
 			self.fishing_rod = nil
 		end
 	end
-
+	function SWEP:Think()
+		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then
+			self:Remove()
+		end
+	end
+	
 	function SWEP:OnRemove()
 		self:KillRod()
 	end
