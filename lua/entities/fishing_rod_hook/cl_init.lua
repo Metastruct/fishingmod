@@ -3,7 +3,7 @@ language.Add("fishing_rod_hook","Hook")
 include("shared.lua")
 
 function ENT:Initialize()
-	self:SetModelScale(Vector(1,1,1)*0.3)
+	self:SetModelScale(0.3, 0)
 end
 
 function ENT:Draw()

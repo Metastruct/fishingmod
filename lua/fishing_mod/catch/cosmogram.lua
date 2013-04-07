@@ -99,7 +99,7 @@ else
 
 	function PartThink( part )
 
-		local dir = ( part.Pos - part:GetPos() ):Normalize()
+		local dir = ( part.Pos - part:GetPos() ):GetNormalized()
 		
 		part:SetNextThink( CurTime() + 0.1 )
 		part:SetGravity( dir * 250 )

@@ -52,7 +52,7 @@ if CLIENT then
 		for key, data in pairs(self.storage) do
 			if key == 1 or key == 2 then
 				local pan = ClientsideModel("models/props_c17/metalPot002a.mdl")
-				pan:SetModelScale(Vector(1,1,1)*0.7)
+				pan:SetModelScale(0.7, 0)
 				pan:SetPos(self:GetPos() + self:GetForward() * 3 + ( self:GetUp() * (data.position.z + 1) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y))
 				local angles = pan:GetAngles()
 				angles:RotateAroundAxis(angles:Up(), 180)
@@ -61,7 +61,7 @@ if CLIENT then
 				self.stoves[key] = pan
 			elseif key == 3 or key == 4 then
 				local pan = ClientsideModel("models/props_c17/metalPot001a.mdl")
-				pan:SetModelScale(Vector(1,1,1)*0.7)
+				pan:SetModelScale(0.7, 0)
 				pan:SetPos(self:GetPos() + ( self:GetUp() * (data.position.z + 4.5) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y))
 				local angles = pan:GetAngles()
 				angles:RotateAroundAxis(angles:Up(), 90)
@@ -130,7 +130,7 @@ if CLIENT then
 		end
 		
 		self:DrawModel()
-		self.sound:ChangeVolume(self.dt.heat/100)
+		self.sound:ChangeVolume(self.dt.heat/100, 0)
 		render.SetMaterial( sprite )
 		for k, v in pairs( self.storage ) do
 			render.DrawSprite( self:GetPos() + ( self:GetUp() * v.position.z ) + ( self:GetRight() * v.position.x ) + ( self:GetForward() * v.position.y ), 1, 1, Color( 255, 255, 255, 255 ) )

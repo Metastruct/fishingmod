@@ -84,7 +84,7 @@ if SERVER then
 			phys:SetDamping(1, 0)
 			if math.random() > 0.95 then
 				if IsValid(self.target) then
-					phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*100)
+					phys:AddVelocity((self.target:GetPos() - self:GetPos()):GetNormalized()*100)
 					phys:AddAngleVelocity(VectorRand()*2000)
 				else
 					phys:AddVelocity(VectorRand()*200)

@@ -113,18 +113,18 @@ vgui.Register("Fishingmod:BaitShop", PANEL,"DPanelList")
 local PANEL = {}
 
 function PANEL:Init()
-	self.left = vgui.Create("DSysButton", self)
+	self.left = vgui.Create("DButton", self)
 	self.left:SetSize(20,20)
-	self.left:SetType("left")
+	self.left:SetText("<<")
 	self.left:SetTooltip("+0")
 	
 	self.left.DoClick = function()
 		RunConsoleCommand("fishingmod_downgrade_"..self.command, "1")
 	end
 			
-	self.right = vgui.Create("DSysButton", self)
+	self.right = vgui.Create("DButton", self)
 	self.right:SetSize(20,20)
-	self.right:SetType("right")		
+	self.right:SetText(">>")		
 	
 	self.right.DoClick = function()
 		RunConsoleCommand("fishingmod_upgrade_"..self.command, "1")

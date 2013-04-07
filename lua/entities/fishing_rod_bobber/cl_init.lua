@@ -5,7 +5,7 @@ include("shared.lua")
 local rope_material = Material("cable/rope")
 
 function ENT:Draw()
-	self:SetModelScale(Vector(0.5,0.5,0.5))
+	self:SetModelScale(0.5, 0)
 	self:DrawModel()
 	self:SetRenderBounds(Vector(1,1,1)*-1000, Vector(1,1,1)*1000)
 	if IsValid(self.dt.hook) then

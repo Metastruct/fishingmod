@@ -41,8 +41,8 @@ local function UpdatePlayer(ply,um)
 	local string_length = um:ReadShort()
 	local force = um:ReadShort()
 	local spawned = um:ReadBool()
-  ply.fishingmod=ply.fishingmod or {}
-  if not ply.fishingmod then return end
+	ply.fishingmod=ply.fishingmod or {}
+	if not ply.fishingmod then return end
 	ply.fishingmod.length = length
 	ply.fishingmod.reel_speed = reel_speed
 	ply.fishingmod.string_length = string_length
@@ -128,7 +128,7 @@ usermessage.Hook("Fishingmod:Bait", function(um)
 	local entity = um:ReadShort()
 	local owner = um:ReadString()
 	
-	local ply = SinglePlayer() and LocalPlayer() or player.GetByUniqueID(owner)
+	local ply = game.SinglePlayer() and LocalPlayer() or player.GetByUniqueID(owner)
 	
 	if not IsValid(ply) then return end
 

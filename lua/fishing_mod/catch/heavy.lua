@@ -168,7 +168,7 @@ if SERVER then
 				constraint.RemoveAll(self.Heavy)
 			end
 			
-			if target:GetClass() == "fishing_mod_seagull" then velocity = velocity:Normalize() * 1000 end
+			if target:GetClass() == "fishing_mod_seagull" then velocity = velocity:GetNormalized() * 1000 end
 			
 			local gravity = Vector(0,0,-20)
 			

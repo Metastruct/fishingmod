@@ -52,7 +52,7 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			local width = 250
 			local height = 85
 			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
-			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
+			draw.DrawText(data.text, "DermaDefault", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end
 		local data = fishingmod.InfoTable.Bait[entity:EntIndex()]
 		if data and data.text then
@@ -92,11 +92,11 @@ end)
 timer.Create("Fishingmod:Tick", 2, 0, function()
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod scalable") then
-			entity:SetModelScale(Vector(1,1,1)*entity:GetNWFloat("fishingmod scale", 1))
+			entity:SetModelScale(entity:GetNWFloat("fishingmod scale", 1), 0)
 		end
 		local size = entity:GetNWFloat("fishingmod size")
 		if entity:GetNWBool("in fishing shelf") and size ~= 0 then
-			entity:SetModelScale(Vector(1,1,1)*size/entity:BoundingRadius())
+			entity:SetModelScale(size/entity:BoundingRadius(), 0)
 		end
 	end
 end)
@@ -108,7 +108,7 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 		local offset = ply:GetShootPos() + 
 			(ply:EyeAngles():Right() * 50) + 
 			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
-			(Angle(0,0,ply:EyeAngles().z):Up() * 20)
+			(Angle(0,0,ply:EyeAngles().r):Up() * 20)
 		angles.p = math.Clamp(angles.p-30, -70, 15)			
 		
 		return GAMEMODE:CalcView(ply,offset,angles,fov)

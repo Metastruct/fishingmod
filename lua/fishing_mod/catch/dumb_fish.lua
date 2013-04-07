@@ -169,9 +169,9 @@ if SERVER then
 			self.shadow = {}
 			self.shadow.secondstoarrive = 0.5
 			if IsValid(self.avoid_target) then
-				self.shadow.pos = self:GetPos() + (self:GetPos() - self.avoid_target:GetPos()):Normalize() * 100 + self.swim_down
+				self.shadow.pos = self:GetPos() + (self:GetPos() - self.avoid_target:GetPos()):GetNormalized() * 100 + self.swim_down
 			elseif IsValid(self.target) then
-				self.shadow.pos = self:GetPos() + (self.target:GetPos() - self:GetPos()):Normalize() * 50 + self.swim_down
+				self.shadow.pos = self:GetPos() + (self.target:GetPos() - self:GetPos()):GetNormalized() * 50 + self.swim_down
 			else
 				self.shadow.pos = self:GetPos() +  self.avoid:Forward() * (not self.bothhit and 50 or -5) + self.swim_down
 			end

@@ -69,7 +69,7 @@ if SERVER then
 			end
 			
 			if IsValid(self.target) then
-				phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*80)
+				phys:AddVelocity((self.target:GetPos() - self:GetPos()):GetNormalized()*80)
 				phys:AddAngleVelocity(Vector(0,0,360))
 			else
 				phys:AddVelocity(self:GetForward()*20 - Vector(0,0,4))

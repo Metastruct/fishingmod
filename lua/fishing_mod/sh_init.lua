@@ -10,7 +10,9 @@ fishingmod.MaxReelSpeed = 100
 
 fishingmod.HookForcePrice = 600
 
-function _R.Player:GetFishingRod()
+local PLAYER = FindMetaTable("Player")
+
+function PLAYER:GetFishingRod()
 	return IsValid(self:GetNWEntity("fishing rod")) and self:GetNWEntity("fishing rod") or false
 end
 

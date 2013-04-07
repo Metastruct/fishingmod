@@ -28,19 +28,19 @@ if SERVER then
 		self:SetSolid(SOLID_VPHYSICS)
 		self.sound = CreateSound(self, "ambient/music/country_rock_am_radio_loop.wav")
 		self.sound:SetSoundLevel(150)
-		self.sound:ChangeVolume(500)
+		self.sound:ChangeVolume(500, 0)
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(100,110))
+		self.sound:ChangePitch(math.random(100,110), 0)
 	end
 
 	function ENT:Use()
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(100,110))
+		self.sound:ChangePitch(math.random(100,110), 0)
 	end
 
 	function ENT:OnTakeDamage()
 		self.sound:Play()
-		self.sound:ChangePitch(math.random(100,110))
+		self.sound:ChangePitch(math.random(100,110), 0)
 		self.shot = 100
 	end
 
@@ -57,14 +57,14 @@ if SERVER then
 					util.Effect( "Sparks", effectdata )
 					entity:Remove()
 					self.shot = 101
-					self.sound:ChangePitch(self.shot)
+					self.sound:ChangePitch(self.shot, 0)
 				end
 			end
 		end
 		
 		if self.shot and self.shot <=100 then
 			self.shot = math.Clamp(self.shot - 1, 0, 255)
-			self.sound:ChangePitch(self.shot)
+			self.sound:ChangePitch(self.shot, 0)
 		end
 		self:NextThink(CurTime())
 		return true

@@ -83,7 +83,7 @@ if SERVER then
 			end
 		
 			if IsValid(self.target) then
-				phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*10)
+				phys:AddVelocity((self.target:GetPos() - self:GetPos()):GetNormalized()*10)
 				phys:AddAngleVelocity(VectorRand()*10)
 			else
 				phys:AddVelocity(MoveSmooth(VectorRand())*20 + Vector(0,0,-1))
@@ -93,7 +93,7 @@ if SERVER then
 			phys:SetDamping(1, 0)
 			if math.random() > 0.95 then
 				if IsValid(self.target) then
-					phys:AddVelocity((self.target:GetPos() - self:GetPos()):Normalize()*10)
+					phys:AddVelocity((self.target:GetPos() - self:GetPos()):GetNormalized()*10)
 					phys:AddAngleVelocity(VectorRand()*10)
 				else
 					phys:AddVelocity(VectorRand()*20)
@@ -134,14 +134,14 @@ if SERVER then
 					dmg:SetAttacker(self)
 					dmg:SetInflictor(self)
 					dmg:SetDamageType(DMG_SHOCK)
-					dmg:SetDamageForce((ent:GetPos() - self:GetPos()):Normalize()*50)
+					dmg:SetDamageForce((ent:GetPos() - self:GetPos()):GetNormalized()*50)
 					ent:TakeDamageInfo(dmg)
 					
 					ent:EmitSound("ambient/energy/spark"..math.random(1,6)..".wav", 100, math.random(90,110))
 					
 					local ED = EffectData()
 					ED:SetOrigin(ent:LocalToWorld(ent:OBBCenter()))
-					ED:SetNormal((self:GetPos()-ent:GetPos()):Normalize()*2)
+					ED:SetNormal((self:GetPos()-ent:GetPos()):GetNormalized()*2)
 					ED:SetMagnitude(1)
 					ED:SetScale(2)
 					ED:SetRadius(2)

@@ -23,7 +23,7 @@ function ENT:RenderScene()
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
 	self:SetRenderBounds(Vector(1,1,1)*-1000, Vector(1,1,1)*1000)
-	self:SetModelScale(Vector(1*self.dt.rod_length,1,1))
+	self:SetModelScale(self.dt.rod_length, 0)
 end
 
 function ENT:HUDPaint()
@@ -56,11 +56,11 @@ function ENT:Initialize()
 	
 	self.sound_rope = CreateSound(self, "weapons/tripwire/ropeshoot.wav")
 	self.sound_rope:Play()
-	self.sound_rope:ChangePitch(0)
+	self.sound_rope:ChangePitch(0, 0)
 	
 	self.sound_reel = CreateSound(self, "fishingrod/reel.wav")
 	self.sound_reel:Play()
-	self.sound_reel:ChangePitch(0)
+	self.sound_reel:ChangePitch(0, 0)
 	self.last_length = 0
 	
 	if LocalPlayer() == self:GetPlayer() and not ValidPanel(fishingmod.UpgradeMenu) then 
@@ -72,7 +72,7 @@ function ENT:Initialize()
 	self:SetupHook("HUDPaint")
 	self:SetupHook("Tick")
 end
-
+ 
 function ENT:Think()	
 	local delta = self.dt.length - self.last_length
 
@@ -82,11 +82,11 @@ function ENT:Think()
 	local reel_velocity = self.dt.length - self.last_length
 	
 	local on = (delta ~= 0) and 1 or 0
-	self.sound_reel:ChangePitch(math.Clamp(math.abs(100+delta*10),80,200))
-	self.sound_reel:ChangeVolume(on)
+	self.sound_reel:ChangePitch(math.Clamp(math.abs(100+delta*10),80,200), 0)
+	self.sound_reel:ChangeVolume(on, 0)
 		
-	self.sound_rope:ChangePitch(math.Clamp(pitch, 50, 255))
-	self.sound_rope:ChangeVolume(math.Clamp(volume, 0, 1))
+	self.sound_rope:ChangePitch(math.Clamp(pitch, 50, 255), 0)
+	self.sound_rope:ChangeVolume(math.Clamp(volume, 0, 1), 0)
 	
 	self.last_length = self.dt.length
 	self:NextThink(CurTime())

@@ -1,4 +1,6 @@
 function fishingmod.SavePlayerInfo(ply, name, data)
+	file.CreateDir("fishingmod")
+	file.CreateDir("fishingmod/"..ply:UniqueID())
 	file.Write("fishingmod/"..ply:UniqueID().."/"..name..".txt", data)
 end
 
@@ -7,7 +9,6 @@ function fishingmod.LoadPlayerInfo(ply, name)
 end
 
 function fishingmod.GainEXP(ply, amount)
-	if me then me:Kill() return end -- nero lua prevention
 	ply.fishingmod.exp = ply.fishingmod.exp + amount
 	ply.fishingmod.catches = ply.fishingmod.catches + 1
 	fishingmod.SavePlayerInfo(ply, "exp", ply.fishingmod.exp)
@@ -16,7 +17,6 @@ function fishingmod.GainEXP(ply, amount)
 end
 
 function fishingmod.GiveMoney(ply, amount)
-	if me then me:Kill() return end -- nero lua prevention
 	ply.fishingmod.money = ply.fishingmod.money + amount
 	fishingmod.SavePlayerInfo(ply, "money", ply.fishingmod.money)
 	fishingmod.UpdatePlayerInfo(ply)
@@ -31,14 +31,12 @@ function fishingmod.Pay(ply, money)
 end
 
 function fishingmod.TakeMoney(ply, amount)
-	if me then me:Kill() return end -- nero lua prevention
 	ply.fishingmod.money = ply.fishingmod.money - amount
 	fishingmod.SavePlayerInfo(ply, "money", ply.fishingmod.money)
 	fishingmod.UpdatePlayerInfo(ply)
 end
 
 function fishingmod.SetRodLength(ply, length, add_or_sub)
-	if me then me:Kill() return end -- nero lua prevention
 	if add_or_sub == "add" then
 		ply.fishingmod.length = ply.fishingmod.length + length
 	elseif add_or_sub == "sub" then
@@ -51,7 +49,6 @@ function fishingmod.SetRodLength(ply, length, add_or_sub)
 end
 
 function fishingmod.SetRodReelSpeed(ply, speed, add_or_sub)
-	if me then me:Kill() return end -- nero lua prevention
 	if add_or_sub == "add" then
 		ply.fishingmod.reel_speed = ply.fishingmod.reel_speed + speed
 	elseif add_or_sub == "sub" then
@@ -64,7 +61,6 @@ function fishingmod.SetRodReelSpeed(ply, speed, add_or_sub)
 end
 
 function fishingmod.SetRodStringLength(ply, length, add_or_sub)
-	if me then me:Kill() return end -- nero lua prevention
 	if add_or_sub == "add" then
 		ply.fishingmod.string_length = ply.fishingmod.string_length + length
 	elseif add_or_sub == "sub" then
@@ -77,7 +73,6 @@ function fishingmod.SetRodStringLength(ply, length, add_or_sub)
 end
 
 function fishingmod.SetHookForce(ply, force, add_or_sub)
-	if me then me:Kill() return end -- nero lua prevention
 	if add_or_sub == "add" then
 		ply.fishingmod.force = ply.fishingmod.force + force
 	elseif add_or_sub == "sub" then
