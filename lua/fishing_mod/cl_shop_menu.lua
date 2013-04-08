@@ -184,7 +184,7 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:PaintOver()
-	draw.SimpleText( self.percent.."% OFF", "DefaultFixedOutline", 4, 2, HSVToColor(math.Clamp(self.percent+40,0,160),1,1), TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
+	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 4, 2, HSVToColor(math.Clamp(self.percent+40,0,160),1,1), TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
 	if self.grey then draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) ) end
 end
 
