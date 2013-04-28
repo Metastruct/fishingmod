@@ -89,18 +89,3 @@ fishingmod.AddCatch{
 	bait = bait,
 	value = value,
 }
-
-fishingmod.AddCatch{
-	friendly = "Dead Fast Headcrab",
-	models = {"models/headcrab.mdl"},
-	size = size,
-	rareness = rareness, 
-	yank = yank, 
-	mindepth = mindepth, 
-	maxdepth = maxdepth,
-	expgain = expgain,
-	levelrequired = levelrequired,
-	remove_on_release = remove_on_release,
-	bait = bait,
-	value = value,
-}
