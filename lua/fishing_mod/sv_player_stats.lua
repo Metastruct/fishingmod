@@ -17,6 +17,7 @@ function fishingmod.GainEXP(ply, amount)
 end
 
 function fishingmod.GiveMoney(ply, amount)
+	ply.fishingmod.money=ply.fishingmod.money or 0
 	ply.fishingmod.money = ply.fishingmod.money + amount
 	fishingmod.SavePlayerInfo(ply, "money", ply.fishingmod.money)
 	fishingmod.UpdatePlayerInfo(ply)
