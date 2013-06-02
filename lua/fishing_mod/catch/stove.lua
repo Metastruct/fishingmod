@@ -277,7 +277,7 @@ else
 					entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 					local phys = entity:GetPhysicsObject()
 					if IsValid(phys) then
-						phys:SetAngle( self:GetAngles() )
+						phys:SetAngles( self:GetAngles() )
 						phys:SetPos( self:GetPos() + ( self:GetUp() * (data.position.z + 3) ) + ( self:GetRight() * data.position.x ) + ( self:GetForward() * data.position.y ) - self:OBBCenter())
 					end
 					constraint.Weld(self, entity, 0, 0, 2500, true)
