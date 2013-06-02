@@ -191,7 +191,7 @@ else
 	
 	function ENT:Think()
 		local owner = player.GetByUniqueID(self.data.ownerid)
-		local cvar = owner and owner:GetInfoNum("fishingmod_stove_heat") or 0
+		local cvar = owner and owner:GetInfoNum("fishingmod_stove_heat", 0)
 		self.cvarheat = cvar
 		local heat = math.Clamp(cvar * -1 + 100, 0, 100)		
 		
@@ -290,18 +290,3 @@ else
 end
 
 scripted_ents.Register(ENT, "fishing_mod_catch_stove", true)
-
---[[ if SERVER then
-	All"fishing_mod_catch_stove":Remove()
-	local trace = nero.GetPlayer("caps"):GetEyeTrace()
-	local stove = ents.Create("fishing_mod_catch_stove")
-	stove:SetPos(trace.HitPos)
-	stove:Spawn()
-	stove:CPPISetOwner(nero.GetPlayer"caps")
-	stove.data = {}
-	stove.data.ownerid = nero.GetPlayer"caps":UniqueID()
-end ]]
-
-for key, stove in pairs(ents.FindByClass("fishing_mod_catch_stove")) do
-	stove:SetTable(table.Merge(stove:GetTable(), ENT))
-end
