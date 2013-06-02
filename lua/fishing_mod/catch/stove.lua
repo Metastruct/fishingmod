@@ -175,10 +175,10 @@ else
 	end
 	
 	function ENT:PreSell(ply)
-		if self.cvarheat ~= 0 then
+		--[[ if self.cvarheat ~= 0 then
 			ply:ChatPrint("The stove's heat needs to be 0 for you to sell it!")
 			return false
-		end
+		end ]]
 	end
 	
 	function ENT:Use(ply)

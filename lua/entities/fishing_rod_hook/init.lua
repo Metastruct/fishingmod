@@ -23,9 +23,9 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(entity)
---[[ 	if fishingmod.IsBait(entity) then
+	if fishingmod.IsBait(entity) then
 		self:HookBait(entity)
-	end ]]
+	end
 	fishingmod.HookBait(self.bobber.rod:GetPlayer(), entity)
 end
 
@@ -38,7 +38,7 @@ function ENT:HookBait(bait)
 		end
 		bait:SetPos(self:GetPos())
 		self.dt.bait = bait
-		constraint.Weld(self, self.dt.bait)
+		constraint.Weld(self, self.dt.bait, 0, 0, 0, false, false)
 	end
 end
 

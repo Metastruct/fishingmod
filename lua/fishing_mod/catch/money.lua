@@ -11,7 +11,6 @@ fishingmod.AddCatch{
 	cant_sell = true,
 	bait = {
 		"models/props_c17/cashregister01a.mdl",
-		"models/props_misc/cash_register.mdl",
 	}
 }
 

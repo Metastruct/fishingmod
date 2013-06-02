@@ -59,7 +59,7 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			local width = 200
 			local height = 20
 			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
-			draw.DrawText(data.text, "DefaultSmallDropShadow", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
+			draw.DrawText(data.text, "DermaDefault", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
 		end
 	end
 end)

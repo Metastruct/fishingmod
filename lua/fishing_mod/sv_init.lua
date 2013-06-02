@@ -52,10 +52,11 @@ end)
 
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	local type = table.concat(arguments, " ")
-		
+	local rod = ply:GetFishingRod()
+	local hooky = rod:GetHook()
 	local data = fishingmod.BaitTable[type]
 	
-	if not data then return end
+	--if not data then return end
 	
 	if not fishingmod.Pay(ply, math.Round(data.price*data.multiplier)) then return end
 	
@@ -73,7 +74,7 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	
 	fishingmod.SetBaitInfo(bait)
 	
-	fishingmod.HookBait(ply, bait)
+	fishingmod.HookBait(ply, bait, hooky)
 end)
 
 concommand.Add("fishing_mod_drop_catch", function(ply)
@@ -91,10 +92,9 @@ concommand.Add("fishing_mod_drop_bait", function(ply)
 end)
 
 function fishingmod.HookBait(ply, entity, hook)
+	if !hook then return end
 	if entity.is_bait and player.GetByUniqueID(entity.data.ownerid) == ply then
-		if hook then
-			hook:HookBait(entity)
-		elseif ply:GetFishingRod() and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
+		if ply:GetFishingRod() and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
 			ply:GetFishingRod():GetHook():HookBait(entity)
 		end
 	end
