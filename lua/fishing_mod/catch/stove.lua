@@ -191,7 +191,7 @@ else
 	
 	function ENT:Think()
 		local owner = player.GetByUniqueID(self.data.ownerid)
-		local cvar = owner and owner:GetInfoNum("fishingmod_stove_heat", 0)
+		local cvar = owner and owner:GetInfoNum("fishingmod_stove_heat", 0) or 0
 		self.cvarheat = cvar
 		local heat = math.Clamp(cvar * -1 + 100, 0, 100)		
 		
