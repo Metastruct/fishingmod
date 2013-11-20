@@ -249,6 +249,8 @@ timer.Create("FishingMod:Think",1,0,function()
 		local rod = ply:GetFishingRod()
 		if rod then
 		for key, data in RandomPairs(fishingmod.CatchTable) do
+			if not data.type then continue end
+			
 			local chance=math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2)-math.min(math.ceil(rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4),data.rareness/2),1)/divider:GetFloat(),1)))
 			if 
 

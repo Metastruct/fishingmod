@@ -26,7 +26,12 @@ function ENT:PhysicsSimulate( phys, deltatime )
 		bobber:PhysWake()
 	end
 	
-	local position, angles = self.dt.ply:GetBonePosition(self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand"))
+	if not IsValid(self.dt.ply) then return end
+	
+	local bone = self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand")
+	if not bone then return end
+	
+	local position, angles = self.dt.ply:GetBonePosition(bone)
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	
 	self.shadow_params.secondstoarrive = 0.0001
@@ -47,7 +52,10 @@ end
 function ENT:SetLength(length)
 	if not IsValid(self.physical_rope) then return end
 	self.physical_rope:Fire("SetSpringLength", length/2+10)
-	self:GetHook().physical_rope:Fire("SetSpringLength", length/2+10)
+	local hookent = self:GetHook()
+	if IsValid(hookent) then
+		hookent.physical_rope:Fire("SetSpringLength", length/2+10)
+	end
 	self.dt.length = length
 end
 
