@@ -247,11 +247,32 @@ timer.Create("FishingMod:Think",1,0,function()
 	local divider = CreateConVar("fishing_mod_divider", 1, true, false)
 	for key, ply in pairs(player.GetAll()) do
 		local rod = ply:GetFishingRod()
-		if rod then
+		local bobber = rod and rod:GetBobber()
+		if bobber then
 		for key, data in RandomPairs(fishingmod.CatchTable) do
 			if not data.type then continue end
 			
-			local chance=math.random(math.max(math.max(data.rareness-math.min(math.ceil(rod:GetBobber():GetVelocity():Length()/4),data.rareness/2)-math.min(math.ceil(rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4),data.rareness/2),1)/divider:GetFloat(),1)))
+			local chance=math.random(
+							math.max(
+								math.max(
+									data.rareness 
+									- 
+									math.min( math.ceil( bobber:GetVelocity():Length()/4 ), data.rareness/2 ) 
+									-
+									math.min(
+										math.ceil(
+											rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4)
+										,
+											data.rareness/2 
+										)
+									,
+										1
+									) / divider:GetFloat()
+								,
+									1
+								)
+							)
+						)
 			if 
 
 			(rod:GetHook() and not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1) and

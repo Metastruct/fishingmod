@@ -26,10 +26,15 @@ function ENT:PhysicsSimulate( phys, deltatime )
 		bobber:PhysWake()
 	end
 	
-	if not IsValid(self.dt.ply) then return end
+	if not IsValid(self.dt.ply) then 
+		return 
+	end
 	
 	local bone = self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand")
-	if not bone then return end
+	if not bone then 
+		self:Remove()
+		return 
+	end
 	
 	local position, angles = self.dt.ply:GetBonePosition(bone)
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
@@ -63,8 +68,9 @@ function ENT:AssignPlayer(ply)
 	self:SetOwner(ply)
 
 	self.dt.ply = ply
-	
-	local position = ply:GetBonePosition(ply:LookupBone("ValveBiped.Bip01_R_Hand"))
+	local idx = ply:LookupBone("ValveBiped.Bip01_R_Hand")
+	if not idx then self:Remove() return end
+	local position = ply:GetBonePosition(idx)
 	
 	local bobber = ents.Create("fishing_rod_bobber")
 	bobber.rod = self
