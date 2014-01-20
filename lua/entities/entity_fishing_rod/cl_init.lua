@@ -21,7 +21,7 @@ function ENT:RenderScene()
 	local idx = self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand")
 	if not idx then return end
 	
-	local position, angles = idx and self.dt.ply:GetBonePosition(idx)
+	local position, angles = self.dt.ply:GetBonePosition(idx)
 	local new_position, new_angles = LocalToWorld(Vector(26.5-(self.dt.rod_length/13),-0.17,-44) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	self:SetPos(new_position)
 	self:SetAngles(new_angles)
