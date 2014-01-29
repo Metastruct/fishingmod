@@ -126,6 +126,7 @@ if SERVER then
 			if distance < 60 then
 				local data = DamageInfo()
 				data:SetAttacker(self.Heavy.owner)
+				data:SetInflictor(self)
 				data:SetDamageType(DMG_BULLET)
 				data:SetDamage(10)
 				self.target:TakeDamageInfo(data)
@@ -214,7 +215,9 @@ else
 		local heavy = self.dt.Heavy
 		
 		for key, bone in pairs(bones) do
-			local position = heavy:GetBonePosition(heavy:LookupBone(bone))
+			local bone = heavy:LookupBone(bone)
+			if not bone then continue end -- ???
+			local position = heavy:GetBonePosition(bone)
 			
 			local particle = self.emitter:Add( "effects/yellowflare", position )
 			particle:SetVelocity( VectorRand() * 10 )
