@@ -73,7 +73,6 @@ function ENT:Initialize()
 	
 	self:SetupHook("RenderScene")
 	self:SetupHook("HUDPaint")
-	self:SetupHook("Tick")
 end
  
 function ENT:Think()	
