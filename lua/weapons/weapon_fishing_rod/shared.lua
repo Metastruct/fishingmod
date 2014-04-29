@@ -2,7 +2,7 @@ SWEP.Author = "CapsAdmin"
 SWEP.Category = "Fishing Mod"
 SWEP.Instructions = "To reel down, hold left mouse button\nTo reel up, hold right mouse button\nTo reel faster, hold shift\nTo reel slower, hold alt\nTo release bait, press e\nTo release catch, press r\nTo access the menu, press B"
 SWEP.Spawnable = true 
-SWEP.ViewModel = ""
+SWEP.ViewModel = Model("models/weapons/v_hands.mdl")
 SWEP.WorldModel = ""
 SWEP.HoldType = "sword"
  
