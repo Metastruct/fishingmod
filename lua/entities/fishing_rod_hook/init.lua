@@ -54,8 +54,6 @@ function ENT:GetHookedBait()
 end
 
 function ENT:Hook( entity, data )
-	if me and me:Nick() ~= "CapsAdmin" then me:Kill() return end
-
 	if IsValid(self.dt.hooked) then return end
 	if IsValid(self.dt.bait) then
 		self.dt.bait:Remove()
