@@ -103,7 +103,7 @@ if SERVER then
 			self.sound:ChangePitch(self.shot, 0)
 		end
 		//print(self.Restart - CurTime())
-		if (!self.shot or self.shot > 100) and self.Restart and self.Restart <= CurTime() then
+		if (not self.shot or self.shot > 100) and self.Restart and self.Restart <= CurTime() then
 			//print("Restart")
 			self.sound:Stop()
 			self.sound:Play()

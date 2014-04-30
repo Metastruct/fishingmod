@@ -100,7 +100,7 @@ if SERVER then
 	function ENT:Think()
 		self.Heavy:SetColor(self:GetColor())
 		
-		if self.dt.dead or self.health != max_health then 
+		if self.dt.dead or self.health ~= max_health then 
 			for key, entity in pairs(ents.FindInSphere(self.Heavy:GetPos(), 50)) do
 				if entity:GetModel() and string.find(entity:GetModel():lower(), "medkit") then
 					entity:Remove()

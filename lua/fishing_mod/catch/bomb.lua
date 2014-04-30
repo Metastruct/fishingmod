@@ -39,7 +39,7 @@ if SERVER then
 
 	function ENT:Think()
 		self:NextThink(CurTime() + 0.25)
-		if self:IsOnFire() and !self.triggered then
+		if self:IsOnFire() and not self.triggered then
 			self.triggered = true
 			
 			for _,bombs in pairs(ents.FindInSphere(self:GetPos(), 512)) do

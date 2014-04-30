@@ -92,7 +92,7 @@ concommand.Add("fishing_mod_drop_bait", function(ply)
 end)
 
 function fishingmod.HookBait(ply, entity, hook)
-	if !hook then return end
+	if not hook then return end
 	if entity.is_bait and player.GetByUniqueID(entity.data.ownerid) == ply then
 		if ply:GetFishingRod() and ply:GetFishingRod():GetHook():WaterLevel() == 0 then
 			ply:GetFishingRod():GetHook():HookBait(entity)
