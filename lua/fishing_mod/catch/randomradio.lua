@@ -102,9 +102,9 @@ if SERVER then
 			self.shot = math.Clamp(self.shot - 1, 0, 255)
 			self.sound:ChangePitch(self.shot, 0)
 		end
-		//print(self.Restart - CurTime())
+		--print(self.Restart - CurTime())
 		if (not self.shot or self.shot > 100) and self.Restart and self.Restart <= CurTime() then
-			//print("Restart")
+			--print("Restart")
 			self.sound:Stop()
 			self.sound:Play()
 			self.Restart = CurTime() + self.Duration

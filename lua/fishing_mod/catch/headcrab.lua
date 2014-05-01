@@ -8,7 +8,7 @@ local remove_on_release = false
 local expgain = 100
 local levelrequired = 7
 local value = 100
-//"models/props/cs_office/Snowman_head.mdl",
+--"models/props/cs_office/Snowman_head.mdl",
 local bait = {
 	"models/Gibs/HGIBS.mdl",
 }
