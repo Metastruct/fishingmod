@@ -216,19 +216,20 @@ else
 		
 		for key, bone in pairs(bones) do
 			local bone = heavy:LookupBone(bone)
-			if not bone then continue end -- ???
-			local position = heavy:GetBonePosition(bone)
-			
-			local particle = self.emitter:Add( "effects/yellowflare", position )
-			particle:SetVelocity( VectorRand() * 10 )
-			particle:SetDieTime( 5 )
-			particle:SetStartAlpha( 255 )
-			particle:SetEndAlpha( 0 )
-			particle:SetStartSize( 4 )
-			particle:SetEndSize( 0 )
-			particle:SetRoll( math.Rand( -360, 360 ) )
-			particle:SetRollDelta( math.Rand( -30, 30 ) )
-			particle:SetBounce( 1.0 )
+			if bone then -- ???
+				local position = heavy:GetBonePosition(bone)
+				
+				local particle = self.emitter:Add( "effects/yellowflare", position )
+				particle:SetVelocity( VectorRand() * 10 )
+				particle:SetDieTime( 5 )
+				particle:SetStartAlpha( 255 )
+				particle:SetEndAlpha( 0 )
+				particle:SetStartSize( 4 )
+				particle:SetEndSize( 0 )
+				particle:SetRoll( math.Rand( -360, 360 ) )
+				particle:SetRollDelta( math.Rand( -30, 30 ) )
+				particle:SetBounce( 1.0 )
+			end
 		end
 	end
 end

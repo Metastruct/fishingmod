@@ -30,14 +30,12 @@ local function process_ents(event_name,tbl,...)
 			if not SERVER then
 				recovertable[entity] = event_name
 			end
-			continue
+		else		
+			local func = entity[event_name]
+			if func then
+				func( entity, ... )
+			end
 		end
-		
-		local func = entity[event_name]
-		if func then
-			func( entity, ... )
-		end
-		
 	end
 end
 
