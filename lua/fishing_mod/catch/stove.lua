@@ -186,12 +186,14 @@ else
 			umsg.Start("FishingMod:Stove", ply)
 				umsg.Entity(self)
 			umsg.End()
+
+			self:SetOwner(ply)
 		end
 	end
 	
 	function ENT:Think()
-		local owner = player.GetByUniqueID(self.data.ownerid)
-		local cvar = owner and owner:GetInfoNum("fishingmod_stove_heat", 0) or 0
+		local owner = self:GetOwner()
+		local cvar = IsValid(owner) and owner:GetInfoNum("fishingmod_stove_heat", 0) or 0
 		self.cvarheat = cvar
 		local heat = math.Clamp(cvar * -1 + 100, 0, 100)		
 		

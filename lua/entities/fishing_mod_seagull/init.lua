@@ -31,7 +31,7 @@ function ENT:PickTarget()
 	for key, catch in RandomPairs(ents.GetAll()) do
 		local owner 
 		if catch.data then
-			owner = player.GetByUniqueID(catch.data.ownerid)
+			owner = catch:GetOwner()
 		end
 		if 
 			catch:GetNWBool("fishingmod catch") and 
