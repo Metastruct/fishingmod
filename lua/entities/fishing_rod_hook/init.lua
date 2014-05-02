@@ -78,7 +78,7 @@ function ENT:Hook( entity, data )
 		entity.data.ownerid = ply:UniqueID()
 		
 		entity:SetPos(self:GetPos())
-		entity:SetOwner(self)
+		entity:SetOwner(ply)
 		entity.is_catch = true
 		if entity:IsNPC() then
 			entity.oldmovetype = entity:GetMoveType()
@@ -108,7 +108,7 @@ function ENT:Hook( entity, data )
 		end
 		
 		entity:SetPos(self:GetPos())
-		entity:SetOwner(self)
+		entity:SetOwner(ply)
 		entity:Spawn()
 		
 		if not entity:IsNPC() and not (util.IsValidProp(entity:GetModel():lower()) or util.IsValidRagdoll(entity:GetModel():lower())) then			
