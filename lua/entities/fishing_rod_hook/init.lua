@@ -74,7 +74,7 @@ function ENT:Hook( entity, data )
 		entity.is_catch = true
 		entity.data = data
 		entity.data.caught = os.time()
-		entity.data.owner = ply:Nick()
+		entity.data.owner = ply
 		entity.data.ownerid = ply:UniqueID()
 		
 		entity:SetPos(self:GetPos())
@@ -139,7 +139,7 @@ function ENT:Hook( entity, data )
 		
 		entity.data = table.Copy(data)
 		entity.data.caught = os.time()
-		entity.data.owner = ply:Nick()
+		entity.data.owner = ply
 		entity.data.ownerid = ply:UniqueID()
 		entity.data.value = (entity.data.value or 0) * (size*1.5)
 		entity.data.friendly = name .. " " .. entity.data.friendly
