@@ -294,12 +294,6 @@ else
 
 	function ENT:OnRemove()
 
-		if self.Emitter then
-		
-			self.Emitter:Finish()
-		
-		end
-
 	end
 	
 	local glow = Material("effects/yellowflare") -- "particles/fire_glow
@@ -413,12 +407,6 @@ else
 	end
 
 	function ENT:OnRemove()
-
-		if self.Emitter then
-		
-			self.Emitter:Finish()
-		
-		end
 
 	end
 	
@@ -535,12 +523,6 @@ else
 	end
 
 	function ENT:OnRemove()
-
-		if self.Emitter then
-		
-			self.Emitter:Finish()
-		
-		end
 
 	end
 	
