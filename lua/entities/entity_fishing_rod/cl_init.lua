@@ -34,7 +34,7 @@ function ENT:HUDPaint()
 	
 	if self:GetPlayer() ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
-	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector(0)) + Vector(0,0,10)):ToScreen()
+	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen()
 	
 	local depth = ""
 	if self:GetHook() and self:GetHook():WaterLevel() >= 1 then
