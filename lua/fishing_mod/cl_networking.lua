@@ -71,7 +71,7 @@ local function UpdatePlayerWait(ply,um,time)
 			return
 		end
 	end
-	timer.Simple(0,function() 
+	timer.Simple(0.5,function() 
 		UpdatePlayerWait(ply,um,time)
 	end)
 end
