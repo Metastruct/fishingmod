@@ -164,7 +164,7 @@ if SERVER then
 			local velocity = (target:IsPlayer() and target:GetShootPos() or target:GetPos()) - heavy:GetPos()
 			
 			if target:IsPlayer() and target:GetShootPos():Distance(heavy:GetPos()) < 200 then
-				velocity = Vector(0)
+				velocity = Vector()
 				
 				constraint.RemoveAll(self.Heavy)
 			end

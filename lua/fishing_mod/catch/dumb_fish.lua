@@ -45,9 +45,9 @@ if SERVER then
 		self:SetSolid( SOLID_VPHYSICS )
 		self:StartMotionController()
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
-		self.avoider_angles = Angle(0)
-		self.swim_down = Vector(0)	
-		self.avoid = Angle(0)
+		self.avoider_angles = Angle()
+		self.swim_down = Vector()	
+		self.avoid = Angle()
 		self.bothhit = false
 		self.is_recatchable = true
 		local phys = self:GetPhysicsObject()
@@ -135,7 +135,7 @@ if SERVER then
 		self.last_velocity = phys:GetVelocity()
 		local linear_delta = phys:GetVelocity() * -1 + (phys:GetVelocity() - self.last_velocity * 20)
 
-		local linear = Vector(0)
+		local linear = Vector()
 
 		phys:AddVelocity(linear*deltatime)
 	end
@@ -188,7 +188,7 @@ if SERVER then
 
 		else
 			self.swim_down = Vector(0,0,-10)
-			timer.Create("Fish should swim down"..self:EntIndex(), 1, 1, function() if IsValid(self) then self.swim_down = Vector(0) end end)
+			timer.Create("Fish should swim down"..self:EntIndex(), 1, 1, function() if IsValid(self) then self.swim_down = Vector() end end)
 			phys:EnableGravity(true)
 			if math.random() > 0.99 then
 				phys:AddAngleVelocity(VectorRand()*6000)

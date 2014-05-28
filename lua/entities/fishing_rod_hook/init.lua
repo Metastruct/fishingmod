@@ -14,10 +14,10 @@ function ENT:Initialize()
 	end
 	
 	self.is_hook = true
-	self.last_velocity = Vector(0)
-	self.last_angular_velocity = Vector(0)
+	self.last_velocity = Vector()
+	self.last_angular_velocity = Vector()
 	
-	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,10), Vector(0), 6000, 1200, 0, "", 0, 1 )
+	self.physical_rope = constraint.Elastic( self, self.bobber, 0, 0, Vector(0,1.2,10), Vector(), 6000, 1200, 0, "", 0, 1 )
 	self.physical_rope:Fire("SetSpringLength", 50)
 
 end
@@ -180,7 +180,7 @@ function ENT:UnHook()
 		local entity = entity
 		timer.Simple(1, function() if IsValid(entity) then entity.just_unhooked = false end end)
 		if entity:IsNPC() then
-			entity:SetAngles(Angle(0))
+			entity:SetAngles(Angle())
 			entity:SetMoveType(entity.oldmovetype)
 			entity:SetParent()
 		else

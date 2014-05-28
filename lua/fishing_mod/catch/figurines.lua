@@ -76,7 +76,7 @@ if SERVER then
 		if math.random() > 0.9 then self:EmitSound(table.Random(sounds), 70	, math.random(200,255)) end
 		phys:Wake()
 		local figurines = 0
-		local velocity = Vector(0)
+		local velocity = Vector()
 		for key, figurine in pairs(ents.FindByClass("fishing_mod_catch_figurine")) do
 			if self:GetPos():Distance(figurine:GetPos()) < 2000 then
 				velocity = velocity + (figurine:GetPos() - self:GetPos())
