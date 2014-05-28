@@ -108,12 +108,6 @@ else
 
 	function ENT:OnRemove()
 
-		if self.Emitter then
-		
-			self.Emitter:Finish()
-		
-		end
-
 	end
   
 	local matGlow = Material( "effects/blueflare1" ) 
