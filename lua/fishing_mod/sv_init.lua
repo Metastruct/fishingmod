@@ -253,23 +253,21 @@ timer.Create("FishingMod:Think",1,0,function()
 				
 				local chance=math.random(
 								math.max(
-									math.max(
-										data.rareness 
-										- 
-										math.min( math.ceil( bobber:GetVelocity():Length()/4 ), data.rareness/2 ) 
-										-
-										math.min(
-											math.ceil(
-												rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4)
-											,
-												data.rareness/2 
-											)
+									data.rareness 
+									- 
+									math.min( math.ceil( bobber:GetVelocity():Length()/4 ), data.rareness/2 ) 
+									-
+									math.min(
+										math.ceil(
+											rod:GetBobber():GetPos():Distance(ply:GetShootPos()/4)
 										,
-											1
-										) / divider:GetFloat()
+											data.rareness/2 
+										)
 									,
 										1
-									)
+									) / divider:GetFloat()
+								,
+									1
 								)
 							)
 				if (rod:GetHook() and not rod:GetHook():GetHookedEntity() and rod:GetHook():WaterLevel() >= 1) and
