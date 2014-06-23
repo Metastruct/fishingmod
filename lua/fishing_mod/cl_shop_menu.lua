@@ -20,8 +20,8 @@ function PANEL:Init()
 	self:SetSize(300, 400)self:Center()
 	
 	
-	self.sheet:AddSheet("Upgrade", self.upgrade, "gui/silkicons/star", false, false)
-	self.sheet:AddSheet("Bait Shop", self.baitshop, "gui/silkicons/add", false, false)
+	self.sheet:AddSheet("Upgrade", self.upgrade, "icon16/star.png", false, false)
+	self.sheet:AddSheet("Bait Shop", self.baitshop, "icon16/add.png", false, false)
 	
 	fishingmod.UpdateSales()
 	
@@ -163,7 +163,6 @@ vgui.Register("Fishingmod:UpgradeButton", PANEL)
 local PANEL = {}
 
 function PANEL:Init()
-	self.BaseClass.Init(self)
 	self.percent = 0
 end
 
@@ -175,15 +174,10 @@ function PANEL:SetGrey(bool)
 	self.grey = bool
 end
 
-function PANEL:OnCursorEntered()
-
-end
-
-function PANEL:OnCursorExited()
-
-end
-
 function PANEL:PaintOver()
+	self.BaseClass.PaintOver(self)
+
+	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 5, 3, color_black, TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
 	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 4, 2, HSVToColor(math.Clamp(self.percent+40,0,160),1,1), TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
 	if self.grey then draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) ) end
 end
