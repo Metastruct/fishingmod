@@ -4,7 +4,6 @@ SWEP.Instructions = "To reel down, hold left mouse button\nTo reel up, hold righ
 SWEP.Spawnable = true 
 SWEP.ViewModel = Model("models/weapons/v_hands.mdl")
 SWEP.WorldModel = ""
-SWEP.HoldType = "sword"
  
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -29,6 +28,7 @@ function SWEP:PrimaryAttack()
 		end
 		self.distance = math.Clamp(self.distance + speed, 0, 200+(self.Owner.fishingmod.string_length*368.54))
 		self.fishing_rod:SetLength(self.distance)
+		self:SetHoldType("melee2")
 	end
 end
 
@@ -47,6 +47,7 @@ function SWEP:SecondaryAttack()
 		end
 		self.distance = math.Clamp(self.distance - speed, 0, 200+(self.Owner.fishingmod.string_length*368.54))
 		self.fishing_rod:SetLength(self.distance)
+		self:SetHoldType("melee2")
 	end
 end
 
@@ -67,6 +68,7 @@ else
 	function SWEP:Initialize()
 		self.distance = 0
 		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self:SetHoldType("pistol")
 	end
 
 	function SWEP:Deploy()
@@ -99,6 +101,8 @@ else
 	function SWEP:Think()
 		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then
 			self:Remove()
+		elseif not self.Owner:KeyDown(IN_ATTACK) or not self.Owner:KeyDown(IN_ATTACK2) then
+			self:SetHoldType("pistol")
 		end
 	end
 	
