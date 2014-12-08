@@ -90,7 +90,7 @@ function ENT:Hook( entity, data )
 		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(ply, true) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		hook.Run("FishingModCaught", ply, entity)
 		if entity.CPPISetOwner then entity:CPPISetOwner(ply) end
 	else
 		entity = ents.Create(data.type or "")
@@ -127,7 +127,7 @@ function ENT:Hook( entity, data )
 			if entity.Initialize then entity:Initialize() end
 		end
 		
-		hook.Call("PlayerSpawnedSENT", gmod.GetGamemode(), ply, entity)
+		hook.Run("PlayerSpawnedSENT", ply, entity)
 		
 		if entity:IsNPC() then
 			entity:SetParent(self)
@@ -160,7 +160,7 @@ function ENT:Hook( entity, data )
 		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(ply, false) end
-		hook.Call("FishingModCaught", gmod.GetGamemode(), ply, entity)
+		hook.Run("FishingModCaught", ply, entity)
 		if entity.CPPISetOwner then entity:CPPISetOwner(ply) end
 	end
 end
