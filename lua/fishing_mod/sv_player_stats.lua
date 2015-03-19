@@ -226,14 +226,6 @@ end
 
 function fishingmod.InitPlayerStats(ply)
 	if not IsValid(ply) then return end
-	ply.fishingmod = {
-		catches = tonumber(fishingmod.LoadPlayerInfo(ply, "catches") or 0),
-		exp = tonumber(fishingmod.LoadPlayerInfo(ply, "exp") or 0),
-		money = tonumber(fishingmod.LoadPlayerInfo(ply, "money") or 0),
-		length = tonumber(fishingmod.LoadPlayerInfo(ply, "length") or 0),
-		reel_speed = tonumber(fishingmod.LoadPlayerInfo(ply, "reel_speed") or 0),
-		string_length = tonumber(fishingmod.LoadPlayerInfo(ply, "string_length") or 0),
-		force = tonumber(fishingmod.LoadPlayerInfo(ply, "force") or 0),	
-	}
+	ply.fishingmod = fishingmod.LoadPlayerInfo(ply)
 	fishingmod.UpdatePlayerInfo(ply, true)
 end
