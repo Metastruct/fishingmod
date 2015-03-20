@@ -70,7 +70,7 @@ local POSITIONS = {
 				end
 				file.Delete("fishingmod/"..ply:UniqueID())
 			end
-		})
+		}
 	-- / old fishingmod
 -- / MIGRATION
 
