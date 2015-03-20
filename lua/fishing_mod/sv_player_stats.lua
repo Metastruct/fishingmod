@@ -88,6 +88,7 @@ function fishingmod.LoadPlayerInfo(ply, name)
 	
 	local uid = ply:UniqueID()
 	local filep = "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
+	
 	if file.Exists(filep, "DATA") then
 		local fh = file.Open(filep, "rb", "DATA")
 		assert (fh, "Error opening file for player "..tostring(ply))
@@ -95,23 +96,23 @@ function fishingmod.LoadPlayerInfo(ply, name)
 		if version ~= VERSION then
 			fh:Close() error("Unsupported version: "..version)
 		end
-	end
 	
-	if name then -- read single info
-		fh:Seek(POSITIONS[name])
-		local data = fh:ReadDouble()
-		fh:Close()
-		return data
-	else -- read all info
-		local data = {}
-		
-		for info_n, info_p in next, POSITIONS do
-			fh:Seek(info_p)
-			data [info_n] = fh:ReadDouble()
+		if name then -- read single info
+			fh:Seek(POSITIONS[name])
+			local data = fh:ReadDouble()
+			fh:Close()
+			return data
+		else -- read all info
+			local data = {}
+			
+			for info_n, info_p in next, POSITIONS do
+				fh:Seek(info_p)
+				data [info_n] = fh:ReadDouble()
+			end
+			
+			fh:Close()
+			return data
 		end
-		
-		fh:Close()
-		return data
 	end
 end
 
