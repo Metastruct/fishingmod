@@ -53,7 +53,7 @@ local POSITIONS = {
 	end
 	
 	-- old fishingmod
-		table.insert (MIGRATION, {
+		MIGRATION.legacy = {
 			check = function (ply)
 				return file.IsDir("fishingmod/"..ply:UniqueID(), "DATA")
 			end,
@@ -77,15 +77,13 @@ local POSITIONS = {
 function fishingmod.LoadPlayerInfo(ply, name)
 	if name then assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
 	
-	for _, M in next, MIGRATION do
-		if M.check (ply) then
-			Msg ("[fishingmod] ") print ("Can migrate old fishingmod data from player: "..tostring(ply).."...")
-			local data = M.read (ply)
-			PrintTable (data)
-			MIGRATION_SAVE_NEW_DATA (ply, data)
-			M.cleanup (ply)
-			print ("Success.")
-		end
+	if MIGRATION.legacy.check (ply) then
+		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data from player: "..tostring(ply).."...")
+		local data = MIGRATION.legacy.read (ply)
+		PrintTable (data)
+		MIGRATION_SAVE_NEW_DATA (ply, data)
+		MIGRATION.legacy.cleanup (ply)
+		print ("Success.")
 	end
 	
 	local uid = ply:UniqueID()
