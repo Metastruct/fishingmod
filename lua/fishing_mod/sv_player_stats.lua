@@ -75,6 +75,8 @@ local POSITIONS = {
 -- / MIGRATION
 
 function fishingmod.LoadPlayerInfo(ply, name)
+	if name then assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
+	
 	for _, M in next, MIGRATION do
 		if M.check (ply) then
 			Msg ("[fishingmod] ") print ("Can migrate old fishingmod data from player: "..tostring(ply).."...")
@@ -86,32 +88,23 @@ function fishingmod.LoadPlayerInfo(ply, name)
 		end
 	end
 	
-	if name then -- read single info
-		assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'")
-		local uid = ply:UniqueID()
-		local filep = "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
-		if not file.Exists(filep, "DATA") then return end
+	local uid = ply:UniqueID()
+	local filep = "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
+	if file.Exists(filep, "DATA") then
 		local fh = file.Open(filep, "rb", "DATA")
 		assert (fh, "Error opening file for player "..tostring(ply))
 		local version = fh:ReadByte()
 		if version ~= VERSION then
-			fh:Close() error("Unsupported version: " .. version)
+			fh:Close() error("Unsupported version: "..version)
 		end
+	end
+	
+	if name then -- read single info
 		fh:Seek(POSITIONS[name])
 		local data = fh:ReadDouble()
 		fh:Close()
 		return data
 	else -- read all info
-		local uid = ply:UniqueID()
-		local filep = "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
-		if not file.Exists(filep, "DATA") then return end
-		local fh = file.Open(filep, "rb", "DATA")
-		assert(fh, "Error opening file for player "..tostring(ply))
-		local version = fh:ReadByte()
-		if version ~= VERSION then
-			fh:Close() error("Unsupported version: " .. version)
-		end
-		
 		local data = {}
 		
 		for info_n, info_p in next, POSITIONS do
