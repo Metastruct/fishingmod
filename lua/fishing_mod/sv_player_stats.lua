@@ -218,5 +218,11 @@ end
 function fishingmod.InitPlayerStats(ply)
 	if not IsValid(ply) then return end
 	ply.fishingmod = fishingmod.LoadPlayerInfo(ply)
+	if not istable (ply.fishingmod) then
+		ply.fishingmod = {}
+		for index in next, POSITIONS do
+			ply.fishingmod[index] = 0
+		end
+	end
 	fishingmod.UpdatePlayerInfo(ply, true)
 end
