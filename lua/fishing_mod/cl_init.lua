@@ -69,7 +69,7 @@ hook.Add("Think", "Fishingmod.Keys:Think", function()
 	if ply:GetFishingRod() and not vgui.CursorVisible() then
 		if input.IsKeyDown(KEY_B) then
 			local menu = fishingmod.UpgradeMenu
-			if not menu:IsVisible() then
+			if ValidPanel(menu) and not menu:IsVisible() then
 				menu:SetVisible(true)
 				menu:MakePopup()
 			end
