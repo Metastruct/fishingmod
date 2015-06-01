@@ -11,7 +11,7 @@
 
 local VERSION = 0x01
 
-local POS_VERSION    = 0x01
+local POS_VERSION    = 0x00
 local POS_CATCHES    = 0x00 + 1
 local POS_EXP        = 0x08 + 1
 local POS_MONEY      = 0x10 + 1
