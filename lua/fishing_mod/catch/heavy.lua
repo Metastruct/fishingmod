@@ -61,7 +61,7 @@ if SERVER then
 		if number < 10 then
 			number = "0"..number
 		end
-		self:PlaySound("vo/heavy_sandwichtaunt"..number..".wav")
+		self:PlaySound("vo/heavy_sandwichtaunt"..number..".mp3")
 		self.target = player
 		self.Heavy.owner = player
 		player.FMHeavy = self.Heavy
@@ -84,10 +84,10 @@ if SERVER then
 		local amount=data:GetDamage() > 50 and 50 or data:GetDamage()
 		
 		if self.health > 0 then
-			self:PlaySound("vo/heavy_painsharp0"..math.random(5)..".wav")
+			self:PlaySound("vo/heavy_painsharp0"..math.random(5)..".mp3")
 			self.health = self.health - amount
 		else
-			self:PlaySound("vo/heavy_painsevere0"..math.random(3)..".wav")
+			self:PlaySound("vo/heavy_painsevere0"..math.random(3)..".mp3")
 			self.dt.dead = true
 			local heavy = self.Heavy
 			for i=0,15 do
@@ -106,12 +106,12 @@ if SERVER then
 					entity:Remove()
 					self.dt.dead = false
 					self.health = max_health
-					self:PlaySound("vo/heavy_positivevocalization0"..math.random(5)..".wav")
+					self:PlaySound("vo/heavy_positivevocalization0"..math.random(5)..".mp3")
 				end
 			end
 			
 			if math.random() > 0.9 then
-				self:PlaySound("vo/heavy_medic0"..math.random(3)..".wav")
+				self:PlaySound("vo/heavy_medic0"..math.random(3)..mp3")
 			end
 			return 
 		end
@@ -151,7 +151,7 @@ if SERVER then
 			end
 			
 			if math.random() > 0.999 then
-				self:PlaySound("vo/heavy_positivevocalization0"..math.random(5)..".wav")
+				self:PlaySound("vo/heavy_positivevocalization0"..math.random(5)..".mp3")
 			end
 		
 			local head = heavy:GetPhysicsObjectNum(14)
