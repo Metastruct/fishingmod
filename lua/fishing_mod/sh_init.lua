@@ -19,7 +19,7 @@ end
 function fishingmod.FriedToColor(amount)
 	local colorvalue = math.Clamp(amount/800*-255+255, 0, 255)
 	local redvalue = math.Clamp(amount/1000*-255+255, 0, 255)
-	return redvalue, colorvalue, colorvalue, 255
+	return Color(redvalue, colorvalue, colorvalue, 255)
 end
 
 local pow = 1.4
