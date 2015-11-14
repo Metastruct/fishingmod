@@ -111,7 +111,7 @@ if SERVER then
 			end
 			
 			if math.random() > 0.9 then
-				self:PlaySound("vo/heavy_medic0"..math.random(3)..mp3")
+				self:PlaySound("vo/heavy_medic0"..math.random(3).."mp3")
 			end
 			return 
 		end
