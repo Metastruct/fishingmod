@@ -121,7 +121,6 @@ else
 	
 	function SWEP:OnDrop() 
 		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
-		self:GetOwner()=self.lastowner 
 		if IsValid(self:GetOwner()) then
 		  self:KillRod() 
 		end
