@@ -17,16 +17,16 @@ SWEP.Secondary.Ammo = "none"
 
 function SWEP:PrimaryAttack()
 	if SERVER then
-		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then return end
+		if not IsValid(self.fishing_rod) or not IsValid(self:GetOwner()) or not self:GetOwner().fishingmod then return end
 		
 		local speed = 5
-		if self.Owner:KeyDown(IN_SPEED) then
-			speed = 10 + self.Owner.fishingmod.reel_speed
+		if self:GetOwner():KeyDown(IN_SPEED) then
+			speed = 10 + self:GetOwner().fishingmod.reel_speed
 		end
-		if self.Owner:KeyDown(IN_WALK) then
+		if self:GetOwner():KeyDown(IN_WALK) then
 			speed = 1
 		end
-		self.distance = math.Clamp(self.distance + speed, 0, 200+(self.Owner.fishingmod.string_length*368.54))
+		self.distance = math.Clamp(self.distance + speed, 0, 200+(self:GetOwner().fishingmod.string_length*368.54))
 		self.fishing_rod:SetLength(self.distance)
 		self:SetHoldType("melee2")
 	end
@@ -36,16 +36,16 @@ function SWEP:SecondaryAttack()
 	
 	
 	if SERVER then
-		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then return end
+		if not IsValid(self.fishing_rod) or not IsValid(self:GetOwner()) or not self:GetOwner().fishingmod then return end
 		
 		local speed = 5
-		if self.Owner:KeyDown(IN_SPEED) then
-			speed = 10 + self.Owner.fishingmod.reel_speed
+		if self:GetOwner():KeyDown(IN_SPEED) then
+			speed = 10 + self:GetOwner().fishingmod.reel_speed
 		end
-		if self.Owner:KeyDown(IN_WALK) then
+		if self:GetOwner():KeyDown(IN_WALK) then
 			speed = 1
 		end
-		self.distance = math.Clamp(self.distance - speed, 0, 200+(self.Owner.fishingmod.string_length*368.54))
+		self.distance = math.Clamp(self.distance - speed, 0, 200+(self:GetOwner().fishingmod.string_length*368.54))
 		self.fishing_rod:SetLength(self.distance)
 		self:SetHoldType("melee2")
 	end
@@ -67,30 +67,31 @@ else
 	
 	function SWEP:Initialize()
 		self.distance = 0
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 		self:SetHoldType("pistol")
 	end
 
 	function SWEP:Deploy()
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 		if not IsValid(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
-			if not self.fishing_rod or not self.fishing_rod:IsValid() then
+			if not self.fishing_rod or not self.fishing_rod:IsValid() or not self:GetOwner().fishingmod then
+				Msg"[FishingMod] Broken for "print(self:GetOwner(),self)
 				self:Remove()
 				return
 			end
-			self.fishing_rod.dt.rod_length = self.Owner.fishingmod.length / 10 + 1
+			self.fishing_rod.dt.rod_length = self:GetOwner().fishingmod.length / 10 + 1
 			self.fishing_rod:Spawn()
-			self.fishing_rod:AssignPlayer(self.Owner)
-			self.Owner:SetNWEntity("fishing rod", self.fishing_rod)
-			if self.fishing_rod.CPPISetOwner then self.fishing_rod:CPPISetOwner(self.Owner) end
+			self.fishing_rod:AssignPlayer(self:GetOwner())
+			self:GetOwner():SetNWEntity("fishing rod", self.fishing_rod)
+			if self.fishing_rod.CPPISetOwner then self.fishing_rod:CPPISetOwner(self:GetOwner()) end
 			return true
 		end
 	end
 
 	function SWEP:KillRod()
-		if IsValid(self) and IsValid(self.Owner) and IsValid(self.fishing_rod) then
-			self.Owner:SetNWEntity("fishing rod", NULL)
+		if IsValid(self) and IsValid(self:GetOwner()) and IsValid(self.fishing_rod) then
+			self:GetOwner():SetNWEntity("fishing rod", NULL)
 			return true
 		end
 		if IsValid(self.fishing_rod) then
@@ -99,9 +100,9 @@ else
 		end
 	end
 	function SWEP:Think()
-		if not IsValid(self.fishing_rod) or not IsValid(self.Owner) or not self.Owner.fishingmod then
+		if not IsValid(self.fishing_rod) or not IsValid(self:GetOwner()) or not self:GetOwner().fishingmod then
 			self:Remove()
-		elseif not self.Owner:KeyDown(IN_ATTACK) or not self.Owner:KeyDown(IN_ATTACK2) then
+		elseif not self:GetOwner():KeyDown(IN_ATTACK) or not self:GetOwner():KeyDown(IN_ATTACK2) then
 			self:SetHoldType("pistol")
 		end
 	end
@@ -115,13 +116,13 @@ else
 	end
 	
 	function SWEP:OwnerChanged() 
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 	end
 	
 	function SWEP:OnDrop() 
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self.Owner) and self.Owner or self.lastowner
-		self.Owner=self.lastowner 
-		if IsValid(self.Owner) then
+		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
+		self:GetOwner()=self.lastowner 
+		if IsValid(self:GetOwner()) then
 		  self:KillRod() 
 		end
 		self:Remove() 
