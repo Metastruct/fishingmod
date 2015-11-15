@@ -93,7 +93,9 @@ function fishingmod.LoadPlayerInfo(ply, name)
 		local fh = file.Open(filep, "rb", "DATA")
 		assert (fh, "Error opening file for player "..tostring(ply))
 		local version = fh:ReadByte()
-		if version ~= VERSION then
+		if not version then
+			fh:Close() ErrorNoHalt("[fishingmod] File is empty.") return
+		elseif version ~= VERSION then
 			fh:Close() error("Unsupported version: "..version)
 		end
 	
