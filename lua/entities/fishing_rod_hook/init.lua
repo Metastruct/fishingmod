@@ -130,6 +130,7 @@ function ENT:Hook( entity, data )
 		hook.Run("PlayerSpawnedSENT", ply, entity)
 		
 		if entity:IsNPC() then
+			entity:Activate()
 			entity:SetParent(self)
 			entity.oldmovetype = entity:GetMoveType()
 			entity:SetMoveType(MOVETYPE_NONE)
