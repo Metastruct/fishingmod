@@ -51,15 +51,15 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 		if data and data.text then
 			local width = 250
 			local height = 85
-			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
-			draw.DrawText(data.text, "DermaDefault", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
+			draw.RoundedBox( 8, ScrW() / 2 - (width/2), ScrH() / 2 - 3, width, height, Color( 100, 100, 100, 100 ) )
+			draw.DrawText(data.text, "DermaDefault", ScrW() / 2 - (width/3), ScrH() / 2, Color(255,255,255,255),1)
 		end
 		local data = fishingmod.InfoTable.Bait[entity:EntIndex()]
 		if data and data.text then
-			local width = 200
+			local width = 240
 			local height = 20
-			draw.RoundedBox( 8, ScrW() / 2 - (width/2.2), ScrH() / 2 - 5, width, height, Color( 100, 100, 100, 100 ) )
-			draw.DrawText(data.text, "DermaDefault", ScrW() / 2, ScrH() / 2, Color(255,255,255,255),1)
+			draw.RoundedBox( 8, ScrW() / 2 - (width/2), ScrH() / 2 - 3, width, height, Color( 100, 100, 100, 100 ) )
+			draw.DrawText(data.text, "DermaDefault", ScrW() / 2 - (width/3), ScrH() / 2, Color(255,255,255,255),1)
 		end
 	end
 end)
