@@ -135,9 +135,13 @@ local VERSION = 0x01
 			
 			if file.Exists(filep, "DATA") then
 				local data = BINARY_READ(filep, name)
-				FORMAT[VERSION]:write(PATH_GENERATOR[PATH_GENERATOR_VER](ply), data)
+				if data then
+					FORMAT[VERSION]:write(PATH_GENERATOR[PATH_GENERATOR_VER](ply), data)
+				end
 				file.Delete(filep)
+				return tobool(data)
 			end
+			return false
 		end
 	}
 -- / STORAGE INTERFACE
