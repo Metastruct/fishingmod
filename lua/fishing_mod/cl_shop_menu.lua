@@ -174,8 +174,8 @@ function PANEL:SetGrey(bool)
 	self.grey = bool
 end
 
-function PANEL:PaintOver()
-	self.BaseClass.PaintOver(self)
+function PANEL:PaintOver(w, h)
+	self.BaseClass.PaintOver(self, w, h)
 
 	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 5, 3, color_black, TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
 	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 4, 2, HSVToColor(math.Clamp(self.percent+40,0,160),1,1), TEXT_ALIGN_LEFT,TEXT_ALIGN_LEFT)
