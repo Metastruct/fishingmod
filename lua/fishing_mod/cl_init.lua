@@ -105,7 +105,7 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 	if GetViewEntity() ~= ply then return end
 	local fishingRod = ply:GetFishingRod()
 	if fishingRod and not ply:InVehicle() then
-					
+
 		local view = {}
 		view.origin		= offset
 		view.angles		= angles
@@ -116,12 +116,28 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
 			(Angle(0,0,ply:EyeAngles().r):Up() * 20)
 
+		--[[local ignoreTbl = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() }
+		local ignoreTblFinal = {}
+		for k, v in pairs( ignoreTbl ) do
+			if IsValid( v ) then
+				table.insert( ignoreTblFinal, v )
+			end
+		end]]
+
 		-- Trace back from the original eye position, so we don't clip through walls/objects
 		local WallOffset = 4
 		local tr = util.TraceHull( {
 			start = view.origin,
 			endpos = startview,
-			filter = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() },
+		--	filter = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() },
+		--	filter = ignoreTblFinal,
+			-- VXP: Don't know what's worse - using tables or this function below
+			filter = function( e )
+				return	e != ply &&
+						e != fishingRod &&
+						( IsValid(fishingRod:GetBobber())	&& e != fishingRod:GetBobber() ) &&
+						( IsValid(fishingRod:GetHook())		&& e != fishingRod:GetHook() )
+			end,
 			mins = Vector( -WallOffset, -WallOffset, -WallOffset ),
 			maxs = Vector( WallOffset, WallOffset, WallOffset ),
 		} )
@@ -130,5 +146,6 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 		view.angles.p = math.Clamp(view.angles.p-30, -70, 15)	
 
 		return view
+
 	end
 end)
