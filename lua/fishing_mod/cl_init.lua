@@ -103,14 +103,32 @@ end)
 
 hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 	if GetViewEntity() ~= ply then return end
-	if ply:GetFishingRod() and not ply:InVehicle() then
+	local fishingRod = ply:GetFishingRod()
+	if fishingRod and not ply:InVehicle() then
 					
-		local offset = ply:GetShootPos() + 
+		local view = {}
+		view.origin		= offset
+		view.angles		= angles
+		view.fov		= fov
+
+		local startview = ply:GetShootPos() + 
 			(ply:EyeAngles():Right() * 50) + 
 			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
 			(Angle(0,0,ply:EyeAngles().r):Up() * 20)
-		angles.p = math.Clamp(angles.p-30, -70, 15)			
-		
-		return GAMEMODE:CalcView(ply,offset,angles,fov)
+
+		-- Trace back from the original eye position, so we don't clip through walls/objects
+		local WallOffset = 4
+		local tr = util.TraceHull( {
+			start = view.origin,
+			endpos = startview,
+			filter = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() },
+			mins = Vector( -WallOffset, -WallOffset, -WallOffset ),
+			maxs = Vector( WallOffset, WallOffset, WallOffset ),
+		} )
+
+		view.origin = tr.HitPos
+		view.angles.p = math.Clamp(view.angles.p-30, -70, 15)	
+
+		return view
 	end
 end)
