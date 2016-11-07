@@ -117,16 +117,14 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 			(Angle(0,0,ply:EyeAngles().r):Up() * 20)
 
 		-- Trace back from the original eye position, so we don't clip through walls/objects
+		local fbobber = ( fishingRod.GetBobber != nil and IsValid(fishingRod:GetBobber()) ) and fishingRod:GetBobber()
+		local fhook = ( fishingRod.GetHook != nil and IsValid(fishingRod:GetHook()) ) and fishingRod:GetHook()
 		local WallOffset = 4
+
 		local tr = util.TraceHull( {
 			start = view.origin,
 			endpos = startview,
-			filter = function( e )
-				return	e != ply &&
-						e != fishingRod &&
-						( IsValid(fishingRod:GetBobber())	&& e != fishingRod:GetBobber() ) &&
-						( IsValid(fishingRod:GetHook())		&& e != fishingRod:GetHook() )
-			end,
+			filter = { ply, fishingRod, fbobber, fhook },
 			mins = Vector( -WallOffset, -WallOffset, -WallOffset ),
 			maxs = Vector( WallOffset, WallOffset, WallOffset ),
 		} )
