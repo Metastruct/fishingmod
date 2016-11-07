@@ -116,22 +116,11 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 			(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
 			(Angle(0,0,ply:EyeAngles().r):Up() * 20)
 
-		--[[local ignoreTbl = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() }
-		local ignoreTblFinal = {}
-		for k, v in pairs( ignoreTbl ) do
-			if IsValid( v ) then
-				table.insert( ignoreTblFinal, v )
-			end
-		end]]
-
 		-- Trace back from the original eye position, so we don't clip through walls/objects
 		local WallOffset = 4
 		local tr = util.TraceHull( {
 			start = view.origin,
 			endpos = startview,
-		--	filter = { ply, fishingRod, fishingRod:GetBobber(), fishingRod:GetHook() },
-		--	filter = ignoreTblFinal,
-			-- VXP: Don't know what's worse - using tables or this function below
 			filter = function( e )
 				return	e != ply &&
 						e != fishingRod &&
@@ -143,7 +132,7 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 		} )
 
 		view.origin = tr.HitPos
-		view.angles.p = math.Clamp(view.angles.p-30, -70, 15)	
+		view.angles.p = math.Clamp(view.angles.p-30, -70, 15)
 
 		return view
 
