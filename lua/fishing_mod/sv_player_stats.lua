@@ -2,7 +2,7 @@ local VERSION = 0x01
 
 -- BINARY FORMAT
 	local FORMAT = {}
-	
+
 	FORMAT [0x01] = {
 		POSITIONS = {
 			catches       = 0x00 + 1,
@@ -21,12 +21,12 @@ local VERSION = 0x01
 				return data
 			else -- read all info
 				local data = {}
-				
+
 				for info_n, info_p in next, self.POSITIONS do
 					fh:Seek(info_p)
 					data [info_n] = fh:ReadDouble()
 				end
-				
+
 				fh:Close()
 				return data
 			end
@@ -35,7 +35,7 @@ local VERSION = 0x01
 			local fh = file.Open(filename, "wb", "DATA")
 			if not fh then return false end
 			fh:WriteByte(0x01)
-			
+
 			fh:WriteDouble(data.catches       or 0)
 			fh:WriteDouble(data.exp           or 0)
 			fh:WriteDouble(data.money         or 0)
@@ -47,7 +47,7 @@ local VERSION = 0x01
 			return true
 		end
 	}
-	
+
 	local BINARY_READ = function (filename, name)
 		local fh = file.Open(filename, "rb", "DATA")
 		assert (fh, "Error opening file for player "..tostring(ply))
@@ -55,7 +55,7 @@ local VERSION = 0x01
 		if not version then
 			fh:Close() ErrorNoHalt("[fishingmod] File is empty.") return
 		elseif not istable(FORMAT[version]) then
-			fh:Close() error("Unsupported version: "..version)
+			fh:Close() error("Unsupported file format version: "..version)
 		end
 		return FORMAT[version]:read(fh, name)
 	end
@@ -64,7 +64,7 @@ local VERSION = 0x01
 -- STORAGE INTERFACE
 	local PATH_GENERATOR_VER = 1
 	local PATH_GENERATOR     = {}
-	
+
 	-- fishingmod/[first digit of UniqueID]/[UniqueID].txt
 	PATH_GENERATOR[1] = setmetatable({
 		init = function (ply)
@@ -76,7 +76,7 @@ local VERSION = 0x01
 			return "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
 		end
 	})
-	
+
 	-- fishingmod/[Y where Y in STEAM_X:Y:Z]/[X_Y_Z as in STEAM_X:Y:Z].txt
 	PATH_GENERATOR[2] = setmetatable({
 		init = function (ply)
@@ -88,9 +88,9 @@ local VERSION = 0x01
 			return "fishingmod/"..ply:SteamID():sub(7):gsub("^(.):(.):(.+)$","%2/%1_%2_%3")..".txt"
 		end
 	})
-	
+
 	--- STORAGE CONTROLLERS
-	
+
 	-- old fishingmod / legacy
 	--  PATH: fishingmod/[UniqueID]/[fieldname].txt
 	--  DEPRECATED
@@ -113,7 +113,7 @@ local VERSION = 0x01
 		end
 	}
 	-- / old fishingmod / legacy
-	
+
 	-- Binary Storage Controller
 	local STORAGE_BINARY = {
 		check = function (ply)
@@ -121,7 +121,7 @@ local VERSION = 0x01
 		end,
 		read = function (ply, name)
 			local filep = PATH_GENERATOR[PATH_GENERATOR_VER](ply)
-			
+
 			if file.Exists(filep, "DATA") then
 				return BINARY_READ(filep, name)
 			end
@@ -132,7 +132,7 @@ local VERSION = 0x01
 		end,
 		migrate = function (ply, path_version)
 			local filep = PATH_GENERATOR[path_version](ply)
-			
+
 			if file.Exists(filep, "DATA") then
 				local data = BINARY_READ(filep, name)
 				if data then
@@ -148,7 +148,7 @@ local VERSION = 0x01
 
 function fishingmod.LoadPlayerInfo(ply, name)
 	if name then assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
-	
+
 	if STORAGE_LEGACY.check (ply) then
 		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data from player: "..tostring(ply).."...")
 		local data = STORAGE_LEGACY.read (ply)
@@ -157,7 +157,7 @@ function fishingmod.LoadPlayerInfo(ply, name)
 		STORAGE_LEGACY.cleanup (ply)
 		print ("Success.")
 	end
-	
+
 	return STORAGE_BINARY.read (ply, name)
 end
 
@@ -166,10 +166,10 @@ function fishingmod.SavePlayerInfo(ply, name, data)
 	local uid = ply:UniqueID()
 	file.CreateDir("fishingmod")
 	file.CreateDir("fishingmod/"..uid:sub(1,1))
-	
+
 	local p_data = fishingmod.LoadPlayerInfo(ply) or {}
 	p_data [name] = data
-	
+
 	return STORAGE_BINARY.write (ply, p_data)
 end
 
