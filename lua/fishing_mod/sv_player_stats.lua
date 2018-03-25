@@ -13,7 +13,7 @@ local VERSION = 0x01
 			string_length = 0x28 + 1,
 			force         = 0x30 + 1,
 		},
-		read = function (fh, name)
+		read = function (self, fh, name)
 			if name then -- read single info
 				fh:Seek(self.POSITIONS[name])
 				local data = fh:ReadDouble()
@@ -31,7 +31,7 @@ local VERSION = 0x01
 				return data
 			end
 		end,
-		write = function (filename, data)
+		write = function (self, filename, data)
 			local fh = file.Open(filename, "wb", "DATA")
 			if not fh then return false end
 			fh:WriteByte(0x01)
