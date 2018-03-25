@@ -72,7 +72,7 @@ local VERSION = 0x01
 			file.CreateDir("fishingmod/"..ply:UniqueID():sub(1,1))
 		end
 	}, {
-		__call = function (ply)
+		__call = function (tab, ply)
 			local uid = ply:UniqueID()
 			return "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
 		end
@@ -85,7 +85,7 @@ local VERSION = 0x01
 			file.CreateDir("fishingmod/"..ply:Steam():sub(9,9))
 		end
 	}, {
-		__call = function (ply)
+		__call = function (tab, ply)
 			return "fishingmod/"..ply:SteamID():sub(7):gsub("^(.):(.):(.+)$","%2/%1_%2_%3")..".txt"
 		end
 	})
