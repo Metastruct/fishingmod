@@ -73,6 +73,7 @@ local VERSION = 0x01
 		end
 	}, {
 		__call = function (ply)
+			local uid = ply:UniqueID()
 			return "fishingmod/"..uid:sub(1,1).."/"..uid..".txt"
 		end
 	})
