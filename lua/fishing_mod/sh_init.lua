@@ -68,6 +68,7 @@ for key, catch in pairs(fishingmod.CatchTable) do
 			price = math.Round((GetAveragePrice(catch.bait) or catch.value) / 2), 
 			models = catch.bait,
 			multiplier = 1,
+			levelrequired = catch.levelrequired
 		}
 	end
 end

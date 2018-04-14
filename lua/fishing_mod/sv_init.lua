@@ -53,11 +53,13 @@ end)
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	local type = table.concat(arguments, " ")
 	local rod = ply:GetFishingRod()
+	if not rod then return end
+
 	local hooky = rod:GetHook()
 	local data = fishingmod.BaitTable[type]
-	
-	--if not data then return end
-	
+	if not data then return end
+
+	if fishingmod.ExpToLevel(ply.fishingmod.exp) < data.levelrequired then return end
 	if not fishingmod.Pay(ply, math.Round(data.price*data.multiplier)) then return end
 	
 	local bait = ents.Create("prop_physics")
