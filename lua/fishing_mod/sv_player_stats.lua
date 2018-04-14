@@ -148,7 +148,7 @@ local VERSION = 0x01
 -- / STORAGE INTERFACE
 
 function fishingmod.LoadPlayerInfo(ply, name)
-	if name then assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
+	if name then assert(FORMAT[VERSION].POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
 
 	if STORAGE_LEGACY.check (ply) then
 		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data from player: "..tostring(ply).."...")
@@ -163,7 +163,7 @@ function fishingmod.LoadPlayerInfo(ply, name)
 end
 
 function fishingmod.SavePlayerInfo(ply, name, data)
-	assert(POSITIONS[name], "Unknown data name '"..tostring(name).."'")
+	assert(FORMAT[VERSION].POSITIONS[name], "Unknown data name '"..tostring(name).."'")
 	local uid = ply:UniqueID()
 	file.CreateDir("fishingmod")
 	file.CreateDir("fishingmod/"..uid:sub(1,1))
