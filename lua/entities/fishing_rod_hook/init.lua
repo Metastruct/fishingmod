@@ -196,7 +196,11 @@ function ENT:OnRemove()
 	if IsValid(self.dt.hooked) then
 		self.dt.hooked:SetParent()
 	end
-	self.physical_rope:Remove()
+	
+	-- This is a needed fix as physical_rope can be a bool
+	if type(self.physical_rope) == "Entity" then
+		self.physical_rope:Remove()
+	end
 end
 
 function ENT:Think()
