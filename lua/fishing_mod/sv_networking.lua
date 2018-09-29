@@ -1,3 +1,8 @@
+util.AddNetworkString("Fishingmod:Catch")
+util.AddNetworkString("Fishingmod:Bait")
+util.AddNetworkString("Fishingmod:Player")
+util.AddNetworkString("Fishingmod:BaitPrices")
+
 function fishingmod.SetCatchInfo(entity, ply)
 	local rp = RecipientFilter()
 	if not ply then 
@@ -8,11 +13,11 @@ function fishingmod.SetCatchInfo(entity, ply)
 	
 	entity.data = entity.data or {}
 	
-	umsg.Start("Fishingmod:Catch", rp)
-		umsg.Short(entity:EntIndex() or 0)
-		umsg.String(entity.data.friendly or "unknown")
-		umsg.Long(entity.data.caught or 0)
-		umsg.String(
+	net.Start("Fishingmod:Catch")
+		net.WriteInt(entity:EntIndex() or 0, 16)
+		net.WriteString(entity.data.friendly or "unknown")
+		net.WriteInt(entity.data.caught or 0, 32)
+		net.WriteString(
 			entity.data.owner and (
 			type(entity.data.owner)=="string" and entity.data.owner or 
 			
@@ -20,9 +25,9 @@ function fishingmod.SetCatchInfo(entity, ply)
 				entity.data.owner:Nick()
 			) or 
 			"Unknown")
-		umsg.Short(entity.data.fried or 0)
-		umsg.Long(entity.data.value or 0)
-	umsg.End()
+		net.WriteInt(entity.data.fried or 0, 16)
+		net.WriteInt(entity.data.value or 0, 32)
+	net.Send(rp)
 end
 
 function fishingmod.SetBaitInfo(entity, ply)
@@ -35,31 +40,30 @@ function fishingmod.SetBaitInfo(entity, ply)
 	
 	entity.data = entity.data or {}
 	
-	umsg.Start("Fishingmod:Bait", rp)
-		umsg.Short(entity:EntIndex() or 0)
-		--umsg.String(entity.data.friendly or "unknown")
-		umsg.String(entity.data.ownerid or "unknown")
-	umsg.End()
+	net.Start("Fishingmod:Bait")
+		net.WriteInt(entity:EntIndex() or 0, 16)
+		net.WriteString(entity.data.ownerid or "unknown")
+	net.Send(rp)
 end
 
 function fishingmod.UpdatePlayerInfo(ply, spawned)
-	umsg.Start("Fishingmod:Player")
-		umsg.Entity(ply)
-		umsg.Long(ply.fishingmod.exp)
-		umsg.Long(ply.fishingmod.catches)
-		umsg.Long(ply.fishingmod.money)
-		umsg.Char(ply.fishingmod.length)
-		umsg.Char(ply.fishingmod.reel_speed)
-		umsg.Short(ply.fishingmod.string_length)
-		umsg.Short(ply.fishingmod.force)
-		umsg.Bool(spawned or false)
-	umsg.End()	
+	net.Start("Fishingmod:Player")
+		net.WriteEntity(ply)
+		net.WriteInt(ply.fishingmod.exp, 32)
+		net.WriteInt(ply.fishingmod.catches, 32)
+		net.WriteInt(ply.fishingmod.money, 32)
+		net.WriteInt(ply.fishingmod.length, 8)
+		net.WriteInt(ply.fishingmod.reel_speed, 8)
+		net.WriteInt(ply.fishingmod.string_length, 16)
+		net.WriteInt(ply.fishingmod.force, 16)
+		net.WriteBool(spawned or false)
+	net.Broadcast()	
 end
 
 function fishingmod.SetBaitSale(bait, multiplier, ply)
 	fishingmod.BaitTable[bait].multiplier = multiplier
-	umsg.Start("Fishingmod:BaitPrices", ply)
-		umsg.String(bait)
-		umsg.Float(multiplier)
-	umsg.End()
+	net.Start("Fishingmod:BaitPrices")
+		net.WriteString(bait)
+		net.WriteFloat(multiplier) 
+	net.Send(ply)
 end

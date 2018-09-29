@@ -22,25 +22,25 @@ local function FriedToFriendly(number)
 	end
 end
 
-usermessage.Hook("Fishingmod:BaitPrices", function(um)
-	local name = um:ReadString()
-	local multiplier = um:ReadFloat()
+net.Receive("Fishingmod:BaitPrices", function()
+	local name = net.ReadString()
+	local multiplier = net.ReadFloat()
 	if not fishingmod.BaitTable[name] then return end
 	fishingmod.BaitTable[name].multiplier = multiplier
 	fishingmod.UpdateSales()
 end)
 
 
-local function UpdatePlayer(ply,um) 
+local function UpdatePlayer(ply) 
 	
-	local exp = um:ReadLong()
-	local catch = um:ReadLong()
-	local money = um:ReadLong()
-	local length = um:ReadChar()
-	local reel_speed = um:ReadChar()
-	local string_length = um:ReadShort()
-	local force = um:ReadShort()
-	local spawned = um:ReadBool()
+	local exp = net.ReadInt(32)
+	local catch = net.ReadInt(32)
+	local money = net.ReadInt(32)
+	local length = net.ReadInt(8)
+	local reel_speed = net.ReadInt(8)
+	local string_length = net.ReadInt(16)
+	local force = net.ReadInt(16)
+	local spawned = net.ReadBool()
 	ply.fishingmod=ply.fishingmod or {}
 	if not ply.fishingmod then return end
 	ply.fishingmod.length = length
@@ -61,36 +61,36 @@ local function UpdatePlayer(ply,um)
 	end
 end
 
-local function UpdatePlayerWait(ply,um,time)
+local function UpdatePlayerWait(ply,time)
 	if time<CurTime() then return end
 	if IsValid(ply) and ply:IsPlayer() then
 		ply.fishingmod = ply.fishingmod or {}
 		if ply.fishingmod then
 			--print("Delayed update",ply)
-			UpdatePlayer(ply,um)
+			UpdatePlayer(ply)
 			return
 		end
 	end
 	timer.Simple(0.5,function() 
-		UpdatePlayerWait(ply,um,time)
+		UpdatePlayerWait(ply,time)
 	end)
 end
 
-usermessage.Hook("Fishingmod:Player", function(um) 
-	local ply = um:ReadEntity()
+net.Receive("Fishingmod:Player", function() 
+	local ply = net.ReadEntity()
 	if not IsValid(ply) or not ply:IsPlayer() or not ply.fishingmod then
-		UpdatePlayerWait(ply,um,CurTime()+5)
+		UpdatePlayerWait(ply,CurTime()+5)
 	end
-	UpdatePlayer(ply,um)
+	UpdatePlayer(ply)
 end)
 
-usermessage.Hook("Fishingmod:Catch", function(um) 
-	local entity = um:ReadShort()
-	local friendly = um:ReadString()
-	local caught = um:ReadLong()
-	local owner = um:ReadString()
-	local fried = um:ReadShort()
-	local value = um:ReadLong()
+net.Receive("Fishingmod:Catch", function() 
+	local entity = net.ReadInt(16)
+	local friendly = net.ReadString()
+	local caught = net.ReadInt(32)
+	local owner = net.ReadString()
+	local fried = net.ReadInt(16)
+	local value = net.ReadInt(32)
 	
 	value = value == 0 and "????" or value
 
@@ -124,9 +124,9 @@ usermessage.Hook("Fishingmod:Catch", function(um)
 	fishingmod.InfoTable.Catch[entity].text = text
 end)
 
-usermessage.Hook("Fishingmod:Bait", function(um) 
-	local entity = um:ReadShort()
-	local owner = um:ReadString()
+net.Receive("Fishingmod:Bait", function() 
+	local entity = net.ReadInt(16)
+	local owner = net.ReadString()
 	
 	local ply = game.SinglePlayer() and LocalPlayer() or player.GetByUniqueID(owner)
 	
