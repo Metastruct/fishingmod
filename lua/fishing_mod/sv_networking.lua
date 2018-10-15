@@ -62,8 +62,11 @@ end
 
 function fishingmod.SetBaitSale(bait, multiplier, ply)
 	fishingmod.BaitTable[bait].multiplier = multiplier
-	net.Start("Fishingmod:BaitPrices")
-		net.WriteString(bait)
-		net.WriteFloat(multiplier) 
-	net.Send(ply)
+	
+	if IsValid(ply) then
+		net.Start("Fishingmod:BaitPrices")
+			net.WriteString(bait)
+			net.WriteFloat(multiplier) 
+		net.Send(ply)
+	end
 end
