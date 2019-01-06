@@ -22,7 +22,7 @@ function fishingmod.SetCatchInfo(entity, ply)
 			type(entity.data.owner)=="string" and entity.data.owner or 
 			
 				IsValid(entity.data.owner) and 
-				entity.data.owner:Nick()
+				(UndecorateNick and UndecorateNick(entity.data.owner:Nick()) or entity.data.owner:Nick())
 			) or 
 			"Unknown")
 		net.WriteInt(entity.data.fried or 0, 16)

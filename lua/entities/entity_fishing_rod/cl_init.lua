@@ -47,7 +47,7 @@ function ENT:HUDPaint()
 		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
 	local height_offset = 50
-	draw.DrawText(self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
+	draw.DrawText(UndecorateNick and UndecorateNick(self:GetPlayer():Nick()) or self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
 	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, 100, 23, Color( 255, 255, 255, 100 ) )
 	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, self:GetPlayer().fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
 	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
