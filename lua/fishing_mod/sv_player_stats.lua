@@ -1,4 +1,9 @@
+-- configuration:
+
+--  file format version (used to track compatibility)
 local VERSION = 0x01
+--  path generator version (used to select active path generator version)
+local PATH_GENERATOR_VER = 1
 
 -- BINARY FORMAT
 	local FORMAT = {}
@@ -62,7 +67,6 @@ local VERSION = 0x01
 -- / BINARY FORMAT
 
 -- STORAGE INTERFACE
-	local PATH_GENERATOR_VER = 1
 	local PATH_GENERATOR     = {}
 
 	-- fishingmod/[first digit of UniqueID]/[UniqueID].txt
@@ -78,7 +82,8 @@ local VERSION = 0x01
 		end
 	})
 
-	-- fishingmod/[Y where Y in STEAM_X:Y:Z]/[X_Y_Z as in STEAM_X:Y:Z].txt
+	-- fishingmod/[B]/[A]_[B]_[CDEF...].txt
+	--   (assuming STEAM_A:B:CDEF...)
 	PATH_GENERATOR[2] = setmetatable({
 		init = function (ply)
 			file.CreateDir("fishingmod")
@@ -150,8 +155,9 @@ local VERSION = 0x01
 function fishingmod.LoadPlayerInfo(ply, name)
 	if name then assert(FORMAT[VERSION].POSITIONS[name], "Unknown data name '"..tostring(name).."'") end
 
+	-- migration from STORAGE_LEGACY
 	if STORAGE_LEGACY.check (ply) then
-		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data from player: "..tostring(ply).."...")
+		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data of player: "..tostring(ply).."...")
 		local data = STORAGE_LEGACY.read (ply)
 		PrintTable (data)
 		STORAGE_BINARY.write (ply, data)
