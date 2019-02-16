@@ -3,7 +3,11 @@
 --  file format version (used to track compatibility)
 local VERSION = 0x01
 --  path generator version (used to select active path generator version)
-local PATH_GENERATOR_VER = 1
+local PATH_GENERATOR_VER = 3
+--  path generator migration (used to enable/disable migration support from a different path generator version)
+local PATH_GENERATOR_MIGRATION_ENABLED = {
+	[1] = true
+}
 
 -- BINARY FORMAT
 	local FORMAT = {}
@@ -95,6 +99,32 @@ local PATH_GENERATOR_VER = 1
 		end
 	})
 
+	-- semi-balanced radix tree
+	--   case C  = 1: fishingmod/STEAM_[A]_[B]/1/[D]/[EF...].txt
+	--   case C != 1: fishingmod/STEAM_[A]_[B]/[C]/[DEF...].txt
+	--     (assuming STEAM_A:B:CDEF...)
+	PATH_GENERATOR[3] = setmetatable({
+		init = function (ply)
+			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
+			file.CreateDir("fishingmod")
+			file.CreateDir("fishingmod/steam_"..A)
+			file.CreateDir("fishingmod/steam_"..A.."/"..B)
+			file.CreateDir("fishingmod/steam_"..A.."/"..B.."/"..C)
+			if C == "1" then
+				file.CreateDir("fishingmod/steam_"..A.."/"..B.."/1/"..D)
+			end
+		end
+	}, {
+		__call = function (tab, ply)
+			local A, B, C, D, EF = ply:SteamID():match("^STEAM_(.):(.):(.)(.)(.+)$")
+			if C == "1" then
+				return "fishingmod/steam_"..A.."/"..B.."/1/"..D.."/"..EF..".txt"
+			else
+				return "fishingmod/steam_"..A.."/"..B.."/"..C.."/"..D..EF..".txt"
+			end
+		end
+	})
+
 	--- STORAGE CONTROLLERS
 
 	-- old fishingmod / legacy
@@ -163,6 +193,16 @@ function fishingmod.LoadPlayerInfo(ply, name)
 		STORAGE_BINARY.write (ply, data)
 		STORAGE_LEGACY.cleanup (ply)
 		print ("Success.")
+	end
+
+	-- migration *within* STORAGE_BINARY, but across different path generators
+	-- (migrating from any of enabled PATH_GENERATOR_MIGRATION_ENABLED to currently active PATH_GENERATOR_VER)
+	for ver in ipairs (PATH_GENERATOR) do
+		if PATH_GENERATOR_MIGRATION_ENABLED[ver] and ver ~= PATH_GENERATOR_VER then
+			if STORAGE_BINARY.migrate (ply, ver) then
+				Msg ("[fishingmod] ") print ("Migrated fishingmod data from path v"..ver.." to v"..PATH_GENERATOR_VER.." of player: "..tostring(ply))
+			end
+		end
 	end
 
 	return STORAGE_BINARY.read (ply, name)
