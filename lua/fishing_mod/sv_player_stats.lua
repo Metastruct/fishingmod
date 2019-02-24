@@ -100,8 +100,8 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 	})
 
 	-- semi-balanced radix tree
-	--   case C  = 1: fishingmod/STEAM_[A]_[B]/1/[D]/[EF...].txt
-	--   case C != 1: fishingmod/STEAM_[A]_[B]/[C]/[DEF...].txt
+	--   case C  = 1: fishingmod/STEAM_[A]/[B]/1/[D]/[EF...].txt
+	--   case C != 1: fishingmod/STEAM_[A]/[B]/[C]/[DEF...].txt
 	--     (assuming STEAM_A:B:CDEF...)
 	PATH_GENERATOR[3] = setmetatable({
 		init = function (ply)
