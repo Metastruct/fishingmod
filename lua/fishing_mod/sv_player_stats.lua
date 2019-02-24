@@ -3,10 +3,12 @@
 --  file format version (used to track compatibility)
 local VERSION = 0x01
 --  path generator version (used to select active path generator version)
-local PATH_GENERATOR_VER = 3
+local PATH_GENERATOR_VER = 4
 --  path generator migration (used to enable/disable migration support from a different path generator version)
 local PATH_GENERATOR_MIGRATION_ENABLED = {
-	[1] = true
+	[1] = true,
+	-- 2 was never used in production
+	[3] = true
 }
 
 -- BINARY FORMAT
