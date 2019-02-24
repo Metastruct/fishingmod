@@ -99,7 +99,7 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 		end
 	})
 
-	-- semi-balanced radix tree
+	-- semi-balanced radix tree (the annoying edition; superseded by v4)
 	--   case C  = 1: fishingmod/STEAM_[A]/[B]/1/[D]/[EF...].txt
 	--   case C != 1: fishingmod/STEAM_[A]/[B]/[C]/[DEF...].txt
 	--     (assuming STEAM_A:B:CDEF...)
@@ -121,6 +121,31 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 				return "fishingmod/steam_"..A.."/"..B.."/1/"..D.."/"..EF..".txt"
 			else
 				return "fishingmod/steam_"..A.."/"..B.."/"..C.."/"..D..EF..".txt"
+			end
+		end
+	})
+
+	-- semi-balanced radix tree (fixed variant)
+	--   case C  = 1: fishingmod/STEAM_[A]_[B]/1/[D]/[EF...].txt
+	--   case C != 1: fishingmod/STEAM_[A]_[B]/[C]/[DEF...].txt
+	--     (assuming STEAM_A:B:CDEF...)
+	PATH_GENERATOR[4] = setmetatable({
+		init = function (ply)
+			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
+			file.CreateDir("fishingmod")
+			file.CreateDir("fishingmod/steam_"..A.."_"..B)
+			file.CreateDir("fishingmod/steam_"..A.."_"..B.."/"..C)
+			if C == "1" then
+				file.CreateDir("fishingmod/steam_"..A.."_"..B.."/1/"..D)
+			end
+		end
+	}, {
+		__call = function (tab, ply)
+			local A, B, C, D, EF = ply:SteamID():match("^STEAM_(.):(.):(.)(.)(.+)$")
+			if C == "1" then
+				return "fishingmod/steam_"..A.."_"..B.."/1/"..D.."/"..EF..".txt"
+			else
+				return "fishingmod/steam_"..A.."_"..B.."/"..C.."/"..D..EF..".txt"
 			end
 		end
 	})
