@@ -179,8 +179,8 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 
 	-- Binary Storage Controller
 	local STORAGE_BINARY = {
-		check = function (ply)
-			return file.Exists(PATH_GENERATOR[PATH_GENERATOR_VER](ply), "DATA")
+		check = function (ply, path_version)
+			return file.Exists(PATH_GENERATOR[path_version or PATH_GENERATOR_VER](ply), "DATA")
 		end,
 		read = function (ply, name)
 			local filep = PATH_GENERATOR[PATH_GENERATOR_VER](ply)
@@ -197,7 +197,7 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 			local filep = PATH_GENERATOR[path_version](ply)
 
 			if file.Exists(filep, "DATA") then
-				local data = BINARY_READ(filep, name)
+				local data = BINARY_READ(filep)
 				if data then
 					FORMAT[VERSION]:write(PATH_GENERATOR[PATH_GENERATOR_VER](ply), data)
 				end
@@ -205,6 +205,13 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 				return tobool(data)
 			end
 			return false
+		end,
+		cleanup = function (ply, path_version)
+			local filep = PATH_GENERATOR[path_version](ply)
+
+			if file.Exists(filep, "DATA") then
+				return file.Delete(filep)
+			end
 		end
 	}
 -- / STORAGE INTERFACE
@@ -214,20 +221,32 @@ function fishingmod.LoadPlayerInfo(ply, name)
 
 	-- migration from STORAGE_LEGACY
 	if STORAGE_LEGACY.check (ply) then
-		Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data of player: "..tostring(ply).."...")
-		local data = STORAGE_LEGACY.read (ply)
-		PrintTable (data)
-		STORAGE_BINARY.write (ply, data)
-		STORAGE_LEGACY.cleanup (ply)
-		print ("Success.")
+		if STORAGE_BINARY.check (ply) then
+			Msg ("[fishingmod] ") print ("Found legacy fishingmod data of player: "..tostring(ply)..", but new data exists. Deleting...")
+			STORAGE_LEGACY.cleanup (ply)
+			print ("Success.")
+		else
+			Msg ("[fishingmod] ") print ("Can migrate legacy fishingmod data of player: "..tostring(ply).."...")
+			local data = STORAGE_LEGACY.read (ply)
+			PrintTable (data)
+			STORAGE_BINARY.write (ply, data)
+			STORAGE_LEGACY.cleanup (ply)
+			print ("Success.")
+		end
 	end
 
 	-- migration *within* STORAGE_BINARY, but across different path generators
 	-- (migrating from any of enabled PATH_GENERATOR_MIGRATION_ENABLED to currently active PATH_GENERATOR_VER)
 	for ver in ipairs (PATH_GENERATOR) do
-		if PATH_GENERATOR_MIGRATION_ENABLED[ver] and ver ~= PATH_GENERATOR_VER then
-			if STORAGE_BINARY.migrate (ply, ver) then
-				Msg ("[fishingmod] ") print ("Migrated fishingmod data from path v"..ver.." to v"..PATH_GENERATOR_VER.." of player: "..tostring(ply))
+		if PATH_GENERATOR_MIGRATION_ENABLED[ver] and ver ~= PATH_GENERATOR_VER and STORAGE_BINARY.check (ply, ver) then
+			if STORAGE_BINARY.check (ply) then
+				Msg ("[fishingmod] ") print ("Found duplicate fishingmod data of player: "..tostring(ply).." in path v"..ver..". Deleting...")
+				STORAGE_BINARY.cleanup (ply, ver)
+				print ("Success.")
+			else
+				if STORAGE_BINARY.migrate (ply, ver) then
+					Msg ("[fishingmod] ") print ("Migrated fishingmod data from path v"..ver.." to v"..PATH_GENERATOR_VER.." of player: "..tostring(ply))
+				end
 			end
 		end
 	end
