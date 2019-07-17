@@ -9,15 +9,19 @@ function ENT:Draw()
 		render.SetMaterial(rope_material)
 		render.DrawBeam(self:LocalToWorld(Vector(40,0,0) * self.dt.rod_length), self:GetBobber():LocalToWorld(self:GetBobber().TopOffset), 0.1, 0, 0, Color(255,200,200,50))
 	end
+	
 	self:DrawModel()
 end
 
 function ENT:RenderScene()
 	local ply = self:GetPlayer()
+	
 	if ply then
 		ply:SetAngles(Angle(0,ply:EyeAngles().y,0))
 	end
+	
 	if not IsValid(self.dt.ply) then return end
+	
 	local idx = self.dt.ply:LookupBone("ValveBiped.Bip01_R_Hand")
 	if not idx then return end
 	
@@ -30,9 +34,10 @@ function ENT:RenderScene()
 end
 
 function ENT:HUDPaint()
-	if self:GetPlayer() and not self:GetPlayer().fishingmod then return end
+	local ply = self:GetPlayer()
 	
-	if self:GetPlayer() ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
+	if not IsValid(ply) or (ply and not ply.fishingmod) then return end
+	if ply ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
 	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen()
 	
@@ -47,16 +52,14 @@ function ENT:HUDPaint()
 		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
 	local height_offset = 50
-	draw.DrawText(self:GetPlayer():Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
+	draw.DrawText(ply:Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
 	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, 100, 23, Color( 255, 255, 255, 100 ) )
-	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, self:GetPlayer().fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
-	draw.DrawText(tostring(math.Round(self:GetPlayer().fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
-	draw.DrawText("Total Catch: " .. self:GetPlayer().fishingmod.catches .. "\nMoney: " .. (self:GetPlayer().fishingmod.money or "0") .. "\nLevel: " .. self:GetPlayer().fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
+	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, ply.fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
+	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
+	draw.DrawText("Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (ply.fishingmod.money or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
-	
-	
 	self.sound_rope = CreateSound(self, "weapons/tripwire/ropeshoot.wav")
 	self.sound_rope:Play()
 	self.sound_rope:ChangePitch(0, 0)
@@ -66,7 +69,9 @@ function ENT:Initialize()
 	self.sound_reel:ChangePitch(0, 0)
 	self.last_length = 0
 	
-	if LocalPlayer() == self:GetPlayer() and not ValidPanel(fishingmod.UpgradeMenu) then 
+	local ply = self:GetPlayer()
+	
+	if LocalPlayer() == ply and not ValidPanel(fishingmod.UpgradeMenu) then 
 		fishingmod.UpgradeMenu = vgui.Create("Fishingmod:ShopMenu") 
 		fishingmod.UpgradeMenu:SetVisible(false)
 	end
@@ -96,7 +101,9 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	if LocalPlayer() == self:GetPlayer() then 
+	local ply = self:GetPlayer()
+	
+	if LocalPlayer() == ply then 
 		if IsValid(fishingmod.UpgradeMenu) then
 			fishingmod.UpgradeMenu:Remove()
 		end
