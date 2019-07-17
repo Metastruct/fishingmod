@@ -48,6 +48,10 @@ hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
 	if string.find(trace.Entity:GetClass(), "fishing_rod") then
 		return false
 	end
+		
+	if trace.Entity:GetClass() == "prop_physics" and trace.Entity.is_bait then
+		return false		
+	end
 end)
 
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
@@ -63,7 +67,6 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	if not fishingmod.Pay(ply, math.Round(data.price*data.multiplier)) then return end
 	
 	local bait = ents.Create("prop_physics")
-	bait.DisableDuplicator = true
 	bait.data = {}
 	bait.is_bait = true
 	bait.data.owner = ply
