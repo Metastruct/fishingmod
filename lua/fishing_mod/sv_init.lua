@@ -139,7 +139,7 @@ function fishingmod.IsBait(entity)
 	for name, catch in pairs(fishingmod.CatchTable) do
 		if type(catch.bait) == "table" then
 			for key, bait in pairs(catch.bait) do
-				if string.lower(bait) == model then 
+				if string.lower(bait) == model and entity.is_bait then
 					return true 
 				end
 			end
