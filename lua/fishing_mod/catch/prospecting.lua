@@ -87,7 +87,7 @@ if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
-		self:SetColor(184, 115, 51, 255)
+		self:SetColor(Color(184, 115, 51, 255))
 
 	end
 	
@@ -237,7 +237,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
 		self:SetMaterial("models/shiny")
-		self:SetColor(164, 164, 164, 255)
+		self:SetColor(Color(164, 164, 164, 255))
 
 	end
 	
@@ -467,7 +467,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
 		self:SetMaterial("models/shiny")
-		self:SetColor(164, 164, 164, 255)
+		self:SetColor(Color(164, 164, 164, 255))
 		
 	end
 	
