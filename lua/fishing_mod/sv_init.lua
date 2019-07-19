@@ -48,6 +48,10 @@ hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
 	if string.find(trace.Entity:GetClass(), "fishing_rod") then
 		return false
 	end
+		
+	if trace.Entity:GetClass() == "prop_physics" and trace.Entity.is_bait then
+		return false		
+	end
 end)
 
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
@@ -135,7 +139,7 @@ function fishingmod.IsBait(entity)
 	for name, catch in pairs(fishingmod.CatchTable) do
 		if type(catch.bait) == "table" then
 			for key, bait in pairs(catch.bait) do
-				if string.lower(bait) == model then 
+				if string.lower(bait) == model and entity.is_bait then
 					return true 
 				end
 			end
