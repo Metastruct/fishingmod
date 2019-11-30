@@ -70,7 +70,7 @@ function fishingmod.SetBaitSale(bait, multiplier, ply)
 	
 	if IsValid(ply) then
 		net.Send(ply)
-	else
+	elseif #player.GetHumans() > 0 then
 		net.Broadcast()
 	end
 end
