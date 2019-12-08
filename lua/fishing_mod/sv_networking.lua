@@ -62,7 +62,9 @@ end
 
 function fishingmod.SetBaitSale(bait, multiplier, ply)
 	fishingmod.BaitTable[bait].multiplier = multiplier
+	local hasplayers = player.GetHumans()[1]
 	
+	if not IsValid(ply) and not hasplayers then return end
 	
 	net.Start("Fishingmod:BaitPrices")
 	net.WriteString(bait)
@@ -70,7 +72,7 @@ function fishingmod.SetBaitSale(bait, multiplier, ply)
 	
 	if IsValid(ply) then
 		net.Send(ply)
-	elseif #player.GetHumans() > 0 then
+	elseif hasplayers then
 		net.Broadcast()
 	end
 end
