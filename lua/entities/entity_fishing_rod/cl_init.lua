@@ -1,3 +1,6 @@
+pcall(include, "autorun/translation.lua")
+local L = translation and translation.L or function(s) return s end
+
 language.Add("entity_fishing_rod","Fishing Rod")
 
 include("shared.lua")
@@ -43,20 +46,20 @@ function ENT:HUDPaint()
 	
 	local depth = ""
 	if self:GetHook() and self:GetHook():WaterLevel() >= 1 then
-		depth =  "\nDepth: " .. tostring(math.Round((self:GetDepth()*2.54)/100*10)/10)
+		depth = L "\nDepth: " .. tostring(math.Round((self:GetDepth()*2.54)/100*10)/10)
 	end
 	
 	local catch = ""
 	local hooked_entity = self:GetHook() and self:GetHook():GetHookedEntity()
 	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
-		catch = "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
+		catch = L "\nCatch: " .. hooked_entity:GetNWString("fishingmod friendly")
 	end
 	local height_offset = 50
 	draw.DrawText(ply:Nick(), "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
 	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, 100, 23, Color( 255, 255, 255, 100 ) )
 	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, ply.fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
 	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
-	draw.DrawText("Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (ply.fishingmod.money or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
+	draw.DrawText(L "Total Catch: " .. ply.fishingmod.catches .. L "\nMoney: " .. (ply.fishingmod.money or "0") .. L "\nLevel: " .. ply.fishingmod.level .. L "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()
