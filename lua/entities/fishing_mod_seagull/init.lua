@@ -111,28 +111,36 @@ function ENT:Touch(entity)
 	end
 end
 
-function ENT:EntityTakeDamage(ent, inflictor, attacker, amount, data)
-  data=inflictor
-  inflictor=data:GetInflictor()
-  attacker=data:GetAttacker()
-  amount=data:GetDamage()
-  
-	if ent ~= self then return end
+function ENT:OnTakeDamage(data)
+	local inflictor = data:GetInflictor()
+	local attacker = data:GetAttacker()
+	
 	if data:IsBulletDamage() and attacker:IsPlayer() then
 		local ragdoll = ents.Create("prop_ragdoll")
 		ragdoll:SetModel(self:GetModel())
 		ragdoll:SetPos(self:GetPos())
 		ragdoll:SetAngles(self:GetAngles())
+			
+		local realOwner
+		if inflictor:GetClass() == "gmod_wire_turret" then
+			realOwner = self.owner
+		else
+			realOwner = attacker
+		end
+		
 		ragdoll.data = {
-			value = 1000, 
+			value = 1000,
 			friendly = "Dead Seagull",
 			caught = os.time(),
-			owner = attacker:Nick(),
-			ownerid = attacker:UniqueID(),
+			owner = realOwner:Nick(),
+			ownerid = realOwner:UniqueID(),
 		}
+		
 		ragdoll:SetNWBool("fishingmod catch", true)
 		ragdoll:Spawn()
-		if ragdoll.CPPISetOwner then ragdoll:CPPISetOwner(attacker) end
+		
+		if ragdoll.CPPISetOwner then ragdoll:CPPISetOwner(realOwner) end
+		
 		fishingmod.SetCatchInfo(ragdoll)
 		self:Remove()
 	end
