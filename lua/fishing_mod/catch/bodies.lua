@@ -111,7 +111,7 @@ fishingmod.AddCatch{
 fishingmod.AddCatch{
 	friendly = "Zombie Torso",
 	type = "prop_ragdoll",
-	models = {"models/Classic_torso.mdl"},
+	models = {"models/zombie/classic_torso.mdl"},
 	size = size,
 	rareness = rareness, 
 	yank = yank, 
