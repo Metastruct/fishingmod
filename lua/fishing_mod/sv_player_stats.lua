@@ -118,6 +118,9 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 		end
 	}, {
 		__call = function (tab, ply)
+			if game.SinglePlayer() then
+				return "fishingmod/singleplayer.txt"
+			end
 			local A, B, C, D, EF = ply:SteamID():match("^STEAM_(.):(.):(.)(.)(.+)$")
 			if C == "1" then
 				return "fishingmod/steam_"..A.."/"..B.."/1/"..D.."/"..EF..".txt"
@@ -143,6 +146,9 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 		end
 	}, {
 		__call = function (tab, ply)
+			if game.SinglePlayer() then
+				return "fishingmod/singleplayer.txt"
+			end
 			local A, B, C, D, EF = ply:SteamID():match("^STEAM_(.):(.):(.)(.)(.+)$")
 			if C == "1" then
 				return "fishingmod/steam_"..A.."_"..B.."/1/"..D.."/"..EF..".txt"
