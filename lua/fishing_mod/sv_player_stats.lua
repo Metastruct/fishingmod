@@ -151,7 +151,7 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 	}, {
 		__call = function (tab, ply)
 			if game.SinglePlayer() then
-				return "fishingmod/singleplayer.txt"
+				return "fishingmod/singleplayer.4.txt"
 			end
 			local A, B, C, D, EF = ply:SteamID():match("^STEAM_(.):(.):(.)(.)(.+)$")
 			if C == "1" then
@@ -266,9 +266,6 @@ end
 
 function fishingmod.SavePlayerInfo(ply, name, data)
 	assert(FORMAT[VERSION].POSITIONS[name], "Unknown data name '"..tostring(name).."'")
-	local uid = ply:UniqueID()
-	file.CreateDir("fishingmod")
-	file.CreateDir("fishingmod/"..uid:sub(1,1))
 
 	local p_data = fishingmod.LoadPlayerInfo(ply) or {}
 	p_data [name] = data
