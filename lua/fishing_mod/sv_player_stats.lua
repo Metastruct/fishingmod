@@ -107,8 +107,10 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 	--     (assuming STEAM_A:B:CDEF...)
 	PATH_GENERATOR[3] = setmetatable({
 		init = function (ply)
-			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
 			file.CreateDir("fishingmod")
+			if game.SinglePlayer() then return end
+
+			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
 			file.CreateDir("fishingmod/steam_"..A)
 			file.CreateDir("fishingmod/steam_"..A.."/"..B)
 			file.CreateDir("fishingmod/steam_"..A.."/"..B.."/"..C)
@@ -136,8 +138,10 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 	--     (assuming STEAM_A:B:CDEF...)
 	PATH_GENERATOR[4] = setmetatable({
 		init = function (ply)
-			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
 			file.CreateDir("fishingmod")
+			if game.SinglePlayer() then return end
+
+			local A, B, C, D = ply:SteamID():match("^STEAM_(.):(.):(.)(.)")
 			file.CreateDir("fishingmod/steam_"..A.."_"..B)
 			file.CreateDir("fishingmod/steam_"..A.."_"..B.."/"..C)
 			if C == "1" then
