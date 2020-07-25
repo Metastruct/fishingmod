@@ -76,6 +76,10 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 	bait:SetPos(util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 100, ply).HitPos)
 	bait:Spawn()
 
+	if(bait:GetPhysicsObject():GetMass() > 100) then -- Weight Manipulation
+		bait:GetPhysicsObject():SetMass(100) -- im sorry Great Developers of #ServerName but this got to be here.. 
+	end -- one model was 10 000 by default and the fishing hook can't lift it
+
 	hook.Run("PlayerSpawnedProp", ply, bait:GetModel(), bait)
 
 	if not util.IsValidProp(bait:GetModel():lower()) then bait:PhysicsInitBox(Vector(1,1,1)*-7,Vector(1,1,1)*7) end

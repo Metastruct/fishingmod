@@ -6,6 +6,7 @@ local rope_material = Material("cable/rope")
 
 function ENT:Draw()
 	self:SetModelScale(0.5, 0)
+	self:DrawShadow(false) -- a massive shadow... it's quite disturbing... no thanks ?
 	self:DrawModel()
 	self:SetRenderBounds(Vector(1,1,1)*-1000, Vector(1,1,1)*1000)
 	if IsValid(self.dt.hook) then
