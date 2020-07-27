@@ -41,36 +41,31 @@ function ENT:HUDPaint()
 		
 	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen() -- kinda unsure about this Vec'0,0,+10'
 
-	local height_offset 		= 40 			-- kinda unsure about this but ok -- it was here before
-	local marginFromBorder 		= 16 			-- 16 pixels from the top and bottom border of the screen/game window
-	local innerBoxXY 			= 3  			-- padding of the 2 shades of background
-	local bg_heightdepthcatch 	= 0  			-- if a catch or depth exist elongate the box
-	local minwid 				= 54 			-- minimum width of dark background box
-	local nickLenLimit 			= 32 			-- Nick Character Limit
-	local tempNick 				= ply:Nick() 	-- temporary nickname manipulation
-	local cntemp2 				= ""
-	local tempNickEC 			= ""
+	local height_offset       = 40
+	local marginFromBorder    = 16                         -- 16 pixels from the top and bottom border of the screen/game window
+	local innerBoxXY          = 3                          -- padding of the 2 shades of background
+	local bg_heightdepthcatch = 0                          -- if a catch or depth exist elongate the box
+	local minwid              = 50                         -- minimum width of dark background box
+	local tempNick            = ply:Nick()
+	local markup              = 0
+	local stripped_name       = ""
+	local stripped_name_width = 0
+	local team_col            = team.GetColor(ply:Team())
 
-	if EasyChat then -- i know the code looks REAL NASTY but it works with <c=987654> and <color=255,99,9> tags xd dont hate me
-		-- im not a string.professional so i got to create pron
-		local cntemp1 = string.split(string.replace(tempNick,">","<"),"<") -- this is prongarf
-		cntemp2 = ""
-		for k,v in pairs(cntemp1) do -- make all colors into COLOR=R,G,B
-			if string.find(v,"c=") then 
-				r,g,b = tonumber("0x" .. string.sub(v,3,4)),tonumber("0x" .. string.sub(v,5,6)),tonumber("0x" .. string.sub(v,7,8)) -- replace hexers
-				v = "COLOR=" .. r .. "," .. g .. "," .. b
-			elseif(string.find(v,"color=")) then
-				v = "COLOR=" .. string.sub(v,7)
-			else
-				tempNickEC = tempNickEC .. v -- create nickname in the meantime
-			end
-			cntemp2 = cntemp2 .. v .. "\n"
-		end
+	if EasyChat then 
+		markup = ec_markup.AdvancedParse(tempNick, {
+			nick = true,
+			default_color = team_col,
+			default_font = "ChatFont",
+			default_shadow_font = "ChatFont",
+		}) 
+		stripped_name_width = markup:GetWidth()
+		stripped_name = markup:GetText()
 	end
-	
+
 	local depth = ""
 	if self:GetHook() and self:GetHook():WaterLevel() >= 1 then
-		depth =  "\nDepth: " .. tostring(math.Round((self:GetDepth()*2.54)/100*10)/10)
+		depth =  "\nDepth: " .. tostring(math.Round((self:GetDepth() * 2.54) / 100 * 10) / 10)
 		bg_heightdepthcatch = bg_heightdepthcatch + 10
 	end
 
@@ -81,52 +76,34 @@ function ENT:HUDPaint()
 		bg_heightdepthcatch = bg_heightdepthcatch + 10
 	end
 	
-	if UndecorateNick then -- might be useful? xd
-		tempNick = UndecorateNick(tempNick)
-	end
-	if #tempNick > nickLenLimit then
-		tempNick = string.Trim(string.sub(tempNick, 1, nickLenLimit)) .. "... "
-
-	end
-	if #tempNickEC > nickLenLimit then
-		tempNickEC = string.Trim(string.sub(tempNickEC, 1, nickLenLimit)) .. "... "
-
-	end
+	surface.SetFont("HudSelectionText")
+	local xh2,yh2 = surface.GetTextSize(catch) -- sometimes the "catch:" string is longer so to adjust that with the box size
+	local xh3,yh3 = surface.GetTextSize("Total Catch: " .. ply.fishingmod.catches) -- if someone ever gets "total catch: " > 1 * 10^9
+	
 	surface.SetFont("ChatFont")
 	local xhypo,yhypo = surface.GetTextSize(tempNick)
-	local ecx,ecy = surface.GetTextSize(tempNickEC)
+	
+	xy.y = math.Clamp(xy.y - height_offset, 120 + height_offset + marginFromBorder, ScrH() + height_offset - marginFromBorder - bg_heightdepthcatch)
 
-	xy.y = math.Clamp(xy.y-height_offset, 120+height_offset+marginFromBorder, ScrH()+height_offset-marginFromBorder-bg_heightdepthcatch) -- brain tumour but works fine dont touch
+	local bg_x, bg_width = xy.x - math.max(minwid, xhypo / 2, xh2 / 2) - 10 , (math.max(minwid, xhypo / 2 , xh2 / 2) + 10) * 2
+	local bg_y, bg_height = xy.y - 120 - height_offset , bg_heightdepthcatch + 50 * 2.4
+	local ecbg_x, ecbg_width = xy.x - math.max(minwid , stripped_name_width / 2 , xh2 / 2 , xh3 / 2) - 10 , (math.max(minwid , stripped_name_width / 2 , xh2 / 2 , xh3 / 2) + 10) * 2
 
-	local bg_x, bg_width = xy.x-math.max(minwid,xhypo/2)-10 , (math.max(minwid,xhypo/2)+10)*2
-	local bg_y,bg_height = xy.y-120-height_offset			, bg_heightdepthcatch+50*2.4
-	local ecbg_x, ecbg_width = xy.x-math.max(minwid,ecx/2)-10 , (math.max(minwid,ecy/2)+10)*2
+	surface.SetDrawColor(0, 0, 0, 144)
 
-	surface.SetDrawColor(0, 0, 0, 128)
-	surface.SetTextColor(255, 255, 255, 255)
 	if EasyChat then
-		surface.DrawRect(ecbg_x             , bg_y              , ecbg_width                  , bg_height                   )
-		surface.DrawRect(ecbg_x + innerBoxXY, bg_y + innerBoxXY , ecbg_width - (2*innerBoxXY) , bg_height - (2*innerBoxXY ) ) -- just design i guess
-		surface.SetFont("ChatFont") -- just in case
-		surface.SetTextPos(xy.x-(ecx/2), xy.y-115-height_offset) -- support colors ...
-		local col = { [1]=255, [2]=255,	[3]=255	}
-		for k,v in pairs(string.split(cntemp2,"\n")) do
-			if string.find(v,"COLOR=") then
-				col = string.split(string.sub(v,7),",")
-			else
-				surface.SetTextColor(col[1], col[2], col[3], 255)
-				surface.DrawText(v)
-			end
-		end
+		surface.DrawRect(ecbg_x , bg_y , ecbg_width , bg_height)
+		surface.DrawRect(ecbg_x + innerBoxXY, bg_y + innerBoxXY , ecbg_width - (2 * innerBoxXY) , bg_height - (2 * innerBoxXY))
+		markup:Draw(xy.x - (stripped_name_width / 2), xy.y - 112 - height_offset)
 	else
-		surface.DrawRect(bg_x             , bg_y              , bg_width                  , bg_height                   )
-		surface.DrawRect(bg_x + innerBoxXY, bg_y + innerBoxXY , bg_width - (2*innerBoxXY) , bg_height - (2*innerBoxXY ) ) -- just design i guess
-		draw.DrawText(tempNick, "ChatFont" ,xy.x, xy.y-115-height_offset, color_white, 1)
+		surface.DrawRect(bg_x , bg_y , bg_width , bg_height)
+		surface.DrawRect(bg_x + innerBoxXY, bg_y + innerBoxXY , bg_width - (2 * innerBoxXY) , bg_height - (2 * innerBoxXY) )
+		draw.DrawText(tempNick, "ChatFont" , xy.x , xy.y - 112 - height_offset, team_col, 1)
 	end
-	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, 100, 23, Color( 255, 255, 255, 100 ) )
-	draw.RoundedBox( 0, xy.x-50, xy.y-88-height_offset, ply.fishingmod.percent, 23, Color( 0, 255, 0, 150 ) )
-	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "HudSelectionText" ,xy.x, xy.y-85-height_offset, color_black, 1)
-	draw.DrawText("Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (ply.fishingmod.money or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength()*2.54)/100*10)/10) .. depth .. catch, "HudSelectionText", xy.x,xy.y-60-height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
+	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, 100, 23, Color(255, 255, 255, 100))
+	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, ply.fishingmod.percent, 23, Color(0, 255, 0, 150))
+	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "HudSelectionText" , xy.x, xy.y - 85 - height_offset, color_black, 1)
+	draw.DrawText("Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (ply.fishingmod.money or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength() * 2.54) / 100 * 10) / 10) .. depth .. catch, "HudSelectionText", xy.x, xy.y - 60 - height_offset, hooked_entity and Color(0,255,0,255) or color_white,1)
 end
 
 function ENT:Initialize()

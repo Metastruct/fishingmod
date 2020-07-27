@@ -67,18 +67,17 @@ end)
 hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
 	if ply:GetFishingRod() and not vgui.CursorVisible() then
-		if input.IsKeyDown(KEY_B) and (not input.LookupKeyBinding(KEY_B) or input.LookupKeyBinding(KEY_B) == "") then -- only open menu when the player has nothing bound to the key
-
+		if input.IsKeyDown(KEY_B) and (not input.LookupKeyBinding(KEY_B) or input.LookupKeyBinding(KEY_B) == "") then
 			local menu = fishingmod.UpgradeMenu
 			if ValidPanel(menu) and not menu:IsVisible() then
 				menu:SetVisible(true)
 				menu:MakePopup()
 			end
 		end	
-		if input.IsKeyDown(KEY_E) then -- majority of the people dont often rebind these
+		if input.IsKeyDown(KEY_E) then
 			RunConsoleCommand("fishing_mod_drop_bait")
 		end
-		if input.IsKeyDown(KEY_R) then -- majority of the people dont often rebind these
+		if input.IsKeyDown(KEY_R) then
 			RunConsoleCommand("fishing_mod_drop_catch")
 		end	
 	end

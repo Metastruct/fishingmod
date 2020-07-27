@@ -4,7 +4,8 @@ AddCSLuaFile("shared.lua")
 function ENT:Initialize()
 	self.is_ragdoll = true
 	self:SetModel("models/seagull.mdl")
-	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetCollisionBounds(Vector(-5, -5, -5), Vector(5, 5, 5)) 
+	self:PhysicsInit(SOLID_OBB) -- fix for hitboxes. there was no 5% change to hit because the vphys is buggy
 	self:StartMotionController()
 	self:PhysWake()
 	
