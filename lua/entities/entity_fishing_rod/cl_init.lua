@@ -85,10 +85,12 @@ function ENT:HUDPaint()
 		tempNick = UndecorateNick(tempNick)
 	end
 	if #tempNick > nickLenLimit then
-		tempNick = string.trim(string.sub(tempNick, 1, nickLenLimit)) .. "... "
+		tempNick = string.Trim(string.sub(tempNick, 1, nickLenLimit)) .. "... "
+
 	end
 	if #tempNickEC > nickLenLimit then
-		tempNickEC = string.trim(string.sub(tempNickEC, 1, nickLenLimit)) .. "... "
+		tempNickEC = string.Trim(string.sub(tempNickEC, 1, nickLenLimit)) .. "... "
+
 	end
 	surface.SetFont("ChatFont")
 	local xhypo,yhypo = surface.GetTextSize(tempNick)
