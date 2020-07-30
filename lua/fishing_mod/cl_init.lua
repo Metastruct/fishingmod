@@ -1,5 +1,7 @@
 fishingmod = fishingmod or {}
 
+local color_white = color_white or Color(255, 255, 255, 255)
+
 surface.CreateFont("fixed_Height_Font", {
 	font = "Verdana",
 	extended = false,
@@ -80,75 +82,31 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local entity = LocalPlayer():GetEyeTrace().Entity
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 	local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
-	local pad = 5
+	local sthx, sthy = 0, 0
+	xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
+	local pad = 3
 	if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 		local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
-		if data then
-			if data.ECText and EasyChat then
-				local ECLongest = 0
-				local ects = string.Split(string.Replace(data.ECText,"  "," "),"\n")
-				local mk = ""
-				for k, v in pairs(ects) do
-					mk = ec_markup.AdvancedParse(v,{
-						shadow_intensity = 3,
-						nick = true,
-						default_font = "fixed_Height_Font",
-						defalt_shadow_font = "fixed_Height_Font",
-						default_color = Color(255,255,255,255)
-					})
-					ECLongest = math.max(ECLongest, mk:GetWidth())
-				end
-				local sthx, sthy = ECLongest * 1.05, (mk:GetHeight() * #ects) * 1.1
-				surface.SetDrawColor(0, 0, 0, 144)
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
-				for k, v in pairs(ects) do
-					mk = ec_markup.AdvancedParse(v, {
-						shadow_intensity = 3,
-						nick = true,
-						default_font = "fixed_Height_Font",
-						defalt_shadow_font = "fixed_Height_Font",
-						default_color = Color(255, 255, 255, 255)
-					})
-					mk:Draw(xy.x - mk:GetWidth() / 2, xy.y - (#ects * mk:GetHeight()) + 23 + mk:GetHeight() * k )
-				end
-			elseif(data.text) then
-				local text_ = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
-				surface.SetFont("fixed_Height_Font")
-				surface.SetDrawColor(255, 255, 255, 255)
-				local sthx, sthy = surface.GetTextSize(data.text)
-				local sthx, sthy = sthx + 8, sthy + 8
-				surface.SetDrawColor(0, 0, 0, 144)
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
-				draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), Color( 255, 255, 255, 255), 1) -- \t key causes it to snap
-			end
+		if(data and data.text) then
+			local text_ = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
+			surface.SetFont("fixed_Height_Font")
+			surface.SetDrawColor(color_white.r, color_white.r, color_white.r, color_white.r)
+			sthx, sthy = surface.GetTextSize(data.text)
+			sthx, sthy = sthx + 8, sthy + 8
+			surface.SetDrawColor(0, 0, 0, 144)
+			surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
+			surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
+			draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), color_white, 1) -- \t key causes it to snap
 		end
-		local data = fishingmod.InfoTable.Bait[entity:EntIndex()]
-		if(data) then
-			if(data.ECText and EasyChat) then
-				local ects = data.ECText
-				local mk = ec_markup.AdvancedParse(ects, {
-					shadow_intensity = 3,
-					nick = true,
-					default_font = "fixed_Height_Font",
-					defalt_shadow_font = "fixed_Height_Font",
-					default_color = Color(255, 255, 255, 255)
-				})
-				local sthx, sthy = mk:GetWidth() * 1.15 , mk:GetHeight() * 1.5
-				surface.SetDrawColor(0, 0, 0, 144)
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 + pad , sthx + pad * 2, sthy + 2 + pad * 1)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 + 4 + 3, sthx - 6 + pad * 2, sthy - 6 + 2 + pad * 1)
-				mk:Draw(xy.x - mk:GetWidth() / 2, xy.y - mk:GetHeight() + mk:GetHeight())
-			elseif(data.text) then
-				surface.SetFont("fixed_Height_Font")
-				surface.SetDrawColor(0, 0, 0, 144)
-				local sthx, sthy = surface.GetTextSize(data.text)
-				local sthx, sthy = sthx + 8, sthy - 1
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad + 16, sthx + pad * 2, sthy + pad * 1)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad + 16, sthx - 6 + pad * 2, sthy - 6 + pad * 1)
-				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2) + 16, Color(255, 255, 255, 255), 1)
-			end
+		data = fishingmod.InfoTable.Bait[entity:EntIndex()]
+		if(data and data.text) then
+			surface.SetFont("fixed_Height_Font")
+			surface.SetDrawColor(0, 0, 0, 144)
+			sthx, sthy = surface.GetTextSize(string.Replace(string.Replace(data.text,"\t",""),"\n",""))
+			sthx, sthy = sthx + 8, sthy + 8
+			surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad + 16, sthx + pad * 2, sthy + pad * 1)
+			surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 + 2 - pad + 16, sthx - 6 + pad * 2, sthy - 6 + pad * 1)
+			draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2) + 15, color_white, 1)
 		end
 	end
 end)

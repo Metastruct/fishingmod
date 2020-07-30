@@ -91,15 +91,15 @@ function ENT:HUDPaint()
 	if EasyChat then
 		surface.DrawRect(ecbg_x, bg_y, ecbg_width, bg_height)
 		surface.DrawRect(ecbg_x + innerBoxXY, bg_y + innerBoxXY, ecbg_width - (2 * innerBoxXY), bg_height - (2 * innerBoxXY))
-		markup:Draw(xy.x - (stripped_name_width / 2), xy.y - 112 - height_offset)
+		markup:Draw(xy.x - (stripped_name_width / 2), xy.y - 102 - height_offset - markup:GetHeight()/2)
 	else
 		surface.DrawRect(bg_x, bg_y, bg_width, bg_height)
 		surface.DrawRect(bg_x + innerBoxXY, bg_y + innerBoxXY, bg_width - (2 * innerBoxXY), bg_height - (2 * innerBoxXY) )
 		draw.DrawText(tempNick, "fixed_NameFont", xy.x, xy.y - 112 - height_offset, team_col, 1)
 	end
-	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, 100, 23, Color(255, 255, 255, 100))
+	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, 100, 23, Color(255, 255, 255, 55))
 	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, math.min(ply.fishingmod.percent, 100), 23, Color(0, 255, 0, 150))
-	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "fixed_Height_Font" , xy.x, xy.y - 85 - height_offset, color_black, 1)
+	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "fixed_Height_Font" , xy.x, xy.y - 84 - height_offset, color_black, 1)
 	draw.DrawText(textBelow, "fixed_Height_Font", xy.x, xy.y - 60 - height_offset, hooked_entity and Color(0, 255, 0, 255) or color_white,1)
 end
 

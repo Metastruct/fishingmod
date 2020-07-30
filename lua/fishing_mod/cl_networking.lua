@@ -36,12 +36,12 @@ local function UpdatePlayer(ply)
 	local exp = net.ReadDouble()
 	local catch = net.ReadDouble()
 	local money = net.ReadDouble()
-	local length = net.ReadDouble()
-	local reel_speed = net.ReadDouble()
-	local string_length = net.ReadDouble()
-	local force = net.ReadDouble()
+	local length = net.ReadInt(16)
+	local reel_speed = net.ReadInt(16)
+	local string_length = net.ReadInt(16)
+	local force = net.ReadInt(16)
 	local spawned = net.ReadBool()
-	ply.fishingmod=ply.fishingmod or {}
+	ply.fishingmod = ply.fishingmod or {}
 	if not ply.fishingmod then return end
 	ply.fishingmod.length = length
 	ply.fishingmod.reel_speed = reel_speed
@@ -93,7 +93,11 @@ net.Receive("Fishingmod:Catch", function()
 	local value = net.ReadInt(32)
 	
 	value = value == 0 and "????" or value
-
+	if(UndercorateNick) then
+		owner = UndercorateNick(owner)
+	elseif(EasyChat) then
+		owner = ec_markup.Parse(owner):GetText()
+	end
 	fishingmod.InfoTable.Catch[entity] = {
 		friendly = friendly,
 		caught = caught,
@@ -101,7 +105,7 @@ net.Receive("Fishingmod:Catch", function()
 		cooked = FriedToFriendly(fried),
 		value = value,
 	}
-	local text, ECText = Format([[This catch is called %s
+	local text = Format([[This catch is called %s
 and it is %s
 %s caught this
 {TIME}
@@ -111,17 +115,7 @@ by pressing reload for $%s.]],
 	FriedToFriendly(fried),
 	owner,
 	value
-	),Format([[This catch is called %s
-and it is %s
-%s <color=255,255,255>caught this
-{TIME}
-You can sell this catch 
-by pressing reload for $%s.]],
-		friendly,
-		FriedToFriendly(fried),
-		owner,
-		value
-		)
+	)
 	local time
 	if os.prettydate then
 		time = (os.prettydate(math.Round((os.time() - caught) / 60) * 60) or "") ..' ago'
@@ -129,9 +123,7 @@ by pressing reload for $%s.]],
 		time = string.gsub(os.date("on %A, the $%d of %B, %Y, at %I:%M%p", caught), "$(%d%d)", function(n) return n..STNDRD(tonumber(n)) end)
 	end
 	local text = string.gsub(text, "{TIME}", time)
-	local ECText = string.gsub(ECText, "{TIME}", time)
 	fishingmod.InfoTable.Catch[entity].text = text
-	fishingmod.InfoTable.Catch[entity].ECText = ECText
 end)
 
 net.Receive("Fishingmod:Bait", function() 
@@ -145,17 +137,18 @@ net.Receive("Fishingmod:Bait", function()
 	fishingmod.InfoTable.Bait[entity] = {
 		owner = owner,
 	}
-	local text, ECText = Format([[
+	local nameparse = ply:Nick()
+	if(UndercorateNick) then
+		nameparse = UndercorateNick(nameparse)
+	elseif(EasyChat) then
+		nameparse = ec_markup.Parse(nameparse):GetText()
+	end
+	local text = Format([[
 		This bait is owned by %s.
 	]],
-	ply:Nick()
-	),Format([[
-		This bait is owned by %s<color=255,255,255>.
-	]],
-	ply:Nick()
+	nameparse
 	)
 	fishingmod.InfoTable.Bait[entity].text = text
-	fishingmod.InfoTable.Bait[entity].ECText = ECText
 end)
 
 hook.Add("Tick", "Fishingmod.CleanInfo:Tick", function()
