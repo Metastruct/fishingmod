@@ -11,7 +11,7 @@ fishingmod.AddCatch{
 	levelrequired = 5,
 	bait = {"models/props_c17/metalPot002a.mdl"}
 }
-
+local color_white = color_white or Color(255, 255, 255, 255)
 local ENT = {}
 
 ENT.Type = "anim"
@@ -139,18 +139,53 @@ if CLIENT then
 		
 	function ENT:ShowHeatAdjuster()
 		local frame = vgui.Create("DFrame")
+		frame.Paint = function(s, x, y)
+			surface.SetDrawColor(0, 0, 0, 144)
+			surface.DrawRect(0, 0, x, y)
+			surface.DrawRect(3, 24, x-6, y-24-3)
+		end
+		frame:ShowCloseButton(false)
+		local closebutton = vgui.Create("DButton", frame)
+		local x, y = frame:GetSize()
+		closebutton.ButtonW = 60
+		closebutton:SetSize(closebutton.ButtonW, 18)
+		closebutton:SetText("Close")
+		closebutton:SetTextColor(color_white)
+		closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
+		closebutton.DoClick = function()
+			frame:Close()
+		end
+		closebutton.Paint = function(self, w, h)
+			if(closebutton:IsDown() ) then
+				surface.SetDrawColor(0, 0, 0, 72)
+			elseif(closebutton:IsHovered()) then
+				surface.SetDrawColor(155, 155, 155, 144)
+			else
+				surface.SetDrawColor(0, 0, 0, 144)
+			end
+			surface.DrawRect(0, 0, w, h)
+		end
+		function frame:OnSizeChanged(x, y)
+			closebutton:SetPos(math.max(x - closebutton.ButtonW - 3, 3), 3)
+			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
+		end
 		frame:SetSize(300, 80)
+		frame:GetTable().lblTitle:SetTextColor(color_white)
 		frame:Center()
+		local p = LocalPlayer()
+
 		frame:MakePopup()
 		frame:SetTitle("Stove Heat")
 		
 		local slider = vgui.Create("DNumSlider", frame)
-		slider:SetPos(5,27)
-		slider:SetWide(290)
+		slider:SetPos(15, 35)
+		slider:SetWide(285)
 		slider:SetMin(0)
 		slider:SetMax(100)
 		slider:SetText("Heat")
 		slider:SetConVar("fishingmod_stove_heat")
+		slider:GetTable().Label:SetTextColor(color_white)
+		slider:GetTable().Wang.m_Skin.colTextEntryText = color_white
 	end
 	
 	
