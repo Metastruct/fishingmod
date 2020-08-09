@@ -81,10 +81,13 @@ end)
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local entity = LocalPlayer():GetEyeTrace().Entity
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
+	if not IsValid(entity) then return end
+	
 	local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
 	local sthx, sthy = 0, 0
 	xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
 	local pad = 3
+		
 	if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 		local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
 		if(data and data.text) then
@@ -98,6 +101,7 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
 			draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), color_white, 1) -- \t key causes it to snap
 		end
+			
 		data = fishingmod.InfoTable.Bait[entity:EntIndex()]
 		if(data and data.text) then
 			surface.SetFont("fixed_Height_Font")
