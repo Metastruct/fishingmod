@@ -5,7 +5,6 @@ local FishingMod_spritePlus, a = Material("sprites/key_12")
 FishingMod_spriteMinus:SetInt("$flags", 2097152)
 FishingMod_spritePlus:SetInt("$flags", 2097152)
 local black = Color(0, 0, 0, 144)
-local selected = Color(255, 255, 255, 255)
 local grey = Color(160, 160, 160, 255)
 function PANEL:Init()
 
@@ -36,7 +35,7 @@ function PANEL:Init()
 		xpx, xpy = self:GetSize()
 		upgradesbutton:SetSize((xpx - 6) / 2, 22)
 	end
-	upgradesbutton:SetTextColor(selected)
+	upgradesbutton:SetTextColor(color_white)
 	upgradesbutton.DoClick = function()
 		baitsbutton:SetColor(grey)
 		upgradesbutton:SetColor(selected)
@@ -197,7 +196,7 @@ function PANEL:Init()
 	self:SetVisible(false)
 	local tol_tab = {}
 	local model_seen = {}
-	for key, data in pairs(fishingmod.BaitTable) do -- sorting by level required because it was semi-random before
+	for key, data in ipairs(fishingmod.BaitTable) do -- sorting by level required because it was semi-random before
 		if(not model_seen[data.models[1]]) then
 			model_seen[data.models[1]] = true -- the system is wack so i beat it back
 			tol_tab[#tol_tab+1] = {
@@ -211,7 +210,7 @@ function PANEL:Init()
 	table.SortByMember(tol_tab, "levelrequired", true)
 
 	-- Add baits
-	for key, data in pairs(tol_tab) do
+	for key, data in ipairs(tol_tab) do
 		local level = LocalPlayer().fishingmod.level
 		local icon = vgui.Create("Fishingmod:SpawnIcon")
 		icon:SetModel(data.model)
@@ -347,7 +346,7 @@ vgui.Register("Fishingmod:SpawnIcon", PANEL, "SpawnIcon")
 
 
 function fishingmod.UpdateSales()
-	for key, bait in pairs(fishingmod.BaitTable) do
+	for key, bait in ipairs(fishingmod.BaitTable) do
 		local levelrequired = fishingmod.CatchTable[key].levelrequired
 		local saleprice = math.Round(bait.price * bait.multiplier)
 		local sale = "This bait now cost " .. math.Round(bait.price * bait.multiplier) .. "!\nIts original price is " .. bait.price .. "."
