@@ -152,12 +152,12 @@ net.Receive("Fishingmod:Bait", function()
 end)
 
 hook.Add("Tick", "Fishingmod.CleanInfo:Tick", function()
-	for key, value in pairs(fishingmod.InfoTable.Catch) do
+	for key, value in ipairs(fishingmod.InfoTable.Catch) do
 		if not IsValid(Entity(key)) then
 			fishingmod.InfoTable.Catch[key] = nil
 		end
 	end
-	for key, value in pairs(fishingmod.InfoTable.Bait) do
+	for key, value in ipairs(fishingmod.InfoTable.Bait) do
 		if not IsValid(Entity(key)) then
 			fishingmod.InfoTable.Bait[key] = nil
 		end
