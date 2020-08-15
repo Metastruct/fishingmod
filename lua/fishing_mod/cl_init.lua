@@ -1,7 +1,5 @@
 fishingmod = fishingmod or {}
 
-local color_white = color_white or Color(255, 255, 255, 255)
-
 surface.CreateFont("fixed_Height_Font", {
 	font = "Verdana",
 	extended = false,
@@ -51,7 +49,7 @@ function fishingmod.RemoveCatch(name)
 	fishingmod.CatchTable[name] = nil
 end
 
-for key, name in pairs(file.Find("fishing_mod/catch/*.lua", "LUA")) do
+for key, name in ipairs(file.Find("fishing_mod/catch/*.lua", "LUA")) do
 	include("fishing_mod/catch/"..name)
 end
 
@@ -141,7 +139,7 @@ hook.Add("ShouldDrawLocalPlayer", "Fishingmod:ShouldDrawLocalPlayer", function(p
 end)
 
 timer.Create("Fishingmod:Tick", 2, 0, function()
-	for key, entity in pairs(ents.GetAll()) do
+	for key, entity in ipairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod scalable") then
 			entity:SetModelScale(entity:GetNWFloat("fishingmod scale", 1), 0)
 		end
