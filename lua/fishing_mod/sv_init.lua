@@ -27,7 +27,7 @@ for key, name in pairs(file.Find("lua/fishing_mod/catch/*.lua", "GAME")) do
 	AddCSLuaFile(path)
 end
 
-local function BreakWeld(ply,entity)
+local function BreakWeld(ply, entity)
 	if entity.shelf_stored then
 		constraint.RemoveAll(entity)
 		entity.weld_broke = true
@@ -53,37 +53,43 @@ hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
 		return false		
 	end
 end)
+fishingmod.lastBaitSpawn = CurTime()
 
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
-	local type = table.concat(arguments, " ")
-	local rod = ply:GetFishingRod()
-	if not rod then return end
+	if CurTime() >= fishingmod.lastBaitSpawn + 0.625 then
+		local type = table.concat(arguments, " ")
+		local rod = ply:GetFishingRod()
+		if not rod then return end
 
-	local hooky = rod:GetHook()
-	local data = fishingmod.BaitTable[type]
-	if not data then return end
+		local hooky = rod:GetHook()
+		local data = fishingmod.BaitTable[type]
+		if not data then return end
 
-	if fishingmod.ExpToLevel(ply.fishingmod.exp) < data.levelrequired then return end
-	if not fishingmod.Pay(ply, math.Round(data.price*data.multiplier)) then return end
-	
-	local bait = ents.Create("prop_physics")
-	bait.data = {}
-	bait.is_bait = true
-	bait.data.owner = ply
-	bait.data.ownerid = ply:UniqueID()
-	bait.data.friendly = type
-	bait:SetModel(table.Random(data.models))
-	bait:SetPos(util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 100, ply).HitPos)
-	bait:Spawn()
-	bait:GetPhysicsObject():SetMass(math.min(bait:GetPhysicsObject():GetMass(), 100))
+		if fishingmod.ExpToLevel(ply.fishingmod.exp) < data.levelrequired then return end
+		if not fishingmod.Pay(ply, math.Round(data.price * data.multiplier)) then return end
+		
+		local bait = ents.Create("prop_physics")
+		bait.data = {}
+		bait.is_bait = true
+		bait.data.owner = ply
+		bait.data.ownerid = ply:UniqueID()
+		bait.data.friendly = type
+		bait:SetModel(table.Random(data.models))
+		bait:SetPos(util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 100, ply).HitPos + Vector(0, 0, 32))
+		bait:Spawn()
+		if bait:IsValid() then
+			bait:GetPhysicsObject():SetMass(math.min(bait:GetPhysicsObject():GetMass(), 100))
+		end
 
-	hook.Run("PlayerSpawnedProp", ply, bait:GetModel(), bait)
+		hook.Run("PlayerSpawnedProp", ply, bait:GetModel(), bait)
 
-	if not util.IsValidProp(bait:GetModel():lower()) then bait:PhysicsInitBox(Vector(1,1,1)*-7,Vector(1,1,1)*7) end
-	
-	fishingmod.SetBaitInfo(bait)
-	
-	fishingmod.HookBait(ply, bait, hooky)
+		if not util.IsValidProp(bait:GetModel():lower()) then bait:PhysicsInitBox(Vector(1, 1, 1 ) * -7,Vector(1, 1, 1) * 7) end
+		
+		fishingmod.SetBaitInfo(bait)
+		hooky:SetPos(hooky:GetPos() + Vector(0, 0, (1 - util.QuickTrace(hooky:GetPos(), Vector(0, 0, -16) ).Fraction) * 16 ) )
+		fishingmod.HookBait(ply, bait, hooky)
+		fishingmod.lastBaitSpawn = CurTime()
+	end
 end)
 
 concommand.Add("fishing_mod_drop_catch", function(ply)
@@ -157,7 +163,7 @@ local function RouletteRandom(t, r_func)
         end
     end
     if max == 0 then return end
-    local choice = (r_func or math.random)()*max
+    local choice = (r_func or math.random)() * max
     local biggest, best = -1
     for pos, v in pairs(t) do
         local k = tonumber(pos)
@@ -188,7 +194,7 @@ local sizes = {
 function fishingmod.GenerateSize()
     local size_category, choice = RouletteRandom(sizes)
     if size_category then
-        return size_category.min+math.random()*(size_category.max-size_category.min), size_category.n, choice
+        return size_category.min + math.random() * (size_category.max - size_category.min), size_category.n, choice
     else
         return 1, "", choice
     end
@@ -199,7 +205,7 @@ function fishingmod.Sell(ply, entity, value)
 	if entity.PreSell and entity:PreSell(ply, value) == false then return false end
 	entity:Remove()
 	fishingmod.GiveMoney(ply, value or 0)
-	ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90,110))
+	ply:EmitSound("ambient/levels/labs/coinslot1.wav", 100, math.random(90, 110))
 	return true
 end
 

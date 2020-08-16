@@ -1,3 +1,4 @@
+
 fishingmod.AddCatch{
 	friendly = "Stove",
 	type = "fishing_mod_catch_stove",
@@ -33,9 +34,20 @@ function ENT:SetupDataTables()
 end
 
 if CLIENT then
+	if fishingmod then
+		if fishingmod.ColorTable then
+			uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
+			bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
+			sel = fishingmod.ColorTable.uiButtonSelected or fishingmod.ColorTable.uiButtonSelected
+			nosel = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
+			hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
+			pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
+		else
+			fishingmod.ColorTable = fishingmod.DefaultUIColors()
+		end
+	end
 
 	local sprite = Material( "sprites/splodesprite" )
-	
 	function ENT:Initialize()
 		self.emitter = ParticleEmitter(self:GetPos())
 		self.sound = CreateSound(self, "ambient/fire/fire_small_loop2.wav")
@@ -140,9 +152,21 @@ if CLIENT then
 	function ENT:ShowHeatAdjuster()
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
-			surface.SetDrawColor(0, 0, 0, 144)
+			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
 			surface.DrawRect(0, 0, x, y)
-			surface.DrawRect(3, 24, x-6, y-24-3)
+			surface.DrawRect(3, 24, x - 6, y - 24 - 3)
+			if fishingmod then
+				if fishingmod.ColorTable then
+					uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
+					bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
+					sel = fishingmod.ColorTable.uiButtonSelected or fishingmod.ColorTable.uiButtonSelected
+					nosel = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
+					hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
+					pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
+				else
+					fishingmod.ColorTable = fishingmod.DefaultUIColors()
+				end
+			end
 		end
 		frame:ShowCloseButton(false)
 		local closebutton = vgui.Create("DButton", frame)
@@ -150,18 +174,18 @@ if CLIENT then
 		closebutton.ButtonW = 60
 		closebutton:SetSize(closebutton.ButtonW, 18)
 		closebutton:SetText("Close")
-		closebutton:SetTextColor(color_white)
+		closebutton:SetTextColor(uiText)
 		closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
 		closebutton.DoClick = function()
 			frame:Close()
 		end
 		closebutton.Paint = function(self, w, h)
 			if(closebutton:IsDown() ) then
-				surface.SetDrawColor(0, 0, 0, 72)
+				surface.SetDrawColor(nosel.r, nosel.g, nosel.b, nosel.a)
 			elseif(closebutton:IsHovered()) then
-				surface.SetDrawColor(155, 155, 155, 144)
+				surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
 			else
-				surface.SetDrawColor(0, 0, 0, 144)
+				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
 			end
 			surface.DrawRect(0, 0, w, h)
 		end
@@ -170,7 +194,7 @@ if CLIENT then
 			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
 		end
 		frame:SetSize(300, 80)
-		frame:GetTable().lblTitle:SetTextColor(color_white)
+		frame:GetTable().lblTitle:SetTextColor(uiText)
 		frame:Center()
 		local p = LocalPlayer()
 
@@ -184,8 +208,8 @@ if CLIENT then
 		slider:SetMax(100)
 		slider:SetText("Heat")
 		slider:SetConVar("fishingmod_stove_heat")
-		slider:GetTable().Label:SetTextColor(color_white)
-		slider:GetTable().Wang.m_Skin.colTextEntryText = color_white
+		slider:GetTable().Label:SetTextColor(uiText)
+		slider:GetTable().Wang.m_Skin.colTextEntryText = uiText
 	end
 	
 	
@@ -234,7 +258,7 @@ else
 		
 		self.smoothheat = self.smoothheat + ((heat - self.smoothheat) / 1000)
 		
-		self.dt.heat = self.smoothheat * -1 +100
+		self.dt.heat = self.smoothheat * -1 + 100
 		
 		for key, data in pairs(self.storage) do
 		
@@ -251,7 +275,7 @@ else
 				if catch:IsOnFire() then catch.data.fried = 1000 end
 								
 				catch.data.fried = catch.data.fried or 0
-				catch.data.fried = math.Clamp(catch.data.fried + (catch.data.fried*self.dt.heat/700), 1, 1000)
+				catch.data.fried = math.Clamp(catch.data.fried + (catch.data.fried * self.dt.heat / 700), 1, 1000)
 				
 --[[ 				if (lastprint or 0) < CurTime() then 
 					print(catch.data.fried, self.smoothheat)
@@ -274,7 +298,7 @@ else
 	
 		if (self.next_search or 0) < CurTime() then
 		
-			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() ) ) do
+			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + Vector(self:OBBMaxs().x, self:OBBMaxs().y, self:OBBMaxs().z * 1.2 ) ) ) do
 				if entity.data and entity ~= self and not entity.shelf_stored and entity:GetClass() ~= "fishing_mod_catch_stove" and not entity.is_bait then
 					self:AddItem( entity )
 				end

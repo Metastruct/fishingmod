@@ -289,7 +289,7 @@ function fishingmod.GiveMoney(ply, amount)
 end
 
 function fishingmod.Pay(ply, money)
-	if ply.fishingmod.money > money then
+	if ply.fishingmod.money >= money then
 		fishingmod.TakeMoney(ply, money)
 		return true
 	end

@@ -39,6 +39,7 @@ surface.CreateFont("fixed_NameFont", {
 
 include("cl_networking.lua")
 include("cl_shop_menu.lua")
+fishingmod.ColorTable = fishingmod.LoadUIColors()
 
 fishingmod.CatchTable = {}
 
@@ -65,11 +66,11 @@ hook.Add("InitPostEntity", "Init Fish Mod", function()
 			local view = {}
 			view.origin = ply:GetShootPos() + 
 				(ply:EyeAngles():Right() * 50) + 
-				(Angle(0,ply:EyeAngles().y,0):Forward() * -150) + 
-				(Angle(0,0,ply:EyeAngles().z):Up() * 20)
+				(Angle(0, ply:EyeAngles().y, 0):Forward() * -150) + 
+				(Angle(0, 0, ply:EyeAngles().z):Up() * 20)
 			
 			
-			view.angles = Angle(math.Clamp(ply:EyeAngles().p-30, -70, 15), ply:EyeAngles().y, 0)		
+			view.angles = Angle(math.Clamp(ply:EyeAngles().p -30, -70, 15), ply:EyeAngles().y, 0)		
 			
 			return view
 		end
@@ -77,48 +78,70 @@ hook.Add("InitPostEntity", "Init Fish Mod", function()
 	end
 
 end)
-
+local uiText = fishingmod.DefaultUIColors().uiText
+local bg = fishingmod.DefaultUIColors().uiBackground
+local crosshair = fishingmod.DefaultUIColors().crossHairColor
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local entity = LocalPlayer():GetEyeTrace().Entity
+	if fishingmod.ColorTable then 
+		crosshair = fishingmod.ColorTable.crossHairColor or fishingmod.DefaultUIColors().crossHairColor
+		uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
+		bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
+	end
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
-	if not IsValid(entity) then return end
-	
-	local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
-	local sthx, sthy = 0, 0
-	xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
-	local pad = 3
-		
-	if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
-		local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
-		if(data and data.text) then
-			local text_ = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
-			surface.SetFont("fixed_Height_Font")
-			surface.SetDrawColor(color_white.r, color_white.r, color_white.r, color_white.r)
-			sthx, sthy = surface.GetTextSize(data.text)
-			sthx, sthy = sthx + 8, sthy + 8
-			surface.SetDrawColor(0, 0, 0, 144)
-			surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
-			surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
-			draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), color_white, 1) -- \t key causes it to snap
-		end
+	if IsValid(entity) then
+		local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
+		local sthx, sthy = 0, 0
+		xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
+		local pad = 3
 			
-		data = fishingmod.InfoTable.Bait[entity:EntIndex()]
-		if(data and data.text) then
-			surface.SetFont("fixed_Height_Font")
-			surface.SetDrawColor(0, 0, 0, 144)
-			sthx, sthy = surface.GetTextSize(string.Replace(string.Replace(data.text,"\t",""),"\n",""))
-			sthx, sthy = sthx + 8, sthy + 8
-			surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad + 16, sthx + pad * 2, sthy + pad * 1)
-			surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 + 2 - pad + 16, sthx - 6 + pad * 2, sthy - 6 + pad * 1)
-			draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2) + 15, color_white, 1)
+		if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
+			local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
+			if(data and data.text) then
+				local text_ = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
+				surface.SetFont("fixed_Height_Font")
+				surface.SetDrawColor(uiText.r, uiText.g, uiText.b, uiText.a)
+				sthx, sthy = surface.GetTextSize(data.text)
+				sthx, sthy = sthx + 8, sthy + 8
+				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
+				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
+				draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), uiText, 1) -- \t key causes it to snap
+			end
+				
+			data = fishingmod.InfoTable.Bait[entity:EntIndex()]
+			if(data and data.text) then
+				surface.SetFont("fixed_Height_Font")
+				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+				sthx, sthy = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
+				sthx, sthy = sthx + 8, sthy + 8
+				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad + 16, sthx + pad * 2, sthy + pad * 1)
+				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 + 2 - pad + 16, sthx - 6 + pad * 2, sthy - 6 + pad * 1)
+				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2) + 15, uiText, 1)
+			end
+		end
+	end
+	local chpos = LocalPlayer():GetEyeTraceNoCursor().HitPos
+	if IsValid(LocalPlayer():GetActiveWeapon()) then
+		if LocalPlayer():GetActiveWeapon():GetClass() == "weapon_fishing_rod" then
+			surface.SetDrawColor(crosshair.r, crosshair.g, crosshair.b, crosshair.a)
+
+			surface.DrawRect( chpos:ToScreen().x, chpos:ToScreen().y+5, 1, 10)
+			surface.DrawRect( chpos:ToScreen().x, chpos:ToScreen().y-14, 1, 10)
+
+			surface.DrawRect( chpos:ToScreen().x+5, chpos:ToScreen().y, 10, 1 )
+			surface.DrawRect( chpos:ToScreen().x-14, chpos:ToScreen().y, 10, 1 )
+
+			--surface.DrawRect( chpos:ToScreen().x-boxSizeVar, chpos:ToScreen().y-boxSizeVar, boxSizeVar*2, boxSizeVar*2 )
+			--draw.RoundedBox(boxSizeVar, chpos:ToScreen().x-boxSizeVar, chpos:ToScreen().y-boxSizeVar, boxSizeVar*2, boxSizeVar*2, crosshair)
 		end
 	end
 end)
-
+local getbind = input.LookupKeyBinding
 hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
 	if ply:GetFishingRod() and not vgui.CursorVisible() then
-		if input.IsKeyDown(KEY_B) and (not input.LookupKeyBinding(KEY_B) or input.LookupKeyBinding(KEY_B) == "") then
+		if input.IsKeyDown(KEY_B) and (not getbind(KEY_B) or getbind(KEY_B) == "+zoom" or getbind(KEY_B) == "") then
 			local menu = fishingmod.UpgradeMenu
 			if ValidPanel(menu) and not menu:IsVisible() then
 				menu:SetVisible(true)
@@ -147,12 +170,12 @@ timer.Create("Fishingmod:Tick", 2, 0, function()
 		end
 		local size = entity:GetNWFloat("fishingmod size")
 		if entity:GetNWBool("in fishing shelf") and size ~= 0 then
-			entity:SetModelScale(size/entity:BoundingRadius(), 0)
+			entity:SetModelScale(size / entity:BoundingRadius(), 0)
 		end
 	end
 end)
 
-hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
+hook.Add("CalcView", "Fishingmod:CalcView", function(ply, offset, angles, fov)
 	if GetViewEntity() ~= ply then return end
 	local fishingRod = ply:GetFishingRod()
 	if fishingRod and not ply:InVehicle() then
@@ -164,8 +187,8 @@ hook.Add("CalcView", "Fishingmod:CalcView", function(ply,offset,angles,fov)
 
 		local startview = ply:GetShootPos() + 
 			(ply:EyeAngles():Right() * 70) + 
-			(Angle(0,ply:EyeAngles().y,0):Forward() * -120 ) +
-			(Angle(0,0,ply:EyeAngles().r):Up() * -( 10 + ( 180 - 256 * (math.min(view.angles.p, 150 - 90) + 90) / 180) ))
+			(Angle(0, ply:EyeAngles().y, 0):Forward() * -120 ) +
+			(Angle(0, 0, ply:EyeAngles().r):Up() * -( 10 + ( 180 - 256 * (math.min(view.angles.p, 150 - 90) + 90) / 180) ))
 
 
 		-- Trace back from the original eye position, so we don't clip through walls/objects

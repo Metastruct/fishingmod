@@ -58,11 +58,16 @@ function ENT:SetLength(length)
 	if not IsValid(self.physical_rope) then return end
 	self.physical_rope:Fire("SetSpringLength", length/2+10)
 	local hookent = self:GetHook()
-	if IsValid(hookent) then
-		hookent.physical_rope:Fire("SetSpringLength", length/2+10)
+	if IsValid(hookent) and hookent.physical_rope then
+		if IsValid(hookent.physical_rope) then
+			hookent.physical_rope:Fire("SetSpringLength", length/2+10)
+		end
 	end
 	self.dt.length = length
 end
+
+function ENT:CanTool() return false end
+function ENT:CanProperty() return false end
 
 function ENT:AssignPlayer(ply)
 	self:SetOwner(ply)
@@ -77,6 +82,8 @@ function ENT:AssignPlayer(ply)
 	bobber:SetOwner(ply)
 	bobber:SetPos(position)
 	bobber:Spawn()
+	function bobber:CanTool() return false end
+	function bobber:CanProperty() return false end
 	hook.Run("PlayerSpawnedSENT", ply, bobber)
 	if bobber.CPPISetOwner then bobber:CPPISetOwner(ply) end
 	
@@ -87,6 +94,8 @@ function ENT:AssignPlayer(ply)
 	fish_hook:SetOwner(ply)
 	fish_hook:SetPos(position)
 	fish_hook:Spawn()
+	function fish_hook:CanTool() return false end
+	function fish_hook:CanProperty() return false end
 	hook.Run("PlayerSpawnedSENT", ply, fish_hook)
 	if fish_hook.CPPISetOwner then fish_hook:CPPISetOwner(ply) end
 	
@@ -119,5 +128,7 @@ function ENT:OnRemove()
 	SafeRemoveEntity(self.dt.attach)
 	SafeRemoveEntity(self.physical_rope)
 	SafeRemoveEntity(self.avatar)
-	SafeRemoveEntity(self.dt.attach.dt.hook)
+	if self.dt.attach.dt then
+		SafeRemoveEntity(self.dt.attach.dt.hook)
+	end
 end

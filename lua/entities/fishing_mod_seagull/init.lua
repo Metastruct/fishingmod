@@ -116,7 +116,8 @@ function ENT:OnTakeDamage(data)
 	local inflictor = data:GetInflictor()
 	local attacker = data:GetAttacker()
 	
-	if data:IsBulletDamage() and attacker:IsPlayer() then
+	if not self.spawnedRagdoll and data:IsBulletDamage() and attacker:IsPlayer() then
+		self.spawnedRagdoll = true
 		local ragdoll = ents.Create("prop_ragdoll")
 		ragdoll:SetModel(self:GetModel())
 		ragdoll:SetPos(self:GetPos())
