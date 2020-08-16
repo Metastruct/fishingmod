@@ -105,15 +105,13 @@ local masterX, masterY = 354, 224
 local PANEL = {} -- Main panel
 
 function PANEL:Init()
-	if fishingmod then
-		if fishingmod.ColorTable then
-			bg = fishingmod.ColorTable.uiBackground or bg
-			sel = fishingmod.ColorTable.uiText or sel
-			nosel = fishingmod.ColorTable.uiTextBg or nosel
-			hov = fishingmod.ColorTable.uiButtonHovered or hov
-			nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
-			pres = fishingmod.ColorTable.uiButtonPressed or pres
-		end
+	if fishingmod.ColorTable then
+		bg = fishingmod.ColorTable.uiBackground or bg
+		sel = fishingmod.ColorTable.uiText or sel
+		nosel = fishingmod.ColorTable.uiTextBg or nosel
+		hov = fishingmod.ColorTable.uiButtonHovered or hov
+		nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
+		pres = fishingmod.ColorTable.uiButtonPressed or pres
 	end
 	self:MakePopup()
 	self:SetDeleteOnClose(false)
