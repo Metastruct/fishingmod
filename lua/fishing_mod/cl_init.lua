@@ -132,16 +132,19 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			surface.DrawRect( chpos:ToScreen().x+5, chpos:ToScreen().y, 10, 1 )
 			surface.DrawRect( chpos:ToScreen().x-14, chpos:ToScreen().y, 10, 1 )
 
-			--surface.DrawRect( chpos:ToScreen().x-boxSizeVar, chpos:ToScreen().y-boxSizeVar, boxSizeVar*2, boxSizeVar*2 )
-			--draw.RoundedBox(boxSizeVar, chpos:ToScreen().x-boxSizeVar, chpos:ToScreen().y-boxSizeVar, boxSizeVar*2, boxSizeVar*2, crosshair)
 		end
 	end
 end)
-local getbind = input.LookupKeyBinding
+local force_b = 1
+concommand.Add("fishing_mod_b_opens_always", function(ply, cmd, args)
+	if isnumber(tonumber(args[1])) then
+		force_b = math.Clamp(math.Round(args[1]),0,1)
+	end
+end)
 hook.Add("Think", "Fishingmod.Keys:Think", function()
 	local ply = LocalPlayer()
 	if ply:GetFishingRod() and not vgui.CursorVisible() then
-		if input.IsKeyDown(KEY_B) and (not getbind(KEY_B) or getbind(KEY_B) == "+zoom" or getbind(KEY_B) == "") then
+		if input.IsKeyDown(KEY_B) and force_b == 1 then
 			local menu = fishingmod.UpgradeMenu
 			if ValidPanel(menu) and not menu:IsVisible() then
 				menu:SetVisible(true)

@@ -94,12 +94,12 @@ local FishingMod_spritePlus, a = Material("sprites/key_12")
 FishingMod_spriteMinus:SetInt("$flags", 2097152)
 FishingMod_spritePlus:SetInt("$flags", 2097152)
 
-local bg = fishingmod.ColorTable.uiBackground
-local sel = fishingmod.ColorTable.uiText
-local nosel = fishingmod.ColorTable.uiTextBg
-local hov = fishingmod.ColorTable.uiButtonHovered
-local nopres = fishingmod.ColorTable.uiButtonDeSelected
-local pres = fishingmod.ColorTable.uiButtonPressed
+local bg = fishingmod.DefaultUIColors().uiBackground
+local sel = fishingmod.DefaultUIColors().uiText
+local nosel = fishingmod.DefaultUIColors().uiTextBg
+local hov = fishingmod.DefaultUIColors().uiButtonHovered
+local nopres = fishingmod.DefaultUIColors().uiButtonDeSelected
+local pres = fishingmod.DefaultUIColors().uiButtonPressed
 local masterX, masterY = 354, 224
 
 local PANEL = {} -- Main panel
@@ -107,12 +107,12 @@ local PANEL = {} -- Main panel
 function PANEL:Init()
 	if fishingmod then
 		if fishingmod.ColorTable then
-			bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
-			sel = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-			nosel = fishingmod.ColorTable.uiTextBg or fishingmod.DefaultUIColors().uiTextBg
-			hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
-			nopres = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
-			pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
+			bg = fishingmod.ColorTable.uiBackground or bg
+			sel = fishingmod.ColorTable.uiText or sel
+			nosel = fishingmod.ColorTable.uiTextBg or nosel
+			hov = fishingmod.ColorTable.uiButtonHovered or hov
+			nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
+			pres = fishingmod.ColorTable.uiButtonPressed or pres
 		end
 	end
 	self:MakePopup()
@@ -434,17 +434,15 @@ function PANEL:Init()
 	function self:Think()
 		x, y = self:GetParent():GetSize()
 		self:SetSize(x - 6, y - 3 - 46)
-		if fishingmod then
-			if fishingmod.ColorTable then
-				bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
-				sel = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-				nosel = fishingmod.ColorTable.uiTextBg or fishingmod.DefaultUIColors().uiTextBg
-				hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
-				nopres = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
-				pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
-			else
-				fishingmod.ColorTable = fishingmod.DefaultUIColors()
-			end
+		if fishingmod.ColorTable then
+			bg = fishingmod.ColorTable.uiBackground or bg
+			sel = fishingmod.ColorTable.uiText or sel
+			nosel = fishingmod.ColorTable.uiTextBg or nosel
+			hov = fishingmod.ColorTable.uiButtonHovered or hov
+			nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
+			pres = fishingmod.ColorTable.uiButtonPressed or pres
+		else
+			fishingmod.ColorTable = fishingmod.DefaultUIColors()
 		end
 	end
 

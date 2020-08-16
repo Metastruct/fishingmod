@@ -199,6 +199,9 @@ function ENT:UnHook()
 	end
 end
 
+function ENT:CanTool() return false end
+function ENT:CanProperty() return false end
+
 function ENT:OnRemove()
 	if IsValid(self.dt.hooked) then
 		self.dt.hooked:SetParent()

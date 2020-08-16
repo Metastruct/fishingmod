@@ -82,8 +82,6 @@ function ENT:AssignPlayer(ply)
 	bobber:SetOwner(ply)
 	bobber:SetPos(position)
 	bobber:Spawn()
-	function bobber:CanTool() return false end
-	function bobber:CanProperty() return false end
 	hook.Run("PlayerSpawnedSENT", ply, bobber)
 	if bobber.CPPISetOwner then bobber:CPPISetOwner(ply) end
 	

@@ -5,12 +5,12 @@ include("shared.lua")
 
 fishingmod.ColorTable = fishingmod.LoadUIColors()
 
-local uiText = fishingmod.ColorTable.uiText
-local uiTextCaught = fishingmod.ColorTable.uiTextCaught
-local uiBackground = fishingmod.ColorTable.uiBackground
-local xpBarForeGr = fishingmod.ColorTable.xpBarForeGr
-local xpBarBackGr = fishingmod.ColorTable.xpBarBackGr
-local xpBarText = fishingmod.ColorTable.xpBarText
+local uiText = fishingmod.DefaultUIColors().uiText
+local uiTextCaught = fishingmod.DefaultUIColors().uiTextCaught
+local uiBackground = fishingmod.DefaultUIColors().uiBackground
+local xpBarForeGr = fishingmod.DefaultUIColors().xpBarForeGr
+local xpBarBackGr = fishingmod.DefaultUIColors().xpBarBackGr
+local xpBarText = fishingmod.DefaultUIColors().xpBarText
 
 local rope_material = Material("cable/rope")
 
@@ -44,16 +44,13 @@ function ENT:RenderScene()
 end
 
 function ENT:HUDPaint()
-
-	if fishingmod then
-		if fishingmod.ColorTable then
-			uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-			uiTextCaught = fishingmod.ColorTable.uiTextCaught or fishingmod.DefaultUIColors().uiTextCaught
-			uiBackground = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
-			xpBarForeGr = fishingmod.ColorTable.xpBarForeGr or fishingmod.DefaultUIColors().xpBarForeGr
-			xpBarBackGr = fishingmod.ColorTable.xpBarBackGr or fishingmod.DefaultUIColors().xpBarBackGr
-			xpBarText = fishingmod.ColorTable.xpBarText or fishingmod.DefaultUIColors().xpBarText
-		end
+	if fishingmod.ColorTable then
+		uiText = fishingmod.ColorTable.uiText or uiText
+		uiTextCaught = fishingmod.ColorTable.uiTextCaught or uiTextCaught
+		uiBackground = fishingmod.ColorTable.uiBackground or uiBackground
+		xpBarForeGr = fishingmod.ColorTable.xpBarForeGr or xpBarForeGr
+		xpBarBackGr = fishingmod.ColorTable.xpBarBackGr or xpBarBackGr
+		xpBarText = fishingmod.ColorTable.xpBarText or xpBarText
 	end
 
 	local ply = self:GetPlayer()

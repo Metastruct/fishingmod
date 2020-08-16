@@ -34,19 +34,6 @@ function ENT:SetupDataTables()
 end
 
 if CLIENT then
-	if fishingmod then
-		if fishingmod.ColorTable then
-			uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-			bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
-			sel = fishingmod.ColorTable.uiButtonSelected or fishingmod.ColorTable.uiButtonSelected
-			nosel = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
-			hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
-			pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
-		else
-			fishingmod.ColorTable = fishingmod.DefaultUIColors()
-		end
-	end
-
 	local sprite = Material( "sprites/splodesprite" )
 	function ENT:Initialize()
 		self.emitter = ParticleEmitter(self:GetPos())
@@ -148,25 +135,28 @@ if CLIENT then
 			render.DrawSprite( self:GetPos() + ( self:GetUp() * v.position.z ) + ( self:GetRight() * v.position.x ) + ( self:GetForward() * v.position.y ), 1, 1, Color( 255, 255, 255, 255 ) )
 		end
 	end
-		
+
 	function ENT:ShowHeatAdjuster()
+		local bg = fishingmod.DefaultUIColors().uiBackground
+		local nosel = fishingmod.DefaultUIColors().uiButtonDeSelected
+		local sel = fishingmod.DefaultUIColors().uiButtonSelected
+		local hov = fishingmod.DefaultUIColors().uiButtonHovered
+		local uiText = fishingmod.DefaultUIColors().uiText
+		if fishingmod.ColorTable then
+			bg = fishingmod.ColorTable.uiBackground or bg
+			nosel = fishingmod.ColorTable.uiButtonDeSelected or nosel
+			sel = fishingmod.ColorTable.uiButtonSelected or sel
+			hov = fishingmod.ColorTable.uiButtonHovered or hov
+			uiText = fishingmod.ColorTable.uiText or uiText
+		else
+			fishingmod.ColorTable = fishingmod.DefaultUIColors()
+		end
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
+			
 			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
 			surface.DrawRect(0, 0, x, y)
 			surface.DrawRect(3, 24, x - 6, y - 24 - 3)
-			if fishingmod then
-				if fishingmod.ColorTable then
-					uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-					bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
-					sel = fishingmod.ColorTable.uiButtonSelected or fishingmod.ColorTable.uiButtonSelected
-					nosel = fishingmod.ColorTable.uiButtonDeSelected or fishingmod.DefaultUIColors().uiButtonDeSelected
-					hov = fishingmod.ColorTable.uiButtonHovered or fishingmod.DefaultUIColors().uiButtonHovered
-					pres = fishingmod.ColorTable.uiButtonPressed or fishingmod.DefaultUIColors().uiButtonPressed
-				else
-					fishingmod.ColorTable = fishingmod.DefaultUIColors()
-				end
-			end
 		end
 		frame:ShowCloseButton(false)
 		local closebutton = vgui.Create("DButton", frame)
@@ -180,6 +170,7 @@ if CLIENT then
 			frame:Close()
 		end
 		closebutton.Paint = function(self, w, h)
+			
 			if(closebutton:IsDown() ) then
 				surface.SetDrawColor(nosel.r, nosel.g, nosel.b, nosel.a)
 			elseif(closebutton:IsHovered()) then
@@ -194,7 +185,7 @@ if CLIENT then
 			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
 		end
 		frame:SetSize(300, 80)
-		frame:GetTable().lblTitle:SetTextColor(uiText)
+		frame.lblTitle:SetTextColor(uiText)
 		frame:Center()
 		local p = LocalPlayer()
 
@@ -208,8 +199,8 @@ if CLIENT then
 		slider:SetMax(100)
 		slider:SetText("Heat")
 		slider:SetConVar("fishingmod_stove_heat")
-		slider:GetTable().Label:SetTextColor(uiText)
-		slider:GetTable().Wang.m_Skin.colTextEntryText = uiText
+		slider.Label:SetTextColor(uiText)
+		slider.Wang.m_Skin.colTextEntryText = uiText
 	end
 	
 	
