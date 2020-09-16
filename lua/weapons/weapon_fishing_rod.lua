@@ -59,11 +59,9 @@ if CLIENT then
 	SWEP.DrawCrosshair	= false
 	--SWEP.DrawCrosshair = true
 	function SWEP:Initialize()
-		if not self.hasMentioned and not game.SinglePlayer() then
-			if self:GetOwner() == LocalPlayer() then
-				chat.AddText(Color(0, 255, 0), "[Fishing Mod]", Color(255, 255, 255), ": Press 'B' by default to open the fishing mod menu. \nIf you bound 'B' to something else: bind <key> fishing_mod_menu.")
-				self.hasMentioned = true
-			end
+		if not self.hasMentioned and not game.SinglePlayer() and self:GetOwner() == LocalPlayer() then
+			chat.AddText(Color(0, 255, 0), "[Fishing Mod]", Color(255, 255, 255), ": Press 'B' by default to open the fishing mod menu. \nIf you bound 'B' to something else: bind <key> fishing_mod_menu.")
+			self.hasMentioned = true
 		end
 	end
 else

@@ -47,34 +47,34 @@ function fishingmod.SaveUIColors()
         file.CreateDir(fishingmodDataPath)
 	end
 	local newData = {}
-	local t = fishingmod.DefaultUIColors()
+	local returnData = fishingmod.DefaultUIColors()
 	if fishingmod.ColorTable then
 		for k, v in pairs(fishingmod.ColorTable) do
 			newData[k] = tostring(v.r) .. " " .. tostring(v.g) .. " " .. tostring(v.b) .. " ".. tostring(v.a)
 		end
-		table.Merge(t, newData)
+		table.Merge(returnData, newData)
 	end
-	file.Write(fishingmodDataPath .. fishingmodDataFileName, util.TableToJSON(t, false))
+	file.Write(fishingmodDataPath .. fishingmodDataFileName, util.TableToJSON(returnData, false))
 	newData = nil
 end
 function fishingmod.LoadUIColors()
 	local tempCol = Color(0, 0, 0, 72)
 	if file.Exists(fishingmodDataPath, "DATA") then
 		if file.Exists(fishingmodDataPath .. fishingmodDataFileName, "DATA") then
-			local t_ = util.JSONToTable(file.Read(fishingmodDataPath .. fishingmodDataFileName, "DATA"))
-			local t = fishingmod.DefaultUIColors()
-			if t_ then
-				for k, v in pairs(t_) do
+			local tempData = util.JSONToTable(file.Read(fishingmodDataPath .. fishingmodDataFileName, "DATA"))
+			local returnData = fishingmod.DefaultUIColors()
+			if tempData then
+				for k, v in pairs(tempData) do
 					if k and v then
 						if #tostring(k) < 4 then return end
 						if #tostring(v) < 4 then return end
-						t_[k] = string.ToColor(v) or tempCol
+						tempData[k] = string.ToColor(v) or tempCol
 					end
 				end
-				table.Merge(t, t_)
+				table.Merge(returnData, tempData)
 			end
-			t_ = {}
-			return t
+			tempData = {}
+			return returnData
 		else
 			return fishingmod.DefaultUIColors() -- return defaults if the file does not exist
 		end
@@ -94,10 +94,10 @@ local FishingMod_spritePlus, a = Material("sprites/key_12")
 FishingMod_spriteMinus:SetInt("$flags", 2097152)
 FishingMod_spritePlus:SetInt("$flags", 2097152)
 
-local bg = fishingmod.DefaultUIColors().uiBackground
-local sel = fishingmod.DefaultUIColors().uiText
-local nosel = fishingmod.DefaultUIColors().uiTextBg
-local hov = fishingmod.DefaultUIColors().uiButtonHovered
+local backGround = fishingmod.DefaultUIColors().uiBackground
+local uiText = fishingmod.DefaultUIColors().uiText
+local buttonNotSelected = fishingmod.DefaultUIColors().uiTextBg
+local uiButtonHovered = fishingmod.DefaultUIColors().uiButtonHovered
 local nopres = fishingmod.DefaultUIColors().uiButtonDeSelected
 local pres = fishingmod.DefaultUIColors().uiButtonPressed
 local masterX, masterY = 354, 224
@@ -106,10 +106,10 @@ local PANEL = {} -- Main panel
 
 function PANEL:Init()
 	if fishingmod.ColorTable then
-		bg = fishingmod.ColorTable.uiBackground or bg
-		sel = fishingmod.ColorTable.uiText or sel
-		nosel = fishingmod.ColorTable.uiTextBg or nosel
-		hov = fishingmod.ColorTable.uiButtonHovered or hov
+		backGround = fishingmod.ColorTable.uiBackground or backGround
+		uiText = fishingmod.ColorTable.uiText or uiText
+		buttonNotSelected = fishingmod.ColorTable.uiTextBg or buttonNotSelected
+		uiButtonHovered = fishingmod.ColorTable.uiButtonHovered or uiButtonHovered
 		nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
 		pres = fishingmod.ColorTable.uiButtonPressed or pres
 	end
@@ -117,7 +117,7 @@ function PANEL:Init()
 	self:SetDeleteOnClose(false)
 	self:SetSizable(true)
 	self:SetTitle("Fishing Mod")
-	self.lblTitle:SetTextColor(sel)
+	self.lblTitle:SetTextColor(uiText)
 	self:ShowCloseButton(false)
 	self:SetSize(masterX, masterY)
 	self:Center()
@@ -134,10 +134,10 @@ function PANEL:Init()
 
 	local upgradesbutton = vgui.Create("DButton", self) -- upgrades
 	local baitsbutton = vgui.Create("DButton", self) -- baits shop
-	local cus = vgui.Create("DButton", self) -- customization tab
+	local customizationbutton = vgui.Create("DButton", self) -- customization tab
 
-	upgradesbutton.sel = true
-	baitsbutton.sel = false
+	upgradesbutton.selected = true
+	baitsbutton.selected = false
 	upgradesbutton:SetPos(3, 24)
 	upgradesbutton:SetSize((xpx - 6) / 3, 22)
 	upgradesbutton:SetText("Upgrades")
@@ -145,33 +145,33 @@ function PANEL:Init()
 		xpx, xpy = self:GetSize()
 		upgradesbutton:SetSize((xpx - 6) / 3, 22)
 	end
-	upgradesbutton:SetTextColor(sel)
+	upgradesbutton:SetTextColor(uiText)
 	upgradesbutton.DoClick = function()
-		upgradesbutton:SetColor(sel)
+		upgradesbutton:SetColor(uiText)
 		baitsbutton:SetColor(nopres)
-		cus:SetColor(nopres)
+		customizationbutton:SetColor(nopres)
 
-		baitsbutton:SetTextColor(nosel)
-		cus:SetTextColor(nosel)
+		baitsbutton:SetTextColor(buttonNotSelected)
+		customizationbutton:SetTextColor(buttonNotSelected)
 
-		upgradesbutton.sel = true
-		baitsbutton.sel = false
-		cus.sel = false
+		upgradesbutton.selected = true
+		baitsbutton.selected = false
+		customizationbutton.selected = false
 
 		self.customization:Hide()
 		self.upgrade:Show()
 		self.baitshop:Hide()
 	end
 	upgradesbutton.Paint = function(self, w, h)
-		if self.sel then
-			upgradesbutton:SetColor(sel)
-		elseif not self.sel then
-			upgradesbutton:SetColor(nosel)
+		if self.selected then
+			upgradesbutton:SetColor(uiText)
+		elseif not self.selected then
+			upgradesbutton:SetColor(buttonNotSelected)
 		end
-		if(upgradesbutton:IsHovered()) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-		elseif(upgradesbutton.sel) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		if upgradesbutton:IsHovered() then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
+		elseif upgradesbutton.selected then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
@@ -186,33 +186,33 @@ function PANEL:Init()
 		baitsbutton:SetPos(3 + (xpx - 6) / 3, 24)
 	end
 	baitsbutton:SetText("Bait Shop")
-	baitsbutton:SetTextColor(nosel)
+	baitsbutton:SetTextColor(buttonNotSelected)
 	baitsbutton.DoClick = function()
-		baitsbutton:SetColor(sel)
+		baitsbutton:SetColor(uiText)
 		upgradesbutton:SetColor(nopres)
-		cus:SetColor(nopres)
+		customizationbutton:SetColor(nopres)
 
-		upgradesbutton:SetTextColor(nosel)
-		cus:SetTextColor(nosel)
+		upgradesbutton:SetTextColor(buttonNotSelected)
+		customizationbutton:SetTextColor(buttonNotSelected)
 
-		upgradesbutton.sel = false
-		baitsbutton.sel = true
-		cus.sel = false
+		upgradesbutton.selected = false
+		baitsbutton.selected = true
+		customizationbutton.selected = false
 
 		self.customization:Hide()
 		self.upgrade:Hide()
 		self.baitshop:Show()
 	end
 	baitsbutton.Paint = function(self, w, h)
-		if self.sel then
-			baitsbutton:SetColor(sel)
-		elseif not self.sel then
-			baitsbutton:SetColor(nosel)
+		if self.selected then
+			baitsbutton:SetColor(uiText)
+		elseif not self.selected then
+			baitsbutton:SetColor(buttonNotSelected)
 		end
-		if(baitsbutton:IsHovered()) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-		elseif(baitsbutton.sel) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		if baitsbutton:IsHovered() then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
+		elseif baitsbutton.selected then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
@@ -220,51 +220,51 @@ function PANEL:Init()
 	end
 
 
-	cus:SetPos(3 + (xpx - 6) / 3, 24) -- baits shop start of conf
-	cus:SetSize((xpx - 6) / 3, 22)
+	customizationbutton:SetPos(3 + (xpx - 6) / 3, 24) -- baits shop start of conf
+	customizationbutton:SetSize((xpx - 6) / 3, 22)
 	
-	function cus.Think()
+	function customizationbutton.Think()
 		xpx, xpy = self:GetSize()
-		if(xpx % 3 == 2) then
-			cus:SetSize(math.Round((xpx - 6) / 3) + 1 , 22)
-			cus:SetPos(2 + (xpx - 6) / 3 * 2 , 24)
-		elseif(xpx % 3 == 1 ) then
-			cus:SetSize(math.Round((xpx - 6) / 3) + 1, 22)
-			cus:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
+		if xpx % 3 == 2 then
+			customizationbutton:SetSize(math.Round((xpx - 6) / 3) + 1 , 22)
+			customizationbutton:SetPos(2 + (xpx - 6) / 3 * 2 , 24)
+		elseif xpx % 3 == 1  then
+			customizationbutton:SetSize(math.Round((xpx - 6) / 3) + 1, 22)
+			customizationbutton:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
 		else
-			cus:SetSize(math.Round((xpx - 6) / 3) , 22)
-			cus:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
+			customizationbutton:SetSize(math.Round((xpx - 6) / 3) , 22)
+			customizationbutton:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
 		end
 	end
-	cus:SetText("Customize")
-	cus:SetTextColor(nosel)
-	cus.DoClick = function()
-		cus:SetColor(sel)
+	customizationbutton:SetText("Customize")
+	customizationbutton:SetTextColor(buttonNotSelected)
+	customizationbutton.DoClick = function()
+		customizationbutton:SetColor(uiText)
 		upgradesbutton:SetColor(nopres)
 		baitsbutton:SetColor(nopres)
 
-		upgradesbutton:SetTextColor(nosel)
-		baitsbutton:SetTextColor(nosel)
+		upgradesbutton:SetTextColor(buttonNotSelected)
+		baitsbutton:SetTextColor(buttonNotSelected)
 
-		upgradesbutton.sel = false
-		baitsbutton.sel = false
-		cus.sel = true
+		upgradesbutton.selected = false
+		baitsbutton.selected = false
+		customizationbutton.selected = true
 
 		self.customization:Show()
 		self.upgrade:Hide()
 		self.baitshop:Hide()
 
 	end
-	cus.Paint = function(self, w, h)
-		if self.sel then
-			cus:SetColor(sel)
-		elseif not self.sel then
-			cus:SetColor(nosel)
+	customizationbutton.Paint = function(self, w, h)
+		if self.selected then
+			customizationbutton:SetColor(uiText)
+		elseif not self.selected then
+			customizationbutton:SetColor(buttonNotSelected)
 		end
-		if(cus:IsHovered()) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-		elseif(cus.sel) then
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		if(customizationbutton:IsHovered()) then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
+		elseif(customizationbutton.selected) then
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
@@ -273,8 +273,8 @@ function PANEL:Init()
 
 
 	function self:Paint()
-		surface.SetTextColor(sel.r, sel.g, sel.b, sel.a)
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		surface.SetTextColor(uiText.r, uiText.g, uiText.b, uiText.a)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
@@ -283,7 +283,7 @@ function PANEL:Init()
 	closebutton.ButtonW = 60
 	closebutton:SetSize(closebutton.ButtonW, 18)
 	closebutton:SetText("Close")
-	closebutton:SetTextColor(sel)
+	closebutton:SetTextColor(uiText)
 	closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
 	closebutton.DoClick = function()
 		self:Close()
@@ -293,20 +293,20 @@ function PANEL:Init()
 		closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
 	end
 	closebutton.Paint = function(self, w, h)
-		self:GetParent().lblTitle:SetTextColor(sel)
-		closebutton:SetTextColor(sel)
+		self:GetParent().lblTitle:SetTextColor(uiText)
+		closebutton:SetTextColor(uiText)
 		if(closebutton:IsDown() ) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
 		elseif(closebutton:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
 	
 	function self.baitshop:Paint()
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
@@ -330,15 +330,15 @@ function PANEL:Init()
 	self:SetPos(3, 46)
 	self:SetPadding(10)
 	function self:Paint()
-		surface.SetTextColor(sel.r, sel.g, sel.b, sel.a)
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		surface.SetTextColor(uiText.r, uiText.g, uiText.b, uiText.a)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
-		self.money:SetTextColor(sel)
+		self.money:SetTextColor(uiText)
 		return true
 	end
 
 	self.money = vgui.Create("DLabel", self)
-	self.money:SetTextColor(sel)
+	self.money:SetTextColor(uiText)
 	self.money.Think = function(self) self:SetText("Money: " .. math.Round(LocalPlayer().fishingmod.money)) end
 	
 	self:AddItem(self.money)
@@ -407,7 +407,7 @@ function PANEL:Init()
 		fishingmod.BaitTable[data.name].icon = icon
 		
 		if(level < data.levelrequired) then
-			icon:Setnosel(true)
+			icon:SetGray(true)
 		else
 			icon.DoClick = function()
 				RunConsoleCommand("fishing_mod_buy_bait", data.name)
@@ -433,10 +433,10 @@ function PANEL:Init()
 		x, y = self:GetParent():GetSize()
 		self:SetSize(x - 6, y - 3 - 46)
 		if fishingmod.ColorTable then
-			bg = fishingmod.ColorTable.uiBackground or bg
-			sel = fishingmod.ColorTable.uiText or sel
-			nosel = fishingmod.ColorTable.uiTextBg or nosel
-			hov = fishingmod.ColorTable.uiButtonHovered or hov
+			backGround = fishingmod.ColorTable.uiBackground or backGround
+			uiText = fishingmod.ColorTable.uiText or uiText
+			buttonNotSelected = fishingmod.ColorTable.uiTextBg or buttonNotSelected
+			uiButtonHovered = fishingmod.ColorTable.uiButtonHovered or uiButtonHovered
 			nopres = fishingmod.ColorTable.uiButtonDeSelected or nopres
 			pres = fishingmod.ColorTable.uiButtonPressed or pres
 		else
@@ -444,117 +444,117 @@ function PANEL:Init()
 		end
 	end
 
-	local saveb = vgui.Create("DButton", self)
-	saveb:SetPos(10, 50)
-	saveb:SetSize(120, 30)
-	saveb:SetTextColor(sel)
-	saveb:SetText("Save")
-	saveb.Paint = function(self, w, h)
-		saveb:SetTextColor(sel)
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+	local savebutton = vgui.Create("DButton", self)
+	savebutton:SetPos(10, 50)
+	savebutton:SetSize(120, 30)
+	savebutton:SetTextColor(uiText)
+	savebutton:SetText("Save")
+	savebutton.Paint = function(self, w, h)
+		savebutton:SetTextColor(uiText)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	saveb.DoClick = function()
+	savebutton.DoClick = function()
 		if fishingmod.SaveUIColors then
 			fishingmod.SaveUIColors()
-			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been Saved!")
+			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been saved!")
 		end
 	end
-	local Reset = vgui.Create("DButton", self)
-	Reset:SetPos(10, 90)
-	Reset:SetSize(120, 30)
-	Reset:SetTextColor(sel)
-	Reset:SetText("Reset")
-	Reset.Paint = function(self, w, h)
-		Reset:SetTextColor(sel)
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+	local resetbutton = vgui.Create("DButton", self)
+	resetbutton:SetPos(10, 90)
+	resetbutton:SetSize(120, 30)
+	resetbutton:SetTextColor(uiText)
+	resetbutton:SetText("Reset")
+	resetbutton.Paint = function(self, w, h)
+		resetbutton:SetTextColor(uiText)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	Reset.DoClick = function()
+	resetbutton.DoClick = function()
 		if fishingmod.DefaultUIColors then
 			fishingmod.ColorTable = fishingmod.DefaultUIColors()
-			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been Reset!")
+			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been reset!")
 		end
 	end
 	
-	local cbox = vgui.Create("DComboBox", self )
-	cbox:SetPos(10, 10)
-	cbox:SetSize(120, 30)
-	cbox:SetValue("Select element")
+	local combobox = vgui.Create("DComboBox", self )
+	combobox:SetPos(10, 10)
+	combobox:SetSize(120, 30)
+	combobox:SetValue("Select element")
 	if fishingmod.ColorTable then
 		if fishingmod.LoadUIColors then
 			for k, v in pairs(fishingmod.LoadUIColors()) do
-				cbox:AddChoice(translation[k])
+				combobox:AddChoice(translation[k])
 			end
 		end
 	end
-	cbox.Paint = function(self, w, h)
-		cbox:SetTextColor(sel)
-		if(cbox:IsDown()) then
+	combobox.Paint = function(self, w, h)
+		combobox:SetTextColor(uiText)
+		if(combobox:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(cbox:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+		elseif(combobox:IsHovered()) then
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
-	local dcm = vgui.Create( "DColorMixer", self)
+	local colormixer = vgui.Create( "DColorMixer", self)
 	local x, y = self:GetSize()
-	dcm:SetPos(120 + 20, 10)
-	dcm:SetWangs(true)
-	dcm:SetPalette(false)
-	dcm:SetSize(x - 10 - 120 - 20, y - 20)
-	function dcm:ValueChanged(col)
+	colormixer:SetPos(120 + 20, 10)
+	colormixer:SetWangs(true)
+	colormixer:SetPalette(false)
+	colormixer:SetSize(x - 10 - 120 - 20, y - 20)
+	function colormixer:ValueChanged(col)
 		if editable and editable != "" and fishingmod.DefaultUIColors()[editable] then
 			fishingmod.ColorTable[editable] = Color(col.r, col.g, col.b, col.a)
 		end
 	end
-	function cbox.OnSelect(self, val, str)
+	function combobox.OnSelect(self, val, str)
 		if type(str)=="string" and str != "" then
 			editable = translation[str]
 			if fishingmod.ColorTable[editable] then
-				dcm:SetColor(fishingmod.ColorTable[editable])
+				colormixer:SetColor(fishingmod.ColorTable[editable])
 			end
 		end
 	end
 	
-	function saveb:Paint(w, h)
-		saveb:SetTextColor(sel)
-		if(saveb:IsDown()) then
+	function savebutton:Paint(w, h)
+		savebutton:SetTextColor(uiText)
+		if(savebutton:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(saveb:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+		elseif(savebutton:IsHovered()) then
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
-	function Reset:Paint(w, h)
-		Reset:SetTextColor(sel)
-		if(Reset:IsDown()) then
+	function resetbutton:Paint(w, h)
+		resetbutton:SetTextColor(uiText)
+		if(resetbutton:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(Reset:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+		elseif(resetbutton:IsHovered()) then
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
 	function self:Paint()
-		surface.SetTextColor(sel.r, sel.g, sel.b, sel.a)
-		surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+		surface.SetTextColor(uiText.r, uiText.g, uiText.b, uiText.a)
+		surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
 	function self:OnSizeChanged(x, y)
-		dcm:SetSize(math.max(math.min(140, x - 20), x - 10 - 120 - 20), y - 20)
-		dcm:SetPos(math.min(120 + 20, math.max(x - 150, 10)), 10)
-		cbox:SetSize(math.min(120, x - 170), math.min(30, y - 20))
-		saveb:SetSize(math.min(120, x - 170), math.min(30, y - 60))
-		Reset:SetSize(math.min(120, x - 170), math.min(30, y - 100))
+		colormixer:SetSize(math.max(math.min(140, x - 20), x - 10 - 120 - 20), y - 20)
+		colormixer:SetPos(math.min(120 + 20, math.max(x - 150, 10)), 10)
+		combobox:SetSize(math.min(120, x - 170), math.min(30, y - 20))
+		savebutton:SetSize(math.min(120, x - 170), math.min(30, y - 60))
+		resetbutton:SetSize(math.min(120, x - 170), math.min(30, y - 100))
 	end
 end
 
@@ -583,11 +583,11 @@ function PANEL:Init()
 	end
 	
 	self.rightlabel = vgui.Create("DLabel", self)
-	self.rightlabel:SetTextColor(sel)
+	self.rightlabel:SetTextColor(uiText)
 	self.rightlabel:SetSize(100, 30)
 	
 	self.leftlabel = vgui.Create("DLabel", self)
-	self.leftlabel:SetTextColor(sel)
+	self.leftlabel:SetTextColor(uiText)
 	self.leftlabel:SetSize(100, 30)
 	
 	self.left:Dock(LEFT)
@@ -597,16 +597,16 @@ function PANEL:Init()
 	local selfleft = self.left
 	function self.left:Paint() -- 'sell' skill button
 		surface.SetFont("DebugFixed")
-		surface.SetTextColor(sel.r, sel.g, sel.b, sel.a)
+		surface.SetTextColor(uiText.r, uiText.g, uiText.b, uiText.a)
 		if(selfleft:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
 		elseif(selfleft:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
 			surface.SetDrawColor(0, 0, 0, 100)
 		end
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
-		surface.SetDrawColor(sel)
+		surface.SetDrawColor(uiText)
 		surface.SetMaterial(FishingMod_spriteMinus)
 		surface.DrawTexturedRect(1, 1, self:GetWide() - 2, self:GetTall() - 2)
 		return true
@@ -614,17 +614,17 @@ function PANEL:Init()
 	local selfright = self.right
 	function self.right:Paint() -- buy skill button
 		surface.SetFont("DebugFixed")
-		surface.SetTextColor(sel.r, sel.g, sel.b, sel.a)
+		surface.SetTextColor(uiText.r, uiText.g, uiText.b, uiText.a)
 
 		if(selfright:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
 		elseif(selfright:IsHovered()) then
-			surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+			surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 		else
 			surface.SetDrawColor(0, 0, 0, 100)
 		end
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
-		surface.SetDrawColor(sel)
+		surface.SetDrawColor(uiText)
 		surface.SetMaterial(FishingMod_spritePlus)
 		surface.DrawTexturedRect(1, 1, self:GetWide() - 2, self:GetTall() - 2)
 		return true
@@ -642,8 +642,8 @@ end
 
 function PANEL:Think()
 	if not self.set then return end
-	self.rightlabel:SetTextColor(sel)
-	self.leftlabel:SetTextColor(sel)
+	self.rightlabel:SetTextColor(uiText)
+	self.leftlabel:SetTextColor(uiText)
 	self.rightlabel:SetText(LocalPlayer().fishingmod[self.type])
 end
 
@@ -661,8 +661,8 @@ function PANEL:SetSale(multiplier)
 	self.percent = math.Round((multiplier * - 1 + 1) * 100)
 end
 
-function PANEL:Setnosel(bool)
-	self.nosel = bool
+function PANEL:SetGray(bool)
+	self.Grey = bool
 end
 
 function PANEL:PaintOver(w, h)
@@ -670,7 +670,7 @@ function PANEL:PaintOver(w, h)
 
 	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 5, 3, color_black, TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)
 	draw.SimpleText( self.percent.."% OFF", "DermaDefault", 4, 2, HSVToColor(math.Clamp(self.percent + 40, 0, 160), 1, 1), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)
-	if self.nosel then draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) ) end
+	if self.Grey then draw.RoundedBox( 6, 0, 0, 58, 58, Color( 100, 100, 100, 200 ) ) end
 end
 
 vgui.Register("Fishingmod:SpawnIcon", PANEL, "SpawnIcon")

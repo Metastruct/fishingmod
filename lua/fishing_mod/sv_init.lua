@@ -53,10 +53,10 @@ hook.Add("CanTool", "Fishingmod:CanTool", function(ply, trace, tool)
 		return false		
 	end
 end)
-fishingmod.lastBaitSpawn = CurTime()
-
+fishingmod.bait_spawn_delay = 0.625
 concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
-	if CurTime() >= fishingmod.lastBaitSpawn + 0.625 then
+	ply.fishingmod.last_bait_spawn = ply.fishingmod.last_bait_spawn or 0
+	if CurTime() >= ply.fishingmod.last_bait_spawn + fishingmod.bait_spawn_delay then
 		local type = table.concat(arguments, " ")
 		local rod = ply:GetFishingRod()
 		if not rod then return end
@@ -88,7 +88,7 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 		fishingmod.SetBaitInfo(bait)
 		hooky:SetPos(hooky:GetPos() + Vector(0, 0, (1 - util.QuickTrace(hooky:GetPos(), Vector(0, 0, -16) ).Fraction) * 16 ) )
 		fishingmod.HookBait(ply, bait, hooky)
-		fishingmod.lastBaitSpawn = CurTime()
+		ply.fishingmod.last_bait_spawn = CurTime()
 	end
 end)
 

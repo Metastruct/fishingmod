@@ -91,48 +91,45 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 	if IsValid(entity) then
 		local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
-		local sthx, sthy = 0, 0
+		local textHeight, textWidth = 0, 0
 		xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
 		local pad = 3
 			
 		if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
 			local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
-			if(data and data.text) then
-				local text_ = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
+			if data and data.text then
+				data.text = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
 				surface.SetFont("fixed_Height_Font")
 				surface.SetDrawColor(uiText.r, uiText.g, uiText.b, uiText.a)
-				sthx, sthy = surface.GetTextSize(data.text)
-				sthx, sthy = sthx + 8, sthy + 8
+				textHeight, textWidth = surface.GetTextSize(data.text)
+				textHeight, textWidth = textHeight + 8, textWidth + 8
 				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad, sthx + pad * 2, sthy + pad * 2)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 - 1 + 3 - pad, sthx - 6 + pad * 2, sthy - 6 + pad * 2)
-				draw.DrawText(string.Replace(text_, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2), uiText, 1) -- \t key causes it to snap
+				surface.DrawRect(xy.x - textHeight / 2 - pad, xy.y - textWidth / 2 - 1 - pad, textHeight + pad * 2, textWidth + pad * 2)
+				surface.DrawRect(xy.x - textHeight / 2 + 3 - pad, xy.y - textWidth / 2 - 1 + 3 - pad, textHeight - 6 + pad * 2, textWidth - 6 + pad * 2)
+				draw.DrawText(data.text, "fixed_Height_Font", xy.x, xy.y - (textWidth / 2), uiText, 1) -- \t key causes it to snap
 			end
 				
 			data = fishingmod.InfoTable.Bait[entity:EntIndex()]
-			if(data and data.text) then
+			if data and data.text then
 				surface.SetFont("fixed_Height_Font")
 				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-				sthx, sthy = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
-				sthx, sthy = sthx + 8, sthy + 8
-				surface.DrawRect(xy.x - sthx / 2 - pad, xy.y - sthy / 2 - 1 - pad + 16, sthx + pad * 2, sthy + pad * 1)
-				surface.DrawRect(xy.x - sthx / 2 + 3 - pad, xy.y - sthy / 2 + 2 - pad + 16, sthx - 6 + pad * 2, sthy - 6 + pad * 1)
-				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (sthy / 2) + 15, uiText, 1)
+				textHeight, textWidth = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
+				textHeight, textWidth = textHeight + 8, textWidth + 8
+				surface.DrawRect(xy.x - textHeight / 2 - pad, xy.y - textWidth / 2 - 1 - pad + 16, textHeight + pad * 2, textWidth + pad * 1)
+				surface.DrawRect(xy.x - textHeight / 2 + 3 - pad, xy.y - textWidth / 2 + 2 - pad + 16, textHeight - 6 + pad * 2, textWidth - 6 + pad * 1)
+				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (textWidth / 2) + 15, uiText, 1)
 			end
 		end
 	end
 	local chpos = LocalPlayer():GetEyeTraceNoCursor().HitPos
-	if IsValid(LocalPlayer():GetActiveWeapon()) then
-		if LocalPlayer():GetActiveWeapon():GetClass() == "weapon_fishing_rod" then
-			surface.SetDrawColor(crosshair.r, crosshair.g, crosshair.b, crosshair.a)
+	if IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "weapon_fishing_rod" then
+		surface.SetDrawColor(crosshair.r, crosshair.g, crosshair.b, crosshair.a)
+		local xy = chpos:ToScreen()
+		surface.DrawRect( xy.x, xy.y+5, 1, 10)
+		surface.DrawRect( xy.x, xy.y-14, 1, 10)
 
-			surface.DrawRect( chpos:ToScreen().x, chpos:ToScreen().y+5, 1, 10)
-			surface.DrawRect( chpos:ToScreen().x, chpos:ToScreen().y-14, 1, 10)
-
-			surface.DrawRect( chpos:ToScreen().x+5, chpos:ToScreen().y, 10, 1 )
-			surface.DrawRect( chpos:ToScreen().x-14, chpos:ToScreen().y, 10, 1 )
-
-		end
+		surface.DrawRect( xy.x+5, xy.y, 10, 1 )
+		surface.DrawRect( xy.x-14, xy.y, 10, 1 )
 	end
 end)
 local force_b = 1

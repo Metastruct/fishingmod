@@ -137,16 +137,16 @@ if CLIENT then
 	end
 
 	function ENT:ShowHeatAdjuster()
-		local bg = fishingmod.DefaultUIColors().uiBackground
-		local nosel = fishingmod.DefaultUIColors().uiButtonDeSelected
-		local sel = fishingmod.DefaultUIColors().uiButtonSelected
-		local hov = fishingmod.DefaultUIColors().uiButtonHovered
+		local backGround = fishingmod.DefaultUIColors().uiBackground
+		local buttonNotSelected = fishingmod.DefaultUIColors().uiButtonDeSelected
+		local uiButtonSelected = fishingmod.DefaultUIColors().uiButtonSelected
+		local uiButtonHovered = fishingmod.DefaultUIColors().uiButtonHovered
 		local uiText = fishingmod.DefaultUIColors().uiText
 		if fishingmod.ColorTable then
-			bg = fishingmod.ColorTable.uiBackground or bg
-			nosel = fishingmod.ColorTable.uiButtonDeSelected or nosel
-			sel = fishingmod.ColorTable.uiButtonSelected or sel
-			hov = fishingmod.ColorTable.uiButtonHovered or hov
+			backGround = fishingmod.ColorTable.uiBackground or backGround
+			buttonNotSelected = fishingmod.ColorTable.uiButtonDeSelected or buttonNotSelected
+			uiButtonSelected = fishingmod.ColorTable.uiButtonSelected or uiButtonSelected
+			uiButtonHovered = fishingmod.ColorTable.uiButtonHovered or uiButtonHovered
 			uiText = fishingmod.ColorTable.uiText or uiText
 		else
 			fishingmod.ColorTable = fishingmod.DefaultUIColors()
@@ -154,7 +154,7 @@ if CLIENT then
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
 			
-			surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 			surface.DrawRect(0, 0, x, y)
 			surface.DrawRect(3, 24, x - 6, y - 24 - 3)
 		end
@@ -172,11 +172,11 @@ if CLIENT then
 		closebutton.Paint = function(self, w, h)
 			
 			if(closebutton:IsDown() ) then
-				surface.SetDrawColor(nosel.r, nosel.g, nosel.b, nosel.a)
+				surface.SetDrawColor(buttonNotSelected.r, buttonNotSelected.g, buttonNotSelected.b, buttonNotSelected.a)
 			elseif(closebutton:IsHovered()) then
-				surface.SetDrawColor(hov.r, hov.g, hov.b, hov.a)
+				surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
 			else
-				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
+				surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
 			end
 			surface.DrawRect(0, 0, w, h)
 		end
@@ -289,7 +289,7 @@ else
 	
 		if (self.next_search or 0) < CurTime() then
 		
-			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + Vector(self:OBBMaxs().x, self:OBBMaxs().y, self:OBBMaxs().z * 1.2 ) ) ) do
+			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() * Vector(1, 1, 1.2) ) ) do
 				if entity.data and entity ~= self and not entity.shelf_stored and entity:GetClass() ~= "fishing_mod_catch_stove" and not entity.is_bait then
 					self:AddItem( entity )
 				end
