@@ -2,7 +2,7 @@ fishingmod = fishingmod or {}
 
 local color_white = color_white or Color(255, 255, 255, 255)
 
-surface.CreateFont("fixed_Height_Font", {
+surface.CreateFont("fixed_height_font", {
 	font = "Verdana",
 	extended = false,
 	size = 13,
@@ -19,7 +19,7 @@ surface.CreateFont("fixed_Height_Font", {
 	additive = false,
 	outline = false,
 })
-surface.CreateFont("fixed_NameFont", {
+surface.CreateFont("fixed_name_font", {
 	font = "Verdana",
 	extended = false,
 	size = 15,
@@ -78,20 +78,20 @@ hook.Add("InitPostEntity", "Init Fish Mod", function()
 	end
 
 end)
-local uiText = fishingmod.DefaultUIColors().uiText
-local bg = fishingmod.DefaultUIColors().uiBackground
-local crosshair = fishingmod.DefaultUIColors().crossHairColor
+local ui_text = fishingmod.DefaultUIColors().ui_text
+local bg = fishingmod.DefaultUIColors().ui_background
+local crosshair = fishingmod.DefaultUIColors().crosshair_color
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	local entity = LocalPlayer():GetEyeTrace().Entity
 	if fishingmod.ColorTable then 
-		crosshair = fishingmod.ColorTable.crossHairColor or fishingmod.DefaultUIColors().crossHairColor
-		uiText = fishingmod.ColorTable.uiText or fishingmod.DefaultUIColors().uiText
-		bg = fishingmod.ColorTable.uiBackground or fishingmod.DefaultUIColors().uiBackground
+		crosshair = fishingmod.ColorTable.crosshair_color or fishingmod.DefaultUIColors().crosshair_color
+		ui_text = fishingmod.ColorTable.ui_text or fishingmod.DefaultUIColors().ui_text
+		bg = fishingmod.ColorTable.ui_background or fishingmod.DefaultUIColors().ui_background
 	end
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 	if IsValid(entity) then
 		local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
-		local textHeight, textWidth = 0, 0
+		local text_height, text_width = 0, 0
 		xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
 		local pad = 3
 			
@@ -99,25 +99,25 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
 			if data and data.text then
 				data.text = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
-				surface.SetFont("fixed_Height_Font")
-				surface.SetDrawColor(uiText.r, uiText.g, uiText.b, uiText.a)
-				textHeight, textWidth = surface.GetTextSize(data.text)
-				textHeight, textWidth = textHeight + 8, textWidth + 8
+				surface.SetFont("fixed_height_font")
+				surface.SetDrawColor(ui_text.r, ui_text.g, ui_text.b, ui_text.a)
+				text_height, text_width = surface.GetTextSize(data.text)
+				text_height, text_width = text_height + 8, text_width + 8
 				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-				surface.DrawRect(xy.x - textHeight / 2 - pad, xy.y - textWidth / 2 - 1 - pad, textHeight + pad * 2, textWidth + pad * 2)
-				surface.DrawRect(xy.x - textHeight / 2 + 3 - pad, xy.y - textWidth / 2 - 1 + 3 - pad, textHeight - 6 + pad * 2, textWidth - 6 + pad * 2)
-				draw.DrawText(data.text, "fixed_Height_Font", xy.x, xy.y - (textWidth / 2), uiText, 1) -- \t key causes it to snap
+				surface.DrawRect(xy.x - text_height / 2 - pad, xy.y - text_width / 2 - 1 - pad, text_height + pad * 2, text_width + pad * 2)
+				surface.DrawRect(xy.x - text_height / 2 + 3 - pad, xy.y - text_width / 2 - 1 + 3 - pad, text_height - 6 + pad * 2, text_width - 6 + pad * 2)
+				draw.DrawText(data.text, "fixed_height_font", xy.x, xy.y - (text_width / 2), ui_text, 1) -- \t key causes it to snap
 			end
 				
 			data = fishingmod.InfoTable.Bait[entity:EntIndex()]
 			if data and data.text then
-				surface.SetFont("fixed_Height_Font")
+				surface.SetFont("fixed_height_font")
 				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-				textHeight, textWidth = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
-				textHeight, textWidth = textHeight + 8, textWidth + 8
-				surface.DrawRect(xy.x - textHeight / 2 - pad, xy.y - textWidth / 2 - 1 - pad + 16, textHeight + pad * 2, textWidth + pad * 1)
-				surface.DrawRect(xy.x - textHeight / 2 + 3 - pad, xy.y - textWidth / 2 + 2 - pad + 16, textHeight - 6 + pad * 2, textWidth - 6 + pad * 1)
-				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_Height_Font", xy.x, xy.y - (textWidth / 2) + 15, uiText, 1)
+				text_height, text_width = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
+				text_height, text_width = text_height + 8, text_width + 8
+				surface.DrawRect(xy.x - text_height / 2 - pad, xy.y - text_width / 2 - 1 - pad + 16, text_height + pad * 2, text_width + pad * 1)
+				surface.DrawRect(xy.x - text_height / 2 + 3 - pad, xy.y - text_width / 2 + 2 - pad + 16, text_height - 6 + pad * 2, text_width - 6 + pad * 1)
+				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_height_font", xy.x, xy.y - (text_width / 2) + 15, ui_text, 1)
 			end
 		end
 	end

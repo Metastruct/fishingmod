@@ -5,12 +5,12 @@ include("shared.lua")
 
 fishingmod.ColorTable = fishingmod.LoadUIColors()
 
-local uiText = fishingmod.DefaultUIColors().uiText
-local uiTextCaught = fishingmod.DefaultUIColors().uiTextCaught
-local uiBackground = fishingmod.DefaultUIColors().uiBackground
-local xpBarForeGr = fishingmod.DefaultUIColors().xpBarForeGr
-local xpBarBackGr = fishingmod.DefaultUIColors().xpBarBackGr
-local xpBarText = fishingmod.DefaultUIColors().xpBarText
+local ui_text = fishingmod.DefaultUIColors().ui_text
+local ui_text_caught = fishingmod.DefaultUIColors().ui_text_caught
+local ui_background = fishingmod.DefaultUIColors().ui_background
+local xp_bar_fg = fishingmod.DefaultUIColors().xp_bar_fg
+local xp_bar_bg = fishingmod.DefaultUIColors().xp_bar_bg
+local xp_bar_text = fishingmod.DefaultUIColors().xp_bar_text
 
 local rope_material = Material("cable/rope")
 
@@ -45,12 +45,12 @@ end
 
 function ENT:HUDPaint()
 	if fishingmod.ColorTable then
-		uiText = fishingmod.ColorTable.uiText or uiText
-		uiTextCaught = fishingmod.ColorTable.uiTextCaught or uiTextCaught
-		uiBackground = fishingmod.ColorTable.uiBackground or uiBackground
-		xpBarForeGr = fishingmod.ColorTable.xpBarForeGr or xpBarForeGr
-		xpBarBackGr = fishingmod.ColorTable.xpBarBackGr or xpBarBackGr
-		xpBarText = fishingmod.ColorTable.xpBarText or xpBarText
+		ui_text = fishingmod.ColorTable.ui_text or ui_text
+		ui_text_caught = fishingmod.ColorTable.ui_text_caught or ui_text_caught
+		ui_background = fishingmod.ColorTable.ui_background or ui_background
+		xp_bar_fg = fishingmod.ColorTable.xp_bar_fg or xp_bar_fg
+		xp_bar_bg = fishingmod.ColorTable.xp_bar_bg or xp_bar_bg
+		xp_bar_text = fishingmod.ColorTable.xp_bar_text or xp_bar_text
 	end
 
 	local ply = self:GetPlayer()
@@ -60,21 +60,21 @@ function ENT:HUDPaint()
 		
 	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen() -- kinda unsure about this Vec'0,0,+10'
 
-	local height_offset       = 40
-	local marginFromBorder    = 16                         -- 16 pixels from the top and bottom border of the screen/game window
-	local innerBoxXY          = 3                          -- padding of the 2 shades of background
-	local bg_heightdepthcatch = 0                          -- if a catch or depth exist elongate the box
-	local minwid              = 50                         -- minimum width of dark background box
-	local tempNick            = ply:Nick()
-	local markup              = 0
+	local height_offset = 40
+	local margin_from_border = 16         -- 16 pixels from the top and bottom border of the screen/game window
+	local inner_box_xy = 3                -- padding of the 2 shades of background
+	local bg_heightdepthcatch = 0         -- if a catch or depth exist elongate the box
+	local minwid = 50                     -- minimum width of dark background box
+	local temp_nick = ply:Nick()
+	local markup = 0
 	local stripped_name_width = 0
-	local team_col            = team.GetColor(ply:Team())
+	local team_col = team.GetColor(ply:Team())
 	if EasyChat then 
-		markup = ec_markup.AdvancedParse(tempNick, {
+		markup = ec_markup.AdvancedParse(temp_nick, {
 			nick = true,
 			default_color = team_col,
-			default_font = "fixed_NameFont",
-			default_shadow_font = "fixed_NameFont",
+			default_font = "fixed_name_font",
+			default_shadow_font = "fixed_name_font",
 		}) 
 		stripped_name_width = markup:GetWidth()
 	end
@@ -92,34 +92,34 @@ function ENT:HUDPaint()
 		bg_heightdepthcatch = bg_heightdepthcatch + 10
 	end
 
-	surface.SetFont("fixed_Height_Font")
-	local textBelow = "Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (math.Round(ply.fishingmod.money) or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength() * 2.54) / 100 * 10) / 10) .. depth .. catch
-	local boxBelow_W, boxBelow_H = surface.GetTextSize(textBelow)
+	surface.SetFont("fixed_height_font")
+	local text_below = "Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (math.Round(ply.fishingmod.money) or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength() * 2.54) / 100 * 10) / 10) .. depth .. catch
+	local box_below_w, box_below_h = surface.GetTextSize(text_below)
 
-	surface.SetFont("fixed_NameFont")
-	local xhypo, yhypo = surface.GetTextSize(tempNick)
+	surface.SetFont("fixed_name_font")
+	local xhypo, yhypo = surface.GetTextSize(temp_nick)
 	
-	xy.y = math.Clamp(xy.y - height_offset, 120 + height_offset + marginFromBorder, ScrH() + height_offset - marginFromBorder - bg_heightdepthcatch)
+	xy.y = math.Clamp(xy.y - height_offset, 120 + height_offset + margin_from_border, ScrH() + height_offset - margin_from_border - bg_heightdepthcatch)
 
-	local bg_x, bg_width = xy.x - math.max(minwid, xhypo / 2, boxBelow_W / 2) - 10, (math.max(minwid, xhypo / 2, boxBelow_W / 2) + 10) * 2
-	local bg_y, bg_height = xy.y - 120 - height_offset, 70 + boxBelow_H
-	local ecbg_x, ecbg_width = xy.x - math.max(minwid, stripped_name_width / 2, ( boxBelow_W / 2)) - 10, (math.max(minwid, stripped_name_width / 2, boxBelow_W / 2) + 10) * 2
+	local bg_x, bg_width = xy.x - math.max(minwid, xhypo / 2, box_below_w / 2) - 10, (math.max(minwid, xhypo / 2, box_below_w / 2) + 10) * 2
+	local bg_y, bg_height = xy.y - 120 - height_offset, 70 + box_below_h
+	local ecbg_x, ecbg_width = xy.x - math.max(minwid, stripped_name_width / 2, ( box_below_w / 2)) - 10, (math.max(minwid, stripped_name_width / 2, box_below_w / 2) + 10) * 2
 
-	surface.SetDrawColor(uiBackground.r, uiBackground.g, uiBackground.b, uiBackground.a)
+	surface.SetDrawColor(ui_background.r, ui_background.g, ui_background.b, ui_background.a)
 
 	if EasyChat then
 		surface.DrawRect(ecbg_x, bg_y, ecbg_width, bg_height)
-		surface.DrawRect(ecbg_x + innerBoxXY, bg_y + innerBoxXY, ecbg_width - (2 * innerBoxXY), bg_height - (2 * innerBoxXY))
+		surface.DrawRect(ecbg_x + inner_box_xy, bg_y + inner_box_xy, ecbg_width - (2 * inner_box_xy), bg_height - (2 * inner_box_xy))
 		markup:Draw(xy.x - (stripped_name_width / 2), xy.y - 102 - height_offset - markup:GetHeight()/2)
 	else
 		surface.DrawRect(bg_x, bg_y, bg_width, bg_height)
-		surface.DrawRect(bg_x + innerBoxXY, bg_y + innerBoxXY, bg_width - (2 * innerBoxXY), bg_height - (2 * innerBoxXY) )
-		draw.DrawText(tempNick, "fixed_NameFont", xy.x, xy.y - 112 - height_offset, team_col, 1)
+		surface.DrawRect(bg_x + inner_box_xy, bg_y + inner_box_xy, bg_width - (2 * inner_box_xy), bg_height - (2 * inner_box_xy) )
+		draw.DrawText(temp_nick, "fixed_name_font", xy.x, xy.y - 112 - height_offset, team_col, 1)
 	end
-	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, 100, 23, xpBarBackGr)
-	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, math.min(ply.fishingmod.percent, 100), 23, xpBarForeGr)
-	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "fixed_Height_Font" , xy.x, xy.y - 84 - height_offset, xpBarText, 1)
-	draw.DrawText(textBelow, "fixed_Height_Font", xy.x, xy.y - 60 - height_offset, hooked_entity and uiTextCaught or uiText, 1)
+	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, 100, 23, xp_bar_bg)
+	draw.RoundedBox(1, xy.x - 50, xy.y - 88 - height_offset, math.min(ply.fishingmod.percent, 100), 23, xp_bar_fg)
+	draw.DrawText(tostring(math.Round(ply.fishingmod.expleft)), "fixed_height_font" , xy.x, xy.y - 84 - height_offset, xp_bar_text, 1)
+	draw.DrawText(text_below, "fixed_height_font", xy.x, xy.y - 60 - height_offset, hooked_entity and ui_text_caught or ui_text, 1)
 end
 
 function ENT:Initialize()

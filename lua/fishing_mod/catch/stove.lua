@@ -137,24 +137,24 @@ if CLIENT then
 	end
 
 	function ENT:ShowHeatAdjuster()
-		local backGround = fishingmod.DefaultUIColors().uiBackground
-		local buttonNotSelected = fishingmod.DefaultUIColors().uiButtonDeSelected
-		local uiButtonSelected = fishingmod.DefaultUIColors().uiButtonSelected
-		local uiButtonHovered = fishingmod.DefaultUIColors().uiButtonHovered
-		local uiText = fishingmod.DefaultUIColors().uiText
+		local back_ground = fishingmod.DefaultUIColors().ui_background
+		local button_not_selected = fishingmod.DefaultUIColors().ui_button_deselected
+		local ui_button_selected = fishingmod.DefaultUIColors().ui_button_selected
+		local ui_button_hovered = fishingmod.DefaultUIColors().ui_button_hovered
+		local ui_text = fishingmod.DefaultUIColors().ui_text
 		if fishingmod.ColorTable then
-			backGround = fishingmod.ColorTable.uiBackground or backGround
-			buttonNotSelected = fishingmod.ColorTable.uiButtonDeSelected or buttonNotSelected
-			uiButtonSelected = fishingmod.ColorTable.uiButtonSelected or uiButtonSelected
-			uiButtonHovered = fishingmod.ColorTable.uiButtonHovered or uiButtonHovered
-			uiText = fishingmod.ColorTable.uiText or uiText
+			back_ground = fishingmod.ColorTable.ui_background or back_ground
+			button_not_selected = fishingmod.ColorTable.ui_button_deselected or button_not_selected
+			ui_button_selected = fishingmod.ColorTable.ui_button_selected or ui_button_selected
+			ui_button_hovered = fishingmod.ColorTable.ui_button_hovered or ui_button_hovered
+			ui_text = fishingmod.ColorTable.ui_text or ui_text
 		else
 			fishingmod.ColorTable = fishingmod.DefaultUIColors()
 		end
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
 			
-			surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
+			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
 			surface.DrawRect(0, 0, x, y)
 			surface.DrawRect(3, 24, x - 6, y - 24 - 3)
 		end
@@ -164,7 +164,7 @@ if CLIENT then
 		closebutton.ButtonW = 60
 		closebutton:SetSize(closebutton.ButtonW, 18)
 		closebutton:SetText("Close")
-		closebutton:SetTextColor(uiText)
+		closebutton:SetTextColor(ui_text)
 		closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
 		closebutton.DoClick = function()
 			frame:Close()
@@ -172,11 +172,11 @@ if CLIENT then
 		closebutton.Paint = function(self, w, h)
 			
 			if(closebutton:IsDown() ) then
-				surface.SetDrawColor(buttonNotSelected.r, buttonNotSelected.g, buttonNotSelected.b, buttonNotSelected.a)
+				surface.SetDrawColor(button_not_selected.r, button_not_selected.g, button_not_selected.b, button_not_selected.a)
 			elseif(closebutton:IsHovered()) then
-				surface.SetDrawColor(uiButtonHovered.r, uiButtonHovered.g, uiButtonHovered.b, uiButtonHovered.a)
+				surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 			else
-				surface.SetDrawColor(backGround.r, backGround.g, backGround.b, backGround.a)
+				surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
 			end
 			surface.DrawRect(0, 0, w, h)
 		end
@@ -185,7 +185,7 @@ if CLIENT then
 			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
 		end
 		frame:SetSize(300, 80)
-		frame.lblTitle:SetTextColor(uiText)
+		frame.lblTitle:SetTextColor(ui_text)
 		frame:Center()
 		local p = LocalPlayer()
 
@@ -199,8 +199,8 @@ if CLIENT then
 		slider:SetMax(100)
 		slider:SetText("Heat")
 		slider:SetConVar("fishingmod_stove_heat")
-		slider.Label:SetTextColor(uiText)
-		slider.Wang.m_Skin.colTextEntryText = uiText
+		slider.Label:SetTextColor(ui_text)
+		slider.Wang.m_Skin.colTextEntryText = ui_text
 	end
 	
 	
