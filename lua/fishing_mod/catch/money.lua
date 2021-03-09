@@ -50,7 +50,7 @@ fishingmod.AddCatch{
 	remove_on_release = false,
 	bait = {
 		"models/props_c17/cashregister01a.mdl",
-		"models/props_misc/cash_register.mdl",
+		--"models/props_misc/cash_register.mdl",
 	}
 }
 
