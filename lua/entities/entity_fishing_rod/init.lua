@@ -116,8 +116,13 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	SafeRemoveEntity(self.dt.attach)
+	local attach = self.dt and self.dt.attach
+
+	if attach then
+		SafeRemoveEntity(attach.dt and attach.dt.hook)
+		SafeRemoveEntity(attach)
+	end
+
 	SafeRemoveEntity(self.physical_rope)
 	SafeRemoveEntity(self.avatar)
-	SafeRemoveEntity(self.dt.attach.dt.hook)
 end
