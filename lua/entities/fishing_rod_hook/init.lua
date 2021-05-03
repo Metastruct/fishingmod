@@ -208,8 +208,8 @@ function ENT:OnRemove()
 	end
 	
 	-- This is a needed fix as physical_rope can be a bool
-	if type(self.physical_rope) == "Entity" and IsValid(self.physical_rope) then
-		self.physical_rope:Remove()
+	if type(self.physical_rope) == "Entity" then
+		SafeRemoveEntity(self.physical_rope)
 	end
 end
 
