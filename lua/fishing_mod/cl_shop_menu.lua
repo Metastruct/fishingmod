@@ -461,21 +461,21 @@ function PANEL:Init()
 			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been saved!")
 		end
 	end
-	local resetbutton = vgui.Create("DButton", self)
-	resetbutton:SetPos(10, 90)
-	resetbutton:SetSize(120, 30)
-	resetbutton:SetTextColor(ui_text)
-	resetbutton:SetText("Reset")
-	resetbutton.Paint = function(self, w, h)
-		resetbutton:SetTextColor(ui_text)
+	local defaultsbutton = vgui.Create("DButton", self)
+	defaultsbutton:SetPos(10, 90)
+	defaultsbutton:SetSize(120, 30)
+	defaultsbutton:SetTextColor(ui_text)
+	defaultsbutton:SetText("Defaults")
+	defaultsbutton.Paint = function(self, w, h)
+		defaultsbutton:SetTextColor(ui_text)
 		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	resetbutton.DoClick = function()
+	defaultsbutton.DoClick = function()
 		if fishingmod.DefaultUIColors then
 			fishingmod.ColorTable = fishingmod.DefaultUIColors()
-			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been reset!")
+			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been set to default!")
 		end
 	end
 	
@@ -532,11 +532,11 @@ function PANEL:Init()
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
-	function resetbutton:Paint(w, h)
-		resetbutton:SetTextColor(ui_text)
-		if(resetbutton:IsDown()) then
+	function defaultsbutton:Paint(w, h)
+		defaultsbutton:SetTextColor(ui_text)
+		if(defaultsbutton:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(resetbutton:IsHovered()) then
+		elseif(defaultsbutton:IsHovered()) then
 			surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 		else
 			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
@@ -554,7 +554,7 @@ function PANEL:Init()
 		colormixer:SetPos(math.min(120 + 20, math.max(x - 150, 10)), 10)
 		combobox:SetSize(math.min(120, x - 170), math.min(30, y - 20))
 		savebutton:SetSize(math.min(120, x - 170), math.min(30, y - 60))
-		resetbutton:SetSize(math.min(120, x - 170), math.min(30, y - 100))
+		defaultsbutton:SetSize(math.min(120, x - 170), math.min(30, y - 100))
 	end
 end
 

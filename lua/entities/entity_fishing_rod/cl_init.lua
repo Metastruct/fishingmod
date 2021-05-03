@@ -12,6 +12,25 @@ local xp_bar_fg = fishingmod.DefaultUIColors().xp_bar_fg
 local xp_bar_bg = fishingmod.DefaultUIColors().xp_bar_bg
 local xp_bar_text = fishingmod.DefaultUIColors().xp_bar_text
 
+local height_offset = 40
+local margin_from_border = 16         -- 16 pixels from the top and bottom border of the screen/game window
+local inner_box_xy = 3                -- padding of the 2 shades of background
+local bg_heightdepthcatch = 0         -- if a catch or depth exist elongate the box
+local minwid = 50                     -- minimum width of dark background box
+local markup = 0
+local stripped_name_width = 0
+
+local depth, catch = "", ""
+
+local temp_nick, team_col = "", ""
+local box_below_w, box_below_h = 0, 0
+local xy = {x = 0, y = 0, visible = false}
+local xhypo, yhypo = 0, 0
+
+local bg_x, bg_width = 0, 0
+local bg_y, bg_height = 0, 0
+local ecbg_x, ecbg_width = 0, 0
+
 local rope_material = Material("cable/rope")
 
 function ENT:Draw()
@@ -44,6 +63,7 @@ function ENT:RenderScene()
 end
 
 function ENT:HUDPaint()
+	local ply = self:GetPlayer()
 	if fishingmod.ColorTable then
 		ui_text = fishingmod.ColorTable.ui_text or ui_text
 		ui_text_caught = fishingmod.ColorTable.ui_text_caught or ui_text_caught
@@ -53,22 +73,15 @@ function ENT:HUDPaint()
 		xp_bar_text = fishingmod.ColorTable.xp_bar_text or xp_bar_text
 	end
 
-	local ply = self:GetPlayer()
 	
 	if not IsValid(ply) or (ply and not ply.fishingmod) then return end
 	if ply ~= LocalPlayer() and self:GetHook() and self:GetHook():GetPos():Distance(LocalPlayer():EyePos()) > 1500 then return end
 		
-	local xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen() -- kinda unsure about this Vec'0,0,+10'
+	xy = ((self:GetBobber() and self:GetBobber():GetPos() or Vector()) + Vector(0,0,10)):ToScreen() -- kinda unsure about this Vec'0,0,+10'
+	
+	temp_nick = ply:Nick()
+	team_col = team.GetColor(ply:Team())
 
-	local height_offset = 40
-	local margin_from_border = 16         -- 16 pixels from the top and bottom border of the screen/game window
-	local inner_box_xy = 3                -- padding of the 2 shades of background
-	local bg_heightdepthcatch = 0         -- if a catch or depth exist elongate the box
-	local minwid = 50                     -- minimum width of dark background box
-	local temp_nick = ply:Nick()
-	local markup = 0
-	local stripped_name_width = 0
-	local team_col = team.GetColor(ply:Team())
 	if EasyChat then 
 		markup = ec_markup.AdvancedParse(temp_nick, {
 			nick = true,
@@ -78,32 +91,34 @@ function ENT:HUDPaint()
 		}) 
 		stripped_name_width = markup:GetWidth()
 	end
-
-	local depth = ""
+	bg_heightdepthcatch = 0
 	if self:GetHook() and self:GetHook():WaterLevel() >= 1 then
-		depth = "\nDepth: " .. tostring(math.Round((self:GetDepth() * 2.54) / 100 * 10) / 10)
-		bg_heightdepthcatch = bg_heightdepthcatch + 10
-	end
+		depth = "\nDepth: " .. tostring(math.Round((self:GetDepth() * 2.54) / 100 * 10) / 10) or 0
+		bg_heightdepthcatch = bg_heightdepthcatch + 13
+    else
+        depth = ""
+    end
 
-	local catch = ""
 	local hooked_entity = self:GetHook() and self:GetHook():GetHookedEntity()
 	if hooked_entity and hooked_entity:WaterLevel() == 0 and hooked_entity:GetPos():Distance(LocalPlayer():EyePos()) < 500 then
 		catch = "\nCatch: " .. string.Trim(hooked_entity:GetNWString("fishingmod friendly")) -- the catch had 2 spaces before it
-		bg_heightdepthcatch = bg_heightdepthcatch + 10
-	end
+		bg_heightdepthcatch = bg_heightdepthcatch + 13
+    else
+        catch = ""
+    end
 
 	surface.SetFont("fixed_height_font")
 	local text_below = "Total Catch: " .. ply.fishingmod.catches .. "\nMoney: " .. (math.Round(ply.fishingmod.money) or "0") .. "\nLevel: " .. ply.fishingmod.level .. "\nLength: " .. tostring(math.Round((self:GetLength() * 2.54) / 100 * 10) / 10) .. depth .. catch
-	local box_below_w, box_below_h = surface.GetTextSize(text_below)
+	box_below_w, box_below_h = surface.GetTextSize(text_below)
 
 	surface.SetFont("fixed_name_font")
-	local xhypo, yhypo = surface.GetTextSize(temp_nick)
+	xhypo, yhypo = surface.GetTextSize(temp_nick)
 	
 	xy.y = math.Clamp(xy.y - height_offset, 120 + height_offset + margin_from_border, ScrH() + height_offset - margin_from_border - bg_heightdepthcatch)
 
-	local bg_x, bg_width = xy.x - math.max(minwid, xhypo / 2, box_below_w / 2) - 10, (math.max(minwid, xhypo / 2, box_below_w / 2) + 10) * 2
-	local bg_y, bg_height = xy.y - 120 - height_offset, 70 + box_below_h
-	local ecbg_x, ecbg_width = xy.x - math.max(minwid, stripped_name_width / 2, ( box_below_w / 2)) - 10, (math.max(minwid, stripped_name_width / 2, box_below_w / 2) + 10) * 2
+	bg_x, bg_width = xy.x - math.max(minwid, xhypo / 2, box_below_w / 2) - 10, (math.max(minwid, xhypo / 2, box_below_w / 2) + 10) * 2
+	bg_y, bg_height = xy.y - 120 - height_offset, 70 + box_below_h
+	ecbg_x, ecbg_width = xy.x - math.max(minwid, stripped_name_width / 2, ( box_below_w / 2)) - 10, (math.max(minwid, stripped_name_width / 2, box_below_w / 2) + 10) * 2
 
 	surface.SetDrawColor(ui_background.r, ui_background.g, ui_background.b, ui_background.a)
 
