@@ -7,7 +7,7 @@ surface.CreateFont("fixed_height_font", {
 	extended = false,
 	size = 13,
 	weight = 3000,
-	blursize = 0,
+	blursize = 0,g
 	scanlines = 0,
 	antialias = true,
 	underline = false,
@@ -115,8 +115,8 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 				surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
 				text_height, text_width = surface.GetTextSize(string.Replace(string.Replace(data.text, "\t", ""), "\n", ""))
 				text_height, text_width = text_height + 8, text_width + 8
-				surface.DrawRect(xy.x - text_height / 2 - pad, xy.y - text_width / 2 - 1 - pad + 16, text_height + pad * 2, text_width + pad * 1)
-				surface.DrawRect(xy.x - text_height / 2 + 3 - pad, xy.y - text_width / 2 + 2 - pad + 16, text_height - 6 + pad * 2, text_width - 6 + pad * 1)
+				surface.DrawRect(xy.x - text_height / 2 - pad, xy.y - text_width / 2 - 1 - pad + 16, text_height + pad * 2, text_width + pad)
+				surface.DrawRect(xy.x - text_height / 2 + 3 - pad, xy.y - text_width / 2 + 2 - pad + 16, text_height - 6 + pad * 2, text_width - 6 + pad)
 				draw.DrawText(string.Replace(data.text, "\t", ""), "fixed_height_font", xy.x, xy.y - (text_width / 2) + 15, ui_text, 1)
 			end
 		end
@@ -125,17 +125,17 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	if IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "weapon_fishing_rod" then
 		surface.SetDrawColor(crosshair.r, crosshair.g, crosshair.b, crosshair.a)
 		local xy = chpos:ToScreen()
-		surface.DrawRect( xy.x, xy.y+5, 1, 10)
-		surface.DrawRect( xy.x, xy.y-14, 1, 10)
+		surface.DrawRect( xy.x, xy.y + 5, 1, 10)
+		surface.DrawRect( xy.x, xy.y - 14, 1, 10)
 
-		surface.DrawRect( xy.x+5, xy.y, 10, 1 )
-		surface.DrawRect( xy.x-14, xy.y, 10, 1 )
+		surface.DrawRect( xy.x + 5, xy.y, 10, 1 )
+		surface.DrawRect( xy.x - 14, xy.y, 10, 1 )
 	end
 end)
 local force_b = 1
 concommand.Add("fishing_mod_b_opens_always", function(ply, cmd, args)
 	if isnumber(tonumber(args[1])) then
-		force_b = math.Clamp(math.Round(args[1]),0,1)
+		force_b = math.Clamp(math.Round(args[1]), 0, 1)
 	end
 end)
 hook.Add("Think", "Fishingmod.Keys:Think", function()

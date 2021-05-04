@@ -58,7 +58,7 @@ function fishingmod.SaveUIColors()
 	new_data = nil
 end
 function fishingmod.LoadUIColors()
-	local tempCol = Color(0, 0, 0, 72)
+	local temp_col = Color(0, 0, 0, 72)
 	if file.Exists(fishingmod_data_path, "DATA") then
 		if file.Exists(fishingmod_data_path .. fishingmod_data_file_name, "DATA") then
 			local temp_data = util.JSONToTable(file.Read(fishingmod_data_path .. fishingmod_data_file_name, "DATA"))
@@ -66,9 +66,8 @@ function fishingmod.LoadUIColors()
 			if temp_data then
 				for k, v in pairs(temp_data) do
 					if k and v then
-						if #tostring(k) < 4 then return end
-						if #tostring(v) < 4 then return end
-						temp_data[k] = string.ToColor(v) or tempCol
+						if #tostring(k) < 4 or #tostring(v) < 4 then return fishingmod.DefaultUIColors() end
+						temp_data[k] = string.ToColor(v) or temp_col
 					end
 				end
 				table.Merge(return_data, temp_data)
@@ -94,7 +93,12 @@ local fishingmod_sprite_plus, a = Material("sprites/key_12")
 fishingmod_sprite_minus:SetInt("$flags", 2097152)
 fishingmod_sprite_plus:SetInt("$flags", 2097152)
 
-local back_ground = fishingmod.DefaultUIColors().ui_background
+local col_green = Color(0, 255, 0)
+local col_white = Color(255, 255, 255)
+
+local margin = 3
+
+local background = fishingmod.DefaultUIColors().ui_background
 local ui_text = fishingmod.DefaultUIColors().ui_text
 local button_not_selected = fishingmod.DefaultUIColors().ui_text_bg
 local ui_button_hovered = fishingmod.DefaultUIColors().ui_button_hovered
@@ -106,7 +110,7 @@ local PANEL = {} -- Main panel
 
 function PANEL:Init()
 	if fishingmod.ColorTable then
-		back_ground = fishingmod.ColorTable.ui_background or back_ground
+		background = fishingmod.ColorTable.ui_background or background
 		ui_text = fishingmod.ColorTable.ui_text or ui_text
 		button_not_selected = fishingmod.ColorTable.ui_text_bg or button_not_selected
 		ui_button_hovered = fishingmod.ColorTable.ui_button_hovered or ui_button_hovered
@@ -132,87 +136,87 @@ function PANEL:Init()
 
 	local xpx, xpy = self:GetSize()
 
-	local upgradesbutton = vgui.Create("DButton", self) -- upgrades
-	local baitsbutton = vgui.Create("DButton", self) -- baits shop
-	local customizationbutton = vgui.Create("DButton", self) -- customization tab
+	local upgrades_button = vgui.Create("DButton", self) -- upgrades
+	local baits_button = vgui.Create("DButton", self) -- baits shop
+	local customization_button = vgui.Create("DButton", self) -- customization tab
 
-	upgradesbutton.selected = true
-	baitsbutton.selected = false
-	upgradesbutton:SetPos(3, 24)
-	upgradesbutton:SetSize((xpx - 6) / 3, 22)
-	upgradesbutton:SetText("Upgrades")
-	function upgradesbutton.Think()
+	upgrades_button.selected = true
+	baits_button.selected = false
+	upgrades_button:SetPos(margin, 24)
+	upgrades_button:SetSize((xpx - margin * 2) / margin, 22)
+	upgrades_button:SetText("Upgrades")
+	function upgrades_button.Think()
 		xpx, xpy = self:GetSize()
-		upgradesbutton:SetSize((xpx - 6) / 3, 22)
+		upgrades_button:SetSize((xpx - margin * 2) / margin, 22)
 	end
-	upgradesbutton:SetTextColor(ui_text)
-	upgradesbutton.DoClick = function()
-		upgradesbutton:SetColor(ui_text)
-		baitsbutton:SetColor(nopres)
-		customizationbutton:SetColor(nopres)
+	upgrades_button:SetTextColor(ui_text)
+	upgrades_button.DoClick = function()
+		upgrades_button:SetColor(ui_text)
+		baits_button:SetColor(nopres)
+		customization_button:SetColor(nopres)
 
-		baitsbutton:SetTextColor(button_not_selected)
-		customizationbutton:SetTextColor(button_not_selected)
+		baits_button:SetTextColor(button_not_selected)
+		customization_button:SetTextColor(button_not_selected)
 
-		upgradesbutton.selected = true
-		baitsbutton.selected = false
-		customizationbutton.selected = false
+		upgrades_button.selected = true
+		baits_button.selected = false
+		customization_button.selected = false
 
 		self.customization:Hide()
 		self.upgrade:Show()
 		self.baitshop:Hide()
 	end
-	upgradesbutton.Paint = function(self, w, h)
+	upgrades_button.Paint = function(self, w, h)
 		if self.selected then
-			upgradesbutton:SetColor(ui_text)
+			upgrades_button:SetColor(ui_text)
 		elseif not self.selected then
-			upgradesbutton:SetColor(button_not_selected)
+			upgrades_button:SetColor(button_not_selected)
 		end
-		if upgradesbutton:IsHovered() then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
-		elseif upgradesbutton.selected then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		if upgrades_button:IsHovered() then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
+		elseif upgrades_button.selected then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	baitsbutton:SetPos(3 + (xpx - 6) / 3, 24) -- baits shop start of conf
-	baitsbutton:SetSize((xpx - 6) / 3, 22)
-	function baitsbutton.Think()
+	baits_button:SetPos(margin + (xpx - margin * 2) / margin, 24) -- baits shop start of conf
+	baits_button:SetSize((xpx - margin * 2) / margin, 22)
+	function baits_button.Think()
 		xpx, xpy = self:GetSize()
-		baitsbutton:SetSize((xpx - 6) / 3, 22)
-		baitsbutton:SetPos(3 + (xpx - 6) / 3, 24)
+		baits_button:SetSize((xpx - margin * 2) / margin, 22)
+		baits_button:SetPos(margin + (xpx - margin * 2) / margin, 24)
 	end
-	baitsbutton:SetText("Bait Shop")
-	baitsbutton:SetTextColor(button_not_selected)
-	baitsbutton.DoClick = function()
-		baitsbutton:SetColor(ui_text)
-		upgradesbutton:SetColor(nopres)
-		customizationbutton:SetColor(nopres)
+	baits_button:SetText("Bait Shop")
+	baits_button:SetTextColor(button_not_selected)
+	baits_button.DoClick = function()
+		baits_button:SetColor(ui_text)
+		upgrades_button:SetColor(nopres)
+		customization_button:SetColor(nopres)
 
-		upgradesbutton:SetTextColor(button_not_selected)
-		customizationbutton:SetTextColor(button_not_selected)
+		upgrades_button:SetTextColor(button_not_selected)
+		customization_button:SetTextColor(button_not_selected)
 
-		upgradesbutton.selected = false
-		baitsbutton.selected = true
-		customizationbutton.selected = false
+		upgrades_button.selected = false
+		baits_button.selected = true
+		customization_button.selected = false
 
 		self.customization:Hide()
 		self.upgrade:Hide()
 		self.baitshop:Show()
 	end
-	baitsbutton.Paint = function(self, w, h)
+	baits_button.Paint = function(self, w, h)
 		if self.selected then
-			baitsbutton:SetColor(ui_text)
+			baits_button:SetColor(ui_text)
 		elseif not self.selected then
-			baitsbutton:SetColor(button_not_selected)
+			baits_button:SetColor(button_not_selected)
 		end
-		if baitsbutton:IsHovered() then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
-		elseif baitsbutton.selected then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		if baits_button:IsHovered() then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
+		elseif baits_button.selected then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
@@ -220,51 +224,51 @@ function PANEL:Init()
 	end
 
 
-	customizationbutton:SetPos(3 + (xpx - 6) / 3, 24) -- baits shop start of conf
-	customizationbutton:SetSize((xpx - 6) / 3, 22)
+	customization_button:SetPos(margin + (xpx - margin * 2) / margin, 24) -- baits shop start of conf
+	customization_button:SetSize((xpx - margin * 2) / margin, 22)
 	
-	function customizationbutton.Think()
+	function customization_button.Think()
 		xpx, xpy = self:GetSize()
-		if xpx % 3 == 2 then
-			customizationbutton:SetSize(math.Round((xpx - 6) / 3) + 1 , 22)
-			customizationbutton:SetPos(2 + (xpx - 6) / 3 * 2 , 24)
-		elseif xpx % 3 == 1  then
-			customizationbutton:SetSize(math.Round((xpx - 6) / 3) + 1, 22)
-			customizationbutton:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
+		if xpx % margin == 2 then -- odd widths
+			customization_button:SetSize(math.Round((xpx - margin * 2) / margin) + 1 , 22)
+			customization_button:SetPos(margin - 1 + (xpx - margin * 2) / margin * 2 , 24)
+		elseif xpx % margin == 1  then
+			customization_button:SetSize(math.Round((xpx - margin * 2) / margin) + 1, 22)
+			customization_button:SetPos(margin + (xpx - margin * 2) / margin * 2 , 24)
 		else
-			customizationbutton:SetSize(math.Round((xpx - 6) / 3) , 22)
-			customizationbutton:SetPos(3 + (xpx - 6) / 3 * 2 , 24)
+			customization_button:SetSize(math.Round((xpx - margin * 2) / margin) , 22)
+			customization_button:SetPos(margin + (xpx - margin * 2) / margin * 2 , 24)
 		end
 	end
-	customizationbutton:SetText("Customize")
-	customizationbutton:SetTextColor(button_not_selected)
-	customizationbutton.DoClick = function()
-		customizationbutton:SetColor(ui_text)
-		upgradesbutton:SetColor(nopres)
-		baitsbutton:SetColor(nopres)
+	customization_button:SetText("Customize")
+	customization_button:SetTextColor(button_not_selected)
+	customization_button.DoClick = function()
+		customization_button:SetColor(ui_text)
+		upgrades_button:SetColor(nopres)
+		baits_button:SetColor(nopres)
 
-		upgradesbutton:SetTextColor(button_not_selected)
-		baitsbutton:SetTextColor(button_not_selected)
+		upgrades_button:SetTextColor(button_not_selected)
+		baits_button:SetTextColor(button_not_selected)
 
-		upgradesbutton.selected = false
-		baitsbutton.selected = false
-		customizationbutton.selected = true
+		upgrades_button.selected = false
+		baits_button.selected = false
+		customization_button.selected = true
 
 		self.customization:Show()
 		self.upgrade:Hide()
 		self.baitshop:Hide()
 
 	end
-	customizationbutton.Paint = function(self, w, h)
+	customization_button.Paint = function(self, w, h)
 		if self.selected then
-			customizationbutton:SetColor(ui_text)
+			customization_button:SetColor(ui_text)
 		elseif not self.selected then
-			customizationbutton:SetColor(button_not_selected)
+			customization_button:SetColor(button_not_selected)
 		end
-		if(customizationbutton:IsHovered()) then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
-		elseif(customizationbutton.selected) then
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		if(customization_button:IsHovered()) then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
+		elseif(customization_button.selected) then
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		else
 			surface.SetDrawColor(nopres.r, nopres.g, nopres.b, nopres.a)
 		end
@@ -274,39 +278,39 @@ function PANEL:Init()
 
 	function self:Paint()
 		surface.SetTextColor(ui_text.r, ui_text.g, ui_text.b, ui_text.a)
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
-	local closebutton = vgui.Create("DButton", self)
+	local close_button = vgui.Create("DButton", self)
 	local x, y = self:GetSize()
-	closebutton.ButtonW = 60
-	closebutton:SetSize(closebutton.ButtonW, 18)
-	closebutton:SetText("Close")
-	closebutton:SetTextColor(ui_text)
-	closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
-	closebutton.DoClick = function()
+	close_button.ButtonW = 60
+	close_button:SetSize(close_button.ButtonW, 18)
+	close_button:SetText("Close")
+	close_button:SetTextColor(ui_text)
+	close_button:SetPos(x - close_button.ButtonW - margin, margin)
+	close_button.DoClick = function()
 		self:Close()
 	end
 	function self:OnSizeChanged(x, y)
-		closebutton:SetPos(math.max(x - closebutton.ButtonW - 3, 3), 3)
-		closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
+		close_button:SetPos(math.max(x - close_button.ButtonW - margin, margin), margin)
+		close_button:SetSize(math.min(close_button.ButtonW, x - margin * 2) , 18 )
 	end
-	closebutton.Paint = function(self, w, h)
+	close_button.Paint = function(self, w, h)
 		self:GetParent().lblTitle:SetTextColor(ui_text)
-		closebutton:SetTextColor(ui_text)
-		if(closebutton:IsDown() ) then
+		close_button:SetTextColor(ui_text)
+		if(close_button:IsDown() ) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(closebutton:IsHovered()) then
+		elseif(close_button:IsHovered()) then
 			surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 		else
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
 	
 	function self.baitshop:Paint()
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
@@ -322,16 +326,16 @@ local PANEL = {}
 
 function PANEL:Init()
 	local x, y = self:GetParent():GetSize()
-	self:SetSize(x - 6 , y - 3 - 46)
+	self:SetSize(x - margin * 2 , y - margin - 46)
 	function self:Think()
 		x, y = self:GetParent():GetSize()
-		self:SetSize(x - 6, y - 3 - 46 )
+		self:SetSize(x - margin * 2, y - margin - 46 )
 	end
-	self:SetPos(3, 46)
+	self:SetPos(margin, 46)
 	self:SetPadding(10)
 	function self:Paint()
 		surface.SetTextColor(ui_text.r, ui_text.g, ui_text.b, ui_text.a)
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		self.money:SetTextColor(ui_text)
 		return true
@@ -372,12 +376,12 @@ local PANEL = {}
 function PANEL:Init()
 	
 	local x, y = self:GetParent():GetSize()
-	self:SetSize(x - 6, y - 3 - 46)
+	self:SetSize(x - margin * 2, y - margin - 46)
 	function self:Think()
 		x, y = self:GetParent():GetSize()
-		self:SetSize(x - 6, y - 3 - 46)
+		self:SetSize(x - margin * 2, y - margin - 46)
 	end
-	self:SetPos(3, 46)
+	self:SetPos(margin, 46)
 	self:EnableHorizontal(true)
 	self:EnableVerticalScrollbar(true)
 	self:SetVisible(false)
@@ -426,14 +430,14 @@ local PANEL = {}
 
 function PANEL:Init()
 	local x, y = self:GetParent():GetSize()
-	self:SetSize(x - 6, y - 3 - 46)
-	self:SetPos(3, 46)
+	self:SetSize(x - margin * 2, y - margin - 46)
+	self:SetPos(margin, 46)
 	self:SetVisible(false)
 	function self:Think()
 		x, y = self:GetParent():GetSize()
-		self:SetSize(x - 6, y - 3 - 46)
+		self:SetSize(x - margin * 2, y - margin - 46)
 		if fishingmod.ColorTable then
-			back_ground = fishingmod.ColorTable.ui_background or back_ground
+			background = fishingmod.ColorTable.ui_background or background
 			ui_text = fishingmod.ColorTable.ui_text or ui_text
 			button_not_selected = fishingmod.ColorTable.ui_text_bg or button_not_selected
 			ui_button_hovered = fishingmod.ColorTable.ui_button_hovered or ui_button_hovered
@@ -444,117 +448,117 @@ function PANEL:Init()
 		end
 	end
 
-	local savebutton = vgui.Create("DButton", self)
-	savebutton:SetPos(10, 50)
-	savebutton:SetSize(120, 30)
-	savebutton:SetTextColor(ui_text)
-	savebutton:SetText("Save")
-	savebutton.Paint = function(self, w, h)
-		savebutton:SetTextColor(ui_text)
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+	local save_button = vgui.Create("DButton", self)
+	save_button:SetPos(10, 50)
+	save_button:SetSize(120, 30)
+	save_button:SetTextColor(ui_text)
+	save_button:SetText("Save")
+	save_button.Paint = function(self, w, h)
+		save_button:SetTextColor(ui_text)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	savebutton.DoClick = function()
+	save_button.DoClick = function()
 		if fishingmod.SaveUIColors then
 			fishingmod.SaveUIColors()
-			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been saved!")
+			chat.AddText(col_green, "[Fishing Mod]", col_white, ": Colors have been saved!")
 		end
 	end
-	local defaultsbutton = vgui.Create("DButton", self)
-	defaultsbutton:SetPos(10, 90)
-	defaultsbutton:SetSize(120, 30)
-	defaultsbutton:SetTextColor(ui_text)
-	defaultsbutton:SetText("Defaults")
-	defaultsbutton.Paint = function(self, w, h)
-		defaultsbutton:SetTextColor(ui_text)
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+	local defaults_button = vgui.Create("DButton", self)
+	defaults_button:SetPos(10, 90)
+	defaults_button:SetSize(120, 30)
+	defaults_button:SetTextColor(ui_text)
+	defaults_button:SetText("Defaults")
+	defaults_button.Paint = function(self, w, h)
+		defaults_button:SetTextColor(ui_text)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	defaultsbutton.DoClick = function()
+	defaults_button.DoClick = function()
 		if fishingmod.DefaultUIColors then
 			fishingmod.ColorTable = fishingmod.DefaultUIColors()
-			chat.AddText(Color(0, 255, 0, 255), "[Fishing Mod]", Color(255, 255, 255), ": Colors have been set to default!")
+			chat.AddText(col_green, "[Fishing Mod]", col_white, ": Colors have been set to default!")
 		end
 	end
 	
-	local combobox = vgui.Create("DComboBox", self )
-	combobox:SetPos(10, 10)
-	combobox:SetSize(120, 30)
-	combobox:SetValue("Select element")
+	local combo_box = vgui.Create("DComboBox", self )
+	combo_box:SetPos(10, 10)
+	combo_box:SetSize(120, 30)
+	combo_box:SetValue("Select element")
 	if fishingmod.ColorTable then
 		if fishingmod.LoadUIColors then
 			for k, v in pairs(fishingmod.LoadUIColors()) do
-				combobox:AddChoice(translation[k])
+				combo_box:AddChoice(translation[k])
 			end
 		end
 	end
-	combobox.Paint = function(self, w, h)
-		combobox:SetTextColor(ui_text)
-		if(combobox:IsDown()) then
+	combo_box.Paint = function(self, w, h)
+		combo_box:SetTextColor(ui_text)
+		if(combo_box:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(combobox:IsHovered()) then
+		elseif(combo_box:IsHovered()) then
 			surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 		else
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
-	local colormixer = vgui.Create( "DColorMixer", self)
+	local color_mixer = vgui.Create( "DColorMixer", self)
 	local x, y = self:GetSize()
-	colormixer:SetPos(120 + 20, 10)
-	colormixer:SetWangs(true)
-	colormixer:SetPalette(false)
-	colormixer:SetSize(x - 10 - 120 - 20, y - 20)
-	function colormixer:ValueChanged(col)
+	color_mixer:SetPos(120 + 20, 10)
+	color_mixer:SetWangs(true)
+	color_mixer:SetPalette(false)
+	color_mixer:SetSize(x - 10 - 120 - 20, y - 20)
+	function color_mixer:ValueChanged(col)
 		if editable and editable != "" and fishingmod.DefaultUIColors()[editable] then
 			fishingmod.ColorTable[editable] = Color(col.r, col.g, col.b, col.a)
 		end
 	end
-	function combobox.OnSelect(self, val, str)
+	function combo_box.OnSelect(self, val, str)
 		if type(str)=="string" and str != "" then
 			editable = translation[str]
 			if fishingmod.ColorTable[editable] then
-				colormixer:SetColor(fishingmod.ColorTable[editable])
+				color_mixer:SetColor(fishingmod.ColorTable[editable])
 			end
 		end
 	end
 	
-	function savebutton:Paint(w, h)
-		savebutton:SetTextColor(ui_text)
-		if(savebutton:IsDown()) then
+	function save_button:Paint(w, h)
+		save_button:SetTextColor(ui_text)
+		if(save_button:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(savebutton:IsHovered()) then
+		elseif(save_button:IsHovered()) then
 			surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 		else
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
-	function defaultsbutton:Paint(w, h)
-		defaultsbutton:SetTextColor(ui_text)
-		if(defaultsbutton:IsDown()) then
+	function defaults_button:Paint(w, h)
+		defaults_button:SetTextColor(ui_text)
+		if(defaults_button:IsDown()) then
 			surface.SetDrawColor(pres.r, pres.g, pres.b, pres.a)
-		elseif(defaultsbutton:IsHovered()) then
+		elseif(defaults_button:IsHovered()) then
 			surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 		else
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		end
 		surface.DrawRect(0, 0, w, h)
 	end
 	function self:Paint()
 		surface.SetTextColor(ui_text.r, ui_text.g, ui_text.b, ui_text.a)
-		surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+		surface.SetDrawColor(background.r, background.g, background.b, background.a)
 		surface.DrawRect(0, 0, self:GetWide(), self:GetTall())
 		return true
 	end
 	function self:OnSizeChanged(x, y)
-		colormixer:SetSize(math.max(math.min(140, x - 20), x - 10 - 120 - 20), y - 20)
-		colormixer:SetPos(math.min(120 + 20, math.max(x - 150, 10)), 10)
-		combobox:SetSize(math.min(120, x - 170), math.min(30, y - 20))
-		savebutton:SetSize(math.min(120, x - 170), math.min(30, y - 60))
-		defaultsbutton:SetSize(math.min(120, x - 170), math.min(30, y - 100))
+		color_mixer:SetSize(math.max(math.min(140, x - 20), x - 10 - 120 - 20), y - 20)
+		color_mixer:SetPos(math.min(120 + 20, math.max(x - 150, 10)), 10)
+		combo_box:SetSize(math.min(120, x - 170), math.min(30, y - 20))
+		save_button:SetSize(math.min(120, x - 170), math.min(30, y - 60))
+		defaults_button:SetSize(math.min(120, x - 170), math.min(30, y - 100))
 	end
 end
 
@@ -658,7 +662,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetSale(multiplier)
-	self.percent = math.Round((multiplier * - 1 + 1) * 100)
+	self.percent = math.Round((-multiplier + 1) * 100)
 end
 
 function PANEL:SetGray(bool)

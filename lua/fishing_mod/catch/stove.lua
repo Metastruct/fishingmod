@@ -12,6 +12,8 @@ fishingmod.AddCatch{
 	levelrequired = 5,
 	bait = {"models/props_c17/metalPot002a.mdl"}
 }
+
+local margin = 3
 local color_white = color_white or Color(255, 255, 255, 255)
 local ENT = {}
 
@@ -137,13 +139,13 @@ if CLIENT then
 	end
 
 	function ENT:ShowHeatAdjuster()
-		local back_ground = fishingmod.DefaultUIColors().ui_background
+		local background = fishingmod.DefaultUIColors().ui_background
 		local button_not_selected = fishingmod.DefaultUIColors().ui_button_deselected
 		local ui_button_selected = fishingmod.DefaultUIColors().ui_button_selected
 		local ui_button_hovered = fishingmod.DefaultUIColors().ui_button_hovered
 		local ui_text = fishingmod.DefaultUIColors().ui_text
 		if fishingmod.ColorTable then
-			back_ground = fishingmod.ColorTable.ui_background or back_ground
+			background = fishingmod.ColorTable.ui_background or background
 			button_not_selected = fishingmod.ColorTable.ui_button_deselected or button_not_selected
 			ui_button_selected = fishingmod.ColorTable.ui_button_selected or ui_button_selected
 			ui_button_hovered = fishingmod.ColorTable.ui_button_hovered or ui_button_hovered
@@ -154,35 +156,35 @@ if CLIENT then
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
 			
-			surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 			surface.DrawRect(0, 0, x, y)
-			surface.DrawRect(3, 24, x - 6, y - 24 - 3)
+			surface.DrawRect(margin, 24, x - margin * 2, y - 24 - margin)
 		end
-		frame:ShowCloseButton(false)
-		local closebutton = vgui.Create("DButton", frame)
+		frame:Showclose_button(false)
+		local close_button = vgui.Create("DButton", frame)
 		local x, y = frame:GetSize()
-		closebutton.ButtonW = 60
-		closebutton:SetSize(closebutton.ButtonW, 18)
-		closebutton:SetText("Close")
-		closebutton:SetTextColor(ui_text)
-		closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
-		closebutton.DoClick = function()
+		close_button.ButtonW = 60
+		close_button:SetSize(close_button.ButtonW, 18)
+		close_button:SetText("Close")
+		close_button:SetTextColor(ui_text)
+		close_button:SetPos(x - close_button.ButtonW - margin, margin)
+		close_button.DoClick = function()
 			frame:Close()
 		end
-		closebutton.Paint = function(self, w, h)
+		close_button.Paint = function(self, w, h)
 			
-			if(closebutton:IsDown() ) then
+			if(close_button:IsDown() ) then
 				surface.SetDrawColor(button_not_selected.r, button_not_selected.g, button_not_selected.b, button_not_selected.a)
-			elseif(closebutton:IsHovered()) then
+			elseif(close_button:IsHovered()) then
 				surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 			else
-				surface.SetDrawColor(back_ground.r, back_ground.g, back_ground.b, back_ground.a)
+				surface.SetDrawColor(background.r, background.g, background.b, background.a)
 			end
 			surface.DrawRect(0, 0, w, h)
 		end
 		function frame:OnSizeChanged(x, y)
-			closebutton:SetPos(math.max(x - closebutton.ButtonW - 3, 3), 3)
-			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
+			close_button:SetPos(math.max(x - close_button.ButtonW - margin, margin), margin)
+			close_button:SetSize(math.min(close_button.ButtonW, x - margin * 2) , 18 )
 		end
 		frame:SetSize(300, 80)
 		frame.lblTitle:SetTextColor(ui_text)
