@@ -7,7 +7,7 @@ surface.CreateFont("fixed_height_font", {
 	extended = false,
 	size = 13,
 	weight = 3000,
-	blursize = 0,g
+	blursize = 0,
 	scanlines = 0,
 	antialias = true,
 	underline = false,
