@@ -1,3 +1,4 @@
+
 fishingmod.AddCatch{
 	friendly = "Stove",
 	type = "fishing_mod_catch_stove",
@@ -11,6 +12,8 @@ fishingmod.AddCatch{
 	levelrequired = 5,
 	bait = {"models/props_c17/metalPot002a.mdl"}
 }
+
+local margin = 3
 local color_white = color_white or Color(255, 255, 255, 255)
 local ENT = {}
 
@@ -33,9 +36,7 @@ function ENT:SetupDataTables()
 end
 
 if CLIENT then
-
 	local sprite = Material( "sprites/splodesprite" )
-	
 	function ENT:Initialize()
 		self.emitter = ParticleEmitter(self:GetPos())
 		self.sound = CreateSound(self, "ambient/fire/fire_small_loop2.wav")
@@ -136,41 +137,57 @@ if CLIENT then
 			render.DrawSprite( self:GetPos() + ( self:GetUp() * v.position.z ) + ( self:GetRight() * v.position.x ) + ( self:GetForward() * v.position.y ), 1, 1, Color( 255, 255, 255, 255 ) )
 		end
 	end
-		
+
 	function ENT:ShowHeatAdjuster()
+		local background = fishingmod.DefaultUIColors().ui_background
+		local button_not_selected = fishingmod.DefaultUIColors().ui_button_deselected
+		local ui_button_selected = fishingmod.DefaultUIColors().ui_button_selected
+		local ui_button_hovered = fishingmod.DefaultUIColors().ui_button_hovered
+		local ui_text = fishingmod.DefaultUIColors().ui_text
+		if fishingmod.ColorTable then
+			background = fishingmod.ColorTable.ui_background or background
+			button_not_selected = fishingmod.ColorTable.ui_button_deselected or button_not_selected
+			ui_button_selected = fishingmod.ColorTable.ui_button_selected or ui_button_selected
+			ui_button_hovered = fishingmod.ColorTable.ui_button_hovered or ui_button_hovered
+			ui_text = fishingmod.ColorTable.ui_text or ui_text
+		else
+			fishingmod.ColorTable = fishingmod.DefaultUIColors()
+		end
 		local frame = vgui.Create("DFrame")
 		frame.Paint = function(s, x, y)
-			surface.SetDrawColor(0, 0, 0, 144)
+			
+			surface.SetDrawColor(background.r, background.g, background.b, background.a)
 			surface.DrawRect(0, 0, x, y)
-			surface.DrawRect(3, 24, x-6, y-24-3)
+			surface.DrawRect(margin, 24, x - margin * 2, y - 24 - margin)
 		end
-		frame:ShowCloseButton(false)
-		local closebutton = vgui.Create("DButton", frame)
+		frame:Showclose_button(false)
+		local close_button = vgui.Create("DButton", frame)
 		local x, y = frame:GetSize()
-		closebutton.ButtonW = 60
-		closebutton:SetSize(closebutton.ButtonW, 18)
-		closebutton:SetText("Close")
-		closebutton:SetTextColor(color_white)
-		closebutton:SetPos(x - closebutton.ButtonW - 3, 3)
-		closebutton.DoClick = function()
+		close_button.ButtonW = 60
+		close_button:SetSize(close_button.ButtonW, 18)
+		close_button:SetText("Close")
+		close_button:SetTextColor(ui_text)
+		close_button:SetPos(x - close_button.ButtonW - margin, margin)
+		close_button.DoClick = function()
 			frame:Close()
 		end
-		closebutton.Paint = function(self, w, h)
-			if(closebutton:IsDown() ) then
-				surface.SetDrawColor(0, 0, 0, 72)
-			elseif(closebutton:IsHovered()) then
-				surface.SetDrawColor(155, 155, 155, 144)
+		close_button.Paint = function(self, w, h)
+			
+			if(close_button:IsDown() ) then
+				surface.SetDrawColor(button_not_selected.r, button_not_selected.g, button_not_selected.b, button_not_selected.a)
+			elseif(close_button:IsHovered()) then
+				surface.SetDrawColor(ui_button_hovered.r, ui_button_hovered.g, ui_button_hovered.b, ui_button_hovered.a)
 			else
-				surface.SetDrawColor(0, 0, 0, 144)
+				surface.SetDrawColor(background.r, background.g, background.b, background.a)
 			end
 			surface.DrawRect(0, 0, w, h)
 		end
 		function frame:OnSizeChanged(x, y)
-			closebutton:SetPos(math.max(x - closebutton.ButtonW - 3, 3), 3)
-			closebutton:SetSize(math.min(closebutton.ButtonW, x - 6) , 18 )
+			close_button:SetPos(math.max(x - close_button.ButtonW - margin, margin), margin)
+			close_button:SetSize(math.min(close_button.ButtonW, x - margin * 2) , 18 )
 		end
 		frame:SetSize(300, 80)
-		frame:GetTable().lblTitle:SetTextColor(color_white)
+		frame.lblTitle:SetTextColor(ui_text)
 		frame:Center()
 		local p = LocalPlayer()
 
@@ -184,8 +201,8 @@ if CLIENT then
 		slider:SetMax(100)
 		slider:SetText("Heat")
 		slider:SetConVar("fishingmod_stove_heat")
-		slider:GetTable().Label:SetTextColor(color_white)
-		slider:GetTable().Wang.m_Skin.colTextEntryText = color_white
+		slider.Label:SetTextColor(ui_text)
+		slider.Wang.m_Skin.colTextEntryText = ui_text
 	end
 	
 	
@@ -234,7 +251,7 @@ else
 		
 		self.smoothheat = self.smoothheat + ((heat - self.smoothheat) / 1000)
 		
-		self.dt.heat = self.smoothheat * -1 +100
+		self.dt.heat = self.smoothheat * -1 + 100
 		
 		for key, data in pairs(self.storage) do
 		
@@ -251,7 +268,7 @@ else
 				if catch:IsOnFire() then catch.data.fried = 1000 end
 								
 				catch.data.fried = catch.data.fried or 0
-				catch.data.fried = math.Clamp(catch.data.fried + (catch.data.fried*self.dt.heat/700), 1, 1000)
+				catch.data.fried = math.Clamp(catch.data.fried + (catch.data.fried * self.dt.heat / 700), 1, 1000)
 				
 --[[ 				if (lastprint or 0) < CurTime() then 
 					print(catch.data.fried, self.smoothheat)
@@ -274,7 +291,7 @@ else
 	
 		if (self.next_search or 0) < CurTime() then
 		
-			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() ) ) do
+			for key, entity in pairs( ents.FindInBox( self:GetPos() + self:OBBMins(), self:GetPos() + self:OBBMaxs() * Vector(1, 1, 1.2) ) ) do
 				if entity.data and entity ~= self and not entity.shelf_stored and entity:GetClass() ~= "fishing_mod_catch_stove" and not entity.is_bait then
 					self:AddItem( entity )
 				end
