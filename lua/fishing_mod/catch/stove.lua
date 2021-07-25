@@ -160,7 +160,7 @@ if CLIENT then
 			surface.DrawRect(0, 0, x, y)
 			surface.DrawRect(margin, 24, x - margin * 2, y - 24 - margin)
 		end
-		frame:Showclose_button(false)
+		frame:ShowCloseButton(false)
 		local close_button = vgui.Create("DButton", frame)
 		local x, y = frame:GetSize()
 		close_button.ButtonW = 60
