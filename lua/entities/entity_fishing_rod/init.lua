@@ -90,8 +90,6 @@ function ENT:AssignPlayer(ply)
 	fish_hook:SetOwner(ply)
 	fish_hook:SetPos(position)
 	fish_hook:Spawn()
-	function fish_hook:CanTool() return false end
-	function fish_hook:CanProperty() return false end
 	hook.Run("PlayerSpawnedSENT", ply, fish_hook)
 	if fish_hook.CPPISetOwner then fish_hook:CPPISetOwner(ply) end
 	

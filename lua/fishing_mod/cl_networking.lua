@@ -95,11 +95,8 @@ net.Receive("Fishingmod:Catch", function()
 	local value = net.ReadInt(32)
 	
 	value = value == 0 and "????" or value
-	if(UndercorateNick) then
-		owner = UndercorateNick(owner)
-	elseif(EasyChat) then
-		owner = ec_markup.Parse(owner):GetText()
-	end
+    owner = EasyChat and ec_markup.Parse(owner):GetText() or UndercorateNick and UndercorateNick(owner) or owner
+
 	fishingmod.InfoTable.Catch[entity] = {
 		friendly = friendly,
 		caught = caught,
@@ -140,11 +137,8 @@ net.Receive("Fishingmod:Bait", function()
 		owner = owner,
 	}
 	local nameparse = ply:Nick()
-	if(UndercorateNick) then
-		nameparse = UndercorateNick(nameparse)
-	elseif(EasyChat) then
-		nameparse = ec_markup.Parse(nameparse):GetText()
-	end
+	nameparse = EasyChat and ec_markup.Parse(nameparse):GetText() or UndercorateNick and UndercorateNick(nameparse) or nameparse
+
 	local text = Format([[
 		This bait is owned by %s.
 	]],

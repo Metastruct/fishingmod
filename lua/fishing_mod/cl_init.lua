@@ -81,8 +81,14 @@ end)
 local ui_text = fishingmod.DefaultUIColors().ui_text
 local bg = fishingmod.DefaultUIColors().ui_background
 local crosshair = fishingmod.DefaultUIColors().crosshair_color
+local entity = NULL
+local xy = {x=0,y=0}
+local text_height, text_width = 0, 0
+local pad = 3
+local data
+local chpos = Vector()
 hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
-	local entity = LocalPlayer():GetEyeTrace().Entity
+	entity = LocalPlayer():GetEyeTrace().Entity
 	if fishingmod.ColorTable then 
 		crosshair = fishingmod.ColorTable.crosshair_color or fishingmod.DefaultUIColors().crosshair_color
 		ui_text = fishingmod.ColorTable.ui_text or fishingmod.DefaultUIColors().ui_text
@@ -90,13 +96,11 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 	end
 	entity = IsValid(entity) and IsValid(entity:GetNWEntity("FMRedirect")) and entity:GetNWEntity("FMRedirect") or entity
 	if IsValid(entity) then
-		local xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
-		local text_height, text_width = 0, 0
+		xy = (entity:LocalToWorld(entity:OBBCenter())):ToScreen()
+		text_height, text_width = 0, 0
 		xy.y = math.min(math.max(64, xy.y), ScrH() - 64)
-		local pad = 3
-			
 		if IsValid(entity) and (entity:GetPos() - LocalPlayer():GetShootPos()):Length() < 120 then
-			local data = fishingmod.InfoTable.Catch[entity:EntIndex()]
+			data = fishingmod.InfoTable.Catch[entity:EntIndex()]
 			if data and data.text then
 				data.text = string.Replace(string.Replace(data.text, "\t", ""), "  ", " ")
 				surface.SetFont("fixed_height_font")
@@ -121,10 +125,10 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 			end
 		end
 	end
-	local chpos = LocalPlayer():GetEyeTraceNoCursor().HitPos
+	chpos = LocalPlayer():GetEyeTraceNoCursor().HitPos
 	if IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "weapon_fishing_rod" then
 		surface.SetDrawColor(crosshair.r, crosshair.g, crosshair.b, crosshair.a)
-		local xy = chpos:ToScreen()
+		xy = chpos:ToScreen()
 		surface.DrawRect( xy.x, xy.y + 5, 1, 10)
 		surface.DrawRect( xy.x, xy.y - 14, 1, 10)
 
@@ -138,9 +142,10 @@ concommand.Add("fishing_mod_b_opens_always", function(ply, cmd, args)
 		force_b = math.Clamp(math.Round(args[1]), 0, 1)
 	end
 end)
+local ply = LocalPlayer()
 hook.Add("Think", "Fishingmod.Keys:Think", function()
-	local ply = LocalPlayer()
-	if ply:GetFishingRod() and not vgui.CursorVisible() then
+	ply = IsValid(LocalPlayer()) and ply or LocalPlayer()
+	if ply.GetFishingRod and ply:GetFishingRod() and not vgui.CursorVisible() then
 		if input.IsKeyDown(KEY_B) and force_b == 1 then
 			local menu = fishingmod.UpgradeMenu
 			if ValidPanel(menu) and not menu:IsVisible() then
@@ -174,10 +179,10 @@ timer.Create("Fishingmod:Tick", 2, 0, function()
 		end
 	end
 end)
-
+local fishingRod
 hook.Add("CalcView", "Fishingmod:CalcView", function(ply, offset, angles, fov)
 	if GetViewEntity() ~= ply then return end
-	local fishingRod = ply:GetFishingRod()
+	fishingRod = ply:GetFishingRod()
 	if fishingRod and not ply:InVehicle() then
 
 		local view = {}
