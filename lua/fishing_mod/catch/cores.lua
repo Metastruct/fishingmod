@@ -32,7 +32,6 @@ if SERVER then
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
-		self:SetColor(0,0,0,0)
 		
 		self.dt.Core = math.random(0,3)
 		
@@ -41,6 +40,7 @@ if SERVER then
 		self.body:SetAngles(self:GetAngles())
 		self.body:SetPos(self:GetPos())
 		self.body:SetParent(self)
+		self.body:Spawn()
 		
 		self.body:SetSkin(self.dt.Core)
 		
@@ -113,10 +113,6 @@ else
 	end
 	
 	function ENT:Draw()
-		
-		self:DrawShadow(false)
-		self:SetColor(0,0,0,0)
-		
 	end
 	
 end

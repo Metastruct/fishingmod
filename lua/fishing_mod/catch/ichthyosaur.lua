@@ -44,7 +44,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		self:StartMotionController()
 		
-		self:SetColor(0,0,0,0)
+		self:SetColor(Color(0,0,0,0))
 		
 		self.InAttack = 1
 		
