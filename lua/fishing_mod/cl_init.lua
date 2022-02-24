@@ -139,7 +139,7 @@ end)
 local force_b = 1
 concommand.Add("fishing_mod_b_opens_always", function(ply, cmd, args)
 	if isnumber(tonumber(args[1])) then
-		force_b = math.Clamp(math.Round(args[1]), 0, 1)
+		force_b = math.Clamp(math.Round(tonumber(args[1])), 0, 1)
 	end
 end)
 local ply = LocalPlayer()

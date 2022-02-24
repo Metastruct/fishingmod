@@ -86,8 +86,10 @@ concommand.Add("fishing_mod_buy_bait", function(ply, command, arguments)
 		if not util.IsValidProp(bait:GetModel():lower()) then bait:PhysicsInitBox(Vector(1, 1, 1 ) * -7,Vector(1, 1, 1) * 7) end
 		
 		fishingmod.SetBaitInfo(bait)
-		hooky:SetPos(hooky:GetPos() + Vector(0, 0, (1 - util.QuickTrace(hooky:GetPos(), Vector(0, 0, -16) ).Fraction) * 16 ) )
-		fishingmod.HookBait(ply, bait, hooky)
+        if hooky then
+    		hooky:SetPos(hooky:GetPos() + Vector(0, 0, (1 - util.QuickTrace(hooky:GetPos(), Vector(0, 0, -16) ).Fraction) * 16 ) )
+    		fishingmod.HookBait(ply, bait, hooky)
+        end
 		ply.fishingmod.last_bait_spawn = CurTime()
 	end
 end)

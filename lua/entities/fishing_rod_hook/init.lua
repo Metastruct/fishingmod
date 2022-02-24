@@ -214,6 +214,7 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
+    if not IsValid(self.bobber) and IsValid(self) then self:Remove() end
 	for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
 		if entity.is_recatchable and not self.just_released and not entity.just_unhooked then
 			self:Hook(entity, entity.data)

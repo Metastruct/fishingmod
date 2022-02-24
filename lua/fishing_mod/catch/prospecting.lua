@@ -79,7 +79,7 @@ ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
 
 if SERVER then
-	
+	local col_bronze = Color(184, 115, 51, 255)
 	function ENT:Initialize()
 		self:SetModel("models/props_mining/ingot001.mdl")
 		self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -87,7 +87,7 @@ if SERVER then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
-		self:SetColor(Color(184, 115, 51, 255))
+		self:SetColor(col_bronze)
 
 	end
 	
@@ -177,7 +177,7 @@ ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
 
 if SERVER then
-	
+	local color_gray = Color(100, 100, 100, 255)
 	function ENT:Initialize()
 		self:SetModel("models/props_mining/ingot001.mdl")
 		self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -186,7 +186,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
 		self:SetMaterial("models/shiny")
-		self:SetColor(100, 100, 100, 255)
+		self:SetColor(color_gray)
 
 	end
 	
@@ -227,7 +227,7 @@ ENT.Type = "anim"
 ENT.Base = "fishing_mod_base"
 
 if SERVER then
-	
+	local col_silver = Color(164, 164, 164, 255)
 	function ENT:Initialize()
 		self.ThinkNext = 0
 		self:SetModel("models/props_mining/ingot001.mdl")
@@ -237,7 +237,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
 		self:SetMaterial("models/shiny")
-		self:SetColor(Color(164, 164, 164, 255))
+		self:SetColor(col_silver)
 
 	end
 	
@@ -467,7 +467,7 @@ if SERVER then
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		
 		self:SetMaterial("models/shiny")
-		self:SetColor(Color(164, 164, 164, 255))
+		self:SetColor(col_silver)
 		
 	end
 	
