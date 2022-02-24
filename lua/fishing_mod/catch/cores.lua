@@ -24,7 +24,7 @@ function ENT:SetupDataTables()
 end
 
 if SERVER then
-	
+	local col_invisible = Color(0,0,0,0)
 	function ENT:Initialize()
 		
 		self:SetModel("models/props_bts/glados_ball_reference.mdl")
@@ -32,6 +32,7 @@ if SERVER then
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
+		self:SetColor(col_invisible)
 		
 		self.dt.Core = math.random(0,3)
 		
@@ -40,7 +41,6 @@ if SERVER then
 		self.body:SetAngles(self:GetAngles())
 		self.body:SetPos(self:GetPos())
 		self.body:SetParent(self)
-		self.body:Spawn()
 		
 		self.body:SetSkin(self.dt.Core)
 		
@@ -53,13 +53,15 @@ if SERVER then
 	end
 	
 	function ENT:Think()
-		self.body:ResetSequence(self.Anim)
+		if self and IsValid(self.body) then
+            self.body:ResetSequence(self.Anim)
+        end
 	end
 	
 	function ENT:OnRemove()
-		
-		self.body:Remove()
-		
+		if self and IsValid(self.body) then
+		    self.body:Remove()
+        end
 	end
 	
 else
@@ -113,6 +115,10 @@ else
 	end
 	
 	function ENT:Draw()
+		
+		self:DrawShadow(false)
+		self:SetColor(col_invisible)
+		
 	end
 	
 end

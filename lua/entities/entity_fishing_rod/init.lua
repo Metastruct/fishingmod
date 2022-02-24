@@ -58,11 +58,14 @@ function ENT:SetLength(length)
 	if not IsValid(self.physical_rope) then return end
 	self.physical_rope:Fire("SetSpringLength", length/2+10)
 	local hookent = self:GetHook()
-	if IsValid(hookent) then
+	if IsValid(hookent) and IsValid(hookent.physical_rope) then
 		hookent.physical_rope:Fire("SetSpringLength", length/2+10)
 	end
 	self.dt.length = length
 end
+
+function ENT:CanTool() return false end
+function ENT:CanProperty() return false end
 
 function ENT:AssignPlayer(ply)
 	self:SetOwner(ply)
@@ -125,4 +128,7 @@ function ENT:OnRemove()
 
 	SafeRemoveEntity(self.physical_rope)
 	SafeRemoveEntity(self.avatar)
+	if self.dt.attach.dt then
+		SafeRemoveEntity(self.dt.attach.dt.hook)
+	end
 end

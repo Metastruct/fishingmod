@@ -15,6 +15,9 @@ function ENT:Initialize()
 	end
 end
 
+function ENT:CanTool() return false end
+function ENT:CanProperty() return false end
+
 function ENT:Yank( force )
 	force = force or math.random( 50, 100 )
 	self:GetPhysicsObject():AddVelocity( Vector( 0, 0, -force ) )

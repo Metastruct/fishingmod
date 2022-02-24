@@ -26,17 +26,23 @@ function ENT:StartTouch(entity)
 	if fishingmod.IsBait(entity) then
 		self:HookBait(entity)
 	end
-	fishingmod.HookBait(self.bobber.rod:GetPlayer(), entity)
+	if self.bobber.rod then
+		fishingmod.HookBait(self.bobber.rod:GetPlayer(), entity)
+	end
 end
 
 function ENT:HookBait(bait)
-	if not IsValid(self.dt.bait) then
+	if not IsValid(self.dt.bait) and not bait.JustSeparated and not self:GetHookedEntity() then
+		bait.JustSeparated = true
+		timer.Simple(1, function() if IsValid(bait) then bait.JustSeparated = false end end)
 		local phys = bait:GetPhysicsObject()
 		if IsValid(phys) then
 			phys:EnableMotion(true)
 			phys:Wake()
 		end
-		bait:SetPos(self:GetPos())
+		
+		self:SetPos(bait:GetPos())
+		constraint.NoCollide( self, self.dt.bait, 0, 0)
 		self.dt.bait = bait
 		constraint.Weld(self, self.dt.bait, 0, 0, 0, false, false)
 	end
@@ -71,12 +77,12 @@ function ENT:Hook( entity, data )
 		if data.size then
 			entity:SetNWFloat("fishingmod size", data.size)
 		end
+		self:SetPos(self:GetPos()+Vector(0,0,64))
 		entity.is_catch = true
 		entity.data = data
 		entity.data.caught = os.time()
 		entity.data.owner = ply
 		entity.data.ownerid = ply:UniqueID()
-		
 		entity:SetPos(self:GetPos())
 		entity:SetOwner(self)
 		entity.is_catch = true
@@ -87,6 +93,7 @@ function ENT:Hook( entity, data )
 		else
 			constraint.Weld(entity, self, 0, 0, ply.fishingmod.force * 700 + 1000 )
 		end
+		
 		fishingmod.SetCatchInfo(entity)
 		self.dt.hooked = entity
         if entity.PostHook then entity:PostHook(ply, true) end
@@ -192,6 +199,9 @@ function ENT:UnHook()
 	end
 end
 
+function ENT:CanTool() return false end
+function ENT:CanProperty() return false end
+
 function ENT:OnRemove()
 	if IsValid(self.dt.hooked) then
 		self.dt.hooked:SetParent()
@@ -204,6 +214,7 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
+    if not IsValid(self.bobber) and IsValid(self) then self:Remove() end
 	for key, entity in pairs(ents.FindInSphere(self:GetPos(), 20)) do
 		if entity.is_recatchable and not self.just_released and not entity.just_unhooked then
 			self:Hook(entity, entity.data)
