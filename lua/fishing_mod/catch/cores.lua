@@ -53,12 +53,13 @@ if SERVER then
 	end
 	
 	function ENT:Think()
+		if not self.body:IsValid() then return end
 		self.body:ResetSequence(self.Anim)
 	end
 	
 	function ENT:OnRemove()
 		
-		self.body:Remove()
+		SafeRemoveEntity(self.body)
 		
 	end
 	
