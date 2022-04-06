@@ -53,7 +53,7 @@ if SERVER then
 	end
 	
 	function ENT:Think()
-		if not self.body:IsValid() then return end
+		if not IsValid(self.body) then return end
 		self.body:ResetSequence(self.Anim)
 	end
 	
