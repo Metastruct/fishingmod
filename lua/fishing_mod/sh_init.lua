@@ -10,6 +10,8 @@ fishingmod.MaxReelSpeed = 100
 
 fishingmod.HookForcePrice = 600
 
+fishingmod.SeagullDeterPrice = 800
+
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetFishingRod()

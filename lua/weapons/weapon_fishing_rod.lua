@@ -83,6 +83,9 @@ else
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			if not self.fishing_rod or not self.fishing_rod:IsValid() or not self:GetOwner().fishingmod then
 				Msg"[Fishing Mod] Broken for "print(self:GetOwner(), self)
+                if SERVER then 
+                    self:GetOwner():ConCommand("fishing_mod_request_init") 
+                end
 				self:Remove()
 				return
 			elseif not self.hasMentioned and game.SinglePlayer() and IsValid(self:GetOwner()) then

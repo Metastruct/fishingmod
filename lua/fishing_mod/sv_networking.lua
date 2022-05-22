@@ -56,6 +56,7 @@ function fishingmod.UpdatePlayerInfo(ply, spawned)
 		net.WriteInt(ply.fishingmod.reel_speed, 16)
 		net.WriteInt(ply.fishingmod.string_length, 16)
 		net.WriteInt(ply.fishingmod.force, 16)
+        net.WriteInt(ply.fishingmod.seagull_deter or 0, 16)
 		net.WriteBool(spawned or false)
 	net.Broadcast()	
 end

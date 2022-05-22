@@ -136,30 +136,28 @@ hook.Add( "HUDPaint", "Fishingmod:HUDPaint", function()
 		surface.DrawRect( xy.x - 14, xy.y, 10, 1 )
 	end
 end)
-local force_b = 1
-concommand.Add("fishing_mod_b_opens_always", function(ply, cmd, args)
-	if isnumber(tonumber(args[1])) then
-		force_b = math.Clamp(math.Round(tonumber(args[1])), 0, 1)
-	end
-end)
+local force_b = CreateClientConVar("fishing_mod_b_opens_always", "0")
 local ply = LocalPlayer()
 hook.Add("Think", "Fishingmod.Keys:Think", function()
-	ply = IsValid(LocalPlayer()) and ply or LocalPlayer()
-	if ply.GetFishingRod and ply:GetFishingRod() and not vgui.CursorVisible() then
-		if input.IsKeyDown(KEY_B) and force_b == 1 then
-			local menu = fishingmod.UpgradeMenu
-			if ValidPanel(menu) and not menu:IsVisible() then
-				menu:SetVisible(true)
-				menu:MakePopup()
-			end
-		end	
-		if input.IsKeyDown(KEY_E) then
-			RunConsoleCommand("fishing_mod_drop_bait")
-		end
-		if input.IsKeyDown(KEY_R) then
-			RunConsoleCommand("fishing_mod_drop_catch")
-		end	
-	end
+	if ply.GetFishingRod and ply:GetFishingRod() then
+        if not vgui.CursorVisible() then
+            if input.IsKeyDown(KEY_B) and force_b:GetInt() == 1 then
+                local menu = fishingmod.UpgradeMenu
+                if ValidPanel(menu) and not menu:IsVisible() then
+                    menu:SetVisible(true)
+                    menu:MakePopup()
+                end
+            end	
+            if input.IsKeyDown(KEY_E) then
+                RunConsoleCommand("fishing_mod_drop_bait")
+            end
+            if input.IsKeyDown(KEY_R) then
+                RunConsoleCommand("fishing_mod_drop_catch")
+            end
+        end
+	else
+        ply = LocalPlayer()
+    end
 end)
 
 hook.Add("ShouldDrawLocalPlayer", "Fishingmod:ShouldDrawLocalPlayer", function(ply)

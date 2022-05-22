@@ -42,6 +42,7 @@ local function UpdatePlayer(ply)
 	local reel_speed = net.ReadInt(16)
 	local string_length = net.ReadInt(16)
 	local force = net.ReadInt(16)
+    local seagull_deter = net.ReadInt(16)
 	local spawned = net.ReadBool()
 	ply.fishingmod = ply.fishingmod or {}
 	if not ply.fishingmod then return end
@@ -49,6 +50,7 @@ local function UpdatePlayer(ply)
 	ply.fishingmod.reel_speed = reel_speed
 	ply.fishingmod.string_length = string_length
 	ply.fishingmod.force = force
+	ply.fishingmod.seagull_deter = seagull_deter
 	
 	ply.fishingmod.money = money
 	ply.fishingmod.level = fishingmod.ExpToLevel(exp)

@@ -11,7 +11,7 @@ function ENT:Initialize()
 	
 	if not IsValid(self.target) then self:PickTarget() end
 	
-	self:SetupHook("EntityTakeDamage")
+	--self:SetupHook("EntityTakeDamage")
 	
 	bird = self
 	
@@ -69,7 +69,6 @@ function ENT:PhysicsSimulate(phys)
 	
 	local target = IsValid(self.target) and self.target
 	local owner = IsValid(self.owner) and self.owner
-			
 	phys:Wake()
 	phys:EnableMotion(true)
 	
@@ -82,19 +81,19 @@ function ENT:PhysicsSimulate(phys)
 	local params = {}
 	
 	if constraint.FindConstraint(self, "Weld") and IsValid(owner) then
-		params.secondstoarrive = 0.5
+		params.secondstoarrive = 0.9 -- nerf
 		
 		local trace_forward = util.QuickTrace(self:GetPos(), self:GetForward()*5000, {self, target})
 		
 		params.angle = (self:GetForward() + trace_forward.HitNormal):Angle()
-		params.pos = self:GetPos() + (self:GetForward() + trace_forward.HitNormal) * 100
-		params.dampfactor = 0.1
+		params.pos = self:GetPos() + (self:GetForward() + trace_forward.HitNormal) * 180 -- buff
+		params.dampfactor = 0.4
 	else
 		local direction = target:GetPos()-self:GetPos()
-		params.secondstoarrive = 1
-		params.pos = target:GetPos()
+		params.secondstoarrive = 0.7 -- buff
+		params.pos = target:GetPos() + target:GetVelocity()*0.1 -- buff
 		params.angle = direction:Angle()
-		params.dampfactor = 0.4
+		params.dampfactor = 0.3
 	end
 	
 	params.maxangular = 5000 
@@ -116,7 +115,7 @@ function ENT:OnTakeDamage(data)
 	local inflictor = data:GetInflictor()
 	local attacker = data:GetAttacker()
 	
-	if not self.spawnedRagdoll and data:IsBulletDamage() and attacker:IsPlayer() then
+	if not self.spawnedRagdoll and (data:IsBulletDamage() or data:IsDamageType(128)) and attacker:IsPlayer() then
 		self.spawnedRagdoll = true
 		local ragdoll = ents.Create("prop_ragdoll")
 		ragdoll:SetModel(self:GetModel())

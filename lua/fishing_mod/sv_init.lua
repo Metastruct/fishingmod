@@ -228,7 +228,7 @@ hook.Add("FishingModCaught", "FishingMod:Seagull", function(ply, entity)
 	--print("player",ply,"catch",entity)
 	if IsValid(ply) and IsValid(entity) then
 		--print("BEFORE RANDOM")
-		if math.random(3) ~= 1 then return end
+		if math.random(150) < math.Clamp(ply.fishingmod.seagull_deter or 1, 1, 100) then return end
 		--print("AFTER RANDOM")
 		local random = VectorRand()*2000
 		random.z = math.abs(random.z)
@@ -303,8 +303,7 @@ end)
 
 
 concommand.Add("fishing_mod_request_init", function(ply)
-	if ply.fishing_mod_spawned then return end
-	
+	if ply.fishingmod and ply.fishing_mod_spawned then return end
 	for key, entity in pairs(ents.GetAll()) do
 		if entity:GetNWBool("fishingmod catch") then
 			fishingmod.SetCatchInfo(entity, ply)

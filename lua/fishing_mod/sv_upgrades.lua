@@ -57,7 +57,7 @@ end
 
 function fishingmod.DowngradeReelSpeed(ply, amount)
 	amount = math.max(amount, 1)
-	if amount >= ply.fishingmod.string_length then return end
+	if amount >= ply.fishingmod.reel_speed then return end
 	fishingmod.SetRodReelSpeed(ply, amount, "sub")
 end
 
@@ -80,7 +80,7 @@ end
 
 function fishingmod.DowngradeHookForce(ply, amount)
 	amount = math.max(amount, 1)
-	if amount >= ply.fishingmod.string_length then return end
+	if amount >= ply.fishingmod.force then return end
 	fishingmod.SetHookForce(ply, amount, "sub")
 end
 
@@ -90,4 +90,28 @@ end)
 
 concommand.Add("fishingmod_downgrade_hook_force", function(ply, command, arguments)
 	fishingmod.DowngradeHookForce(ply, arguments[1])
+end)
+
+-- Seagull deterring
+
+function fishingmod.UpgradeSeagullDeter(ply, amount)
+    if ply.fishingmod.seagull_deter + amount > 100 then return end
+	local cost = amount * fishingmod.SeagullDeterPrice
+	if cost > ply.fishingmod.money then return end
+	fishingmod.TakeMoney(ply, cost)
+	fishingmod.SetSeagullDeter(ply, amount, "add")
+end
+
+function fishingmod.DowngradeSeagullDeter(ply, amount)
+	amount = math.max(amount, 1)
+	if amount >= ply.fishingmod.seagull_deter then return end
+	fishingmod.SetSeagullDeter(ply, amount, "sub")
+end
+
+concommand.Add("fishingmod_upgrade_seagull_deter", function(ply, command, arguments)
+	fishingmod.UpgradeSeagullDeter(ply, arguments[1])
+end)
+
+concommand.Add("fishingmod_downgrade_seagull_deter", function(ply, command, arguments)
+	fishingmod.DowngradeSeagullDeter(ply, arguments[1])
 end)

@@ -23,6 +23,7 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 			reel_speed    = 0x20 + 1,
 			string_length = 0x28 + 1,
 			force         = 0x30 + 1,
+			seagull_deter = 0x38 + 1,
 		},
 		read = function (self, fh, name)
 			if name then -- read single info
@@ -54,6 +55,7 @@ local PATH_GENERATOR_MIGRATION_ENABLED = {
 			fh:WriteDouble(data.reel_speed    or 0)
 			fh:WriteDouble(data.string_length or 0)
 			fh:WriteDouble(data.force         or 0)
+			fh:WriteDouble(data.seagull_deter or 0)
 			fh:Close()
 			return true
 		end
@@ -350,6 +352,19 @@ function fishingmod.SetHookForce(ply, force, add_or_sub)
 	fishingmod.UpdatePlayerInfo(ply)
 end
 
+function fishingmod.SetSeagullDeter(ply, seagull_deter, add_or_sub)
+    if not ply.fishingmod.seagull_deter then fishingmod.InitPlayerStats(ply) end -- this is cursed but i see no other way atm
+	if add_or_sub == "add" then
+		ply.fishingmod.seagull_deter = ply.fishingmod.seagull_deter + seagull_deter
+	elseif add_or_sub == "sub" then
+		ply.fishingmod.seagull_deter = ply.fishingmod.seagull_deter - seagull_deter
+	else
+		ply.fishingmod.seagull_deter = seagull_deter
+	end
+	fishingmod.SavePlayerInfo(ply, "seagull_deter", ply.fishingmod.seagull_deter)
+	fishingmod.UpdatePlayerInfo(ply)
+end
+
 local fieldnames = {
 	"catches",
 	"exp",
@@ -357,7 +372,8 @@ local fieldnames = {
 	"length",
 	"reel_speed",
 	"string_length",
-	"force"
+	"force",
+	"seagull_deter"
 }
 
 function fishingmod.InitPlayerStats(ply)

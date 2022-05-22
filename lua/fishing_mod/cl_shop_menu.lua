@@ -364,6 +364,10 @@ function PANEL:Init()
 	self.force = vgui.Create("Fishingmod:UpgradeButton", self)
 	self.force:SetType("Hook Force:", "force", "hook_force", fishingmod.HookForcePrice)
 	self:AddItem(self.force)
+
+	self.seagull_deter = vgui.Create("Fishingmod:UpgradeButton", self)
+	self.seagull_deter:SetType("Seagull Deterring:", "seagull_deter", "seagull_deter", fishingmod.SeagullDeterPrice)
+	self:AddItem(self.seagull_deter)
 end
 
 vgui.Register("Fishingmod:Upgrade", PANEL, "DPanelList")
