@@ -11,8 +11,10 @@ if SERVER then
 else
 
 	include("fishing_mod/cl_init.lua")
-	concommand.Add("fishing_mod_menu", function() 
-		fishingmod.UpgradeMenu = vgui.Create('Fishingmod:ShopMenu') fishingmod.UpgradeMenu:SetVisible(true) 
+	concommand.Add("fishing_mod_menu", function(ply, cmd)
+        if ply.GetFishingRod and ply:GetFishingRod() then
+    		fishingmod.UpgradeMenu = vgui.Create('Fishingmod:ShopMenu') fishingmod.UpgradeMenu:SetVisible(true) 
+        end
 	end)
 
 end
