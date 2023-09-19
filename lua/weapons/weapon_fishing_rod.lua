@@ -34,7 +34,7 @@ end
 
 function SWEP:SecondaryAttack()
 	
-	
+
 	if SERVER then
 		if not IsValid(self.fishing_rod) or not IsValid(self:GetOwner()) or not self:GetOwner().fishingmod then return end
 		
@@ -57,7 +57,13 @@ if CLIENT then
 	SWEP.SlotPos = 1
 	SWEP.DrawAmmo = false
 	SWEP.DrawCrosshair	= false
-	
+	--SWEP.DrawCrosshair = true
+	function SWEP:Initialize()
+		if not self.hasMentioned and not game.SinglePlayer() and self:GetOwner() == LocalPlayer() then
+			chat.AddText(Color(0, 255, 0), "[Fishing Mod]", Color(255, 255, 255), ": Press 'B' by default to open the fishing mod menu. \nIf you bound 'B' to something else: bind <key> fishing_mod_menu.")
+			self.hasMentioned = true
+		end
+	end
 else
 	
 	AddCSLuaFile()
@@ -67,18 +73,21 @@ else
 	
 	function SWEP:Initialize()
 		self.distance = 0
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
+		self.lastowner = IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 		self:SetHoldType("pistol")
 	end
 
 	function SWEP:Deploy()
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
+		self.lastowner = IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 		if not IsValid(self.fishing_rod) then
 			self.fishing_rod = ents.Create("entity_fishing_rod")
 			if not self.fishing_rod or not self.fishing_rod:IsValid() or not self:GetOwner().fishingmod then
-				Msg"[FishingMod] Broken for "print(self:GetOwner(),self)
+				Msg"[Fishing Mod] Broken for "print(self:GetOwner(), self)
 				self:Remove()
 				return
+			elseif not self.hasMentioned and game.SinglePlayer() and IsValid(self:GetOwner()) then
+				self:GetOwner():ChatPrint("[Fishing Mod]: Press 'B' by default to open the fishing mod menu. \nIf you bound 'B' to something else: bind <key> fishing_mod_menu.")
+				self.hasMentioned = true
 			end
 			self.fishing_rod.dt.rod_length = self:GetOwner().fishingmod.length / 10 + 1
 			self.fishing_rod:Spawn()
@@ -116,11 +125,11 @@ else
 	end
 	
 	function SWEP:OwnerChanged() 
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
+		self.lastowner = IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 	end
 	
 	function SWEP:OnDrop() 
-		self.lastowner=IsValid(self:GetOwner()) and self:GetOwner() or IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
+		self.lastowner = IsValid(self:GetOwner()) and self:GetOwner() or self.lastowner
 		if IsValid(self:GetOwner()) then
 		  self:KillRod() 
 		end

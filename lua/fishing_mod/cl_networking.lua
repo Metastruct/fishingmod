@@ -27,7 +27,9 @@ net.Receive("Fishingmod:BaitPrices", function()
 	local multiplier = net.ReadFloat()
 	if not fishingmod.BaitTable[name] then return end
 	fishingmod.BaitTable[name].multiplier = multiplier
-	fishingmod.UpdateSales()
+	if fishingmod.UpdateSales then
+		fishingmod.UpdateSales()
+	end
 end)
 
 
