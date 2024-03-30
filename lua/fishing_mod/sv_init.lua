@@ -256,7 +256,7 @@ function fishingmod.FriedToMultiplier(number)
 	return tri
 end
 
-local divider = CreateConVar("fishing_mod_divider", 1, true, false)
+local divider = CreateConVar("fishing_mod_divider", "1", FCVAR_ARCHIVE)
 
 timer.Create("FishingMod:Think",1,0,function()
 	for key, ply in pairs(player.GetAll()) do
