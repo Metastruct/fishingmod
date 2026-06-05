@@ -10,17 +10,21 @@ function fishingmod.UpgradeRodLength(ply, amount)
 end
 
 function fishingmod.DowngradeRodLength(ply, amount)
-	amount = math.max(amount, 1)
+	amount = math.Clamp(amount, 1, ply.fishingmod.length)
 	if amount >= ply.fishingmod.length then return end
 	fishingmod.SetRodLength(ply, amount, "sub")
 end
 
 concommand.Add("fishingmod_upgrade_rod_length", function(ply, command, arguments)
-	fishingmod.UpgradeRodLength(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.UpgradeRodLength(ply, amount)
 end)
 
 concommand.Add("fishingmod_downgrade_rod_length", function(ply, command, arguments)
-	fishingmod.DowngradeRodLength(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.DowngradeRodLength(ply, amount)
 end)
 
 --String length
@@ -34,17 +38,21 @@ function fishingmod.UpgradeStringLength(ply, amount)
 end
 
 function fishingmod.DowngradeStringLength(ply, amount)
-	amount = math.max(amount, 1)
+	amount = math.Clamp(amount, 1, ply.fishingmod.string_length)
 	if amount >= ply.fishingmod.string_length then return end
 	fishingmod.SetRodStringLength(ply, amount, "sub")
 end
 
 concommand.Add("fishingmod_upgrade_string_length", function(ply, command, arguments)
-	fishingmod.UpgradeStringLength(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.UpgradeStringLength(ply, amount)
 end)
 
 concommand.Add("fishingmod_downgrade_string_length", function(ply, command, arguments)
-	fishingmod.DowngradeStringLength(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.DowngradeStringLength(ply, amount)
 end)
 
 --Reel speed
@@ -59,17 +67,21 @@ function fishingmod.UpgradeReelSpeed(ply, amount)
 end
 
 function fishingmod.DowngradeReelSpeed(ply, amount)
-	amount = math.max(amount, 1)
+	amount = math.Clamp(amount, 1, ply.fishingmod.reel_speed)
 	if amount >= ply.fishingmod.reel_speed then return end
 	fishingmod.SetRodReelSpeed(ply, amount, "sub")
 end
 
 concommand.Add("fishingmod_upgrade_reel_speed", function(ply, command, arguments)
-	fishingmod.UpgradeReelSpeed(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.UpgradeReelSpeed(ply, amount)
 end)
 
 concommand.Add("fishingmod_downgrade_reel_speed", function(ply, command, arguments)
-	fishingmod.DowngradeReelSpeed(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.DowngradeReelSpeed(ply, amount)
 end)
 
 --Force
@@ -83,15 +95,20 @@ function fishingmod.UpgradeHookForce(ply, amount)
 end
 
 function fishingmod.DowngradeHookForce(ply, amount)
-	amount = math.max(amount, 1)
+	amount = math.Clamp(amount, 0, ply.fishingmod.force)
 	if amount >= ply.fishingmod.force then return end
 	fishingmod.SetHookForce(ply, amount, "sub")
 end
 
 concommand.Add("fishingmod_upgrade_hook_force", function(ply, command, arguments)
-	fishingmod.UpgradeHookForce(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.UpgradeHookForce(ply, amount)
 end)
 
 concommand.Add("fishingmod_downgrade_hook_force", function(ply, command, arguments)
-	fishingmod.DowngradeHookForce(ply, arguments[1])
+	local amount = tonumber(arguments[1])
+	if not amount then ply:PrintMessage(HUD_PRINTTALK, "Invalid amount") return end
+	fishingmod.DowngradeHookForce(ply, amount)
 end)
+
