@@ -39,6 +39,16 @@ function ENT:PhysicsSimulate( phys, deltatime )
 	local position, angles = self.dt.ply:GetBonePosition(bone)
 	local new_position, new_angles = LocalToWorld(Vector(25,0,-42) * self.dt.rod_length + Vector(-2,-1,0) * self.dt.rod_length, Angle(60,0,90), position, angles)
 	
+	if new_position.x ~= new_position.x or new_position.y ~= new_position.y or new_position.z ~= new_position.z
+	or new_position.x > 32000 or new_position.x < -32000
+	or new_position.y > 32000 or new_position.y < -32000
+	or new_position.z > 32000 or new_position.z < -32000 then
+		ErrorNoHaltWithStack("[Fishing Mod] Removing rod - computed position out of world bounds: " .. tostring(new_position))
+		if IsValid(self.dt.ply) then self.dt.ply:ChatPrint("[Fishing Mod]: Your fishing rod broke!") end
+		self:Remove()
+		return
+	end
+	
 	self.shadow_params.secondstoarrive = 0.0001
 	self.shadow_params.pos = new_position
 	self.shadow_params.angle = new_angles
